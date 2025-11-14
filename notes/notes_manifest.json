@@ -16,6 +16,16 @@
         "knowledge-capture"
       ],
       "created_at": "2025-11-14T23:03:32.763995+00:00"
+    },
+    {
+      "id": "932a177268294f488694b923b9a9f220",
+      "title": "Test Pipeline Note",
+      "contributor": "Agent",
+      "summary": "Testing the full pipeline",
+      "source_links": [],
+      "next_steps": [],
+      "tags": [],
+      "created_at": "2025-11-14T23:08:50.121686+00:00"
     }
   ],
   "links": []

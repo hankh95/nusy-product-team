@@ -32,16 +32,26 @@ class NeurosymbolicClinicalReasoner:
         target_graph = graph or self.graph
         triples = []
         entities = set()
+        relationships = set()
         for s, p, o in target_graph.triples((None, None, None)):
             triples.append((str(s), str(p), str(o)))
             if isinstance(s, (URIRef, BNode)):
                 entities.add(str(s))
+            if isinstance(o, (URIRef, BNode)):
+                entities.add(str(o))
+            relationships.add(str(p))
         result = {
             "keywords": self._extract_keywords(question),
             "triples": len(triples),
             "entities": sorted(entities),
+            "relationships": sorted(relationships),
         }
         return result
+
+    def sparql_query(self, query: str, graph: Optional[Graph] = None) -> List:
+        """Execute a SPARQL query on the graph."""
+        target_graph = graph or self.graph
+        return list(target_graph.query(query))
 
 @dataclass
 class Feature:
@@ -113,3 +123,7 @@ class KnowledgeGraph:
     def neurosymbolic_query(self, question: str):
         """Use the NeurosymbolicClinicalReasoner to query the graph."""
         return self.reasoner.query_graph(question, self.g)
+
+    def sparql_query(self, query: str):
+        """Execute SPARQL query using the reasoner."""
+        return self.reasoner.sparql_query(query, self.g)

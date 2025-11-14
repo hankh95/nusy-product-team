@@ -107,6 +107,37 @@ def query(question: str = typer.Argument(..., help="Question to ask the KG")) ->
     typer.echo(f"Triples: {result['triples']}")
     typer.echo(f"Entities: {', '.join(result['entities'])}")
 
+@notes_app.command("run-pipeline")
+def run_pipeline() -> None:
+    """Run the complete Neurosymbolic pipeline."""
+    manager = NotesManager()
+    result = manager.run_pipeline()
+    typer.secho("Pipeline completed successfully!", fg=typer.colors.GREEN)
+    typer.echo(f"L0 content processed: {len(result['l0_content'])} sections")
+    typer.echo(f"Triples added: {result['triples_added']}")
+    typer.echo(f"BDD scenarios generated: {len(result['scenarios'])}")
+
+@notes_app.command("validate-coverage")
+def validate_coverage() -> None:
+    """Validate pipeline coverage."""
+    manager = NotesManager()
+    coverage = manager.validate_coverage()
+    typer.echo("Coverage Report:")
+    typer.echo(f"- Total scenarios: {coverage['total_scenarios']}")
+    typer.echo(f"- KG triples: {coverage['kg_triples']}")
+    typer.echo(f"- Notes processed: {coverage['notes_processed']}")
+
+@notes_app.command("sparql")
+def sparql_query(query: str = typer.Argument(..., help="SPARQL query to execute")) -> None:
+    """Execute a SPARQL query on the knowledge graph."""
+    manager = NotesManager()
+    results = manager.kg.sparql_query(query)
+    if not results:
+        typer.echo("No results found.")
+        return
+    for row in results:
+        typer.echo(f"- {', '.join(str(cell) for cell in row)}")
+
 app.add_typer(notes_app)
 
 if __name__ == "__main__":

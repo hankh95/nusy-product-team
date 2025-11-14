@@ -11,6 +11,7 @@ from rdflib.namespace import RDFS
 
 from .knowledge.graph import KnowledgeGraph, NUSY
 from .models.kg import KGNode, KGRelation
+from .navigator import Navigator
 
 DEFAULT_MANIFEST = Path(__file__).resolve().parents[2] / "notes" / "notes_manifest.json"
 
@@ -172,19 +173,21 @@ class NotesManager:
     def list_links(self) -> List[NoteLink]:
         return [NoteLink.from_dict(item) for item in self._data.get("links", [])]
 
-    def query_notes_by_contributor(self, contributor: str) -> List[Note]:
-        results = self.kg.get_notes_by_contributor(contributor)
-        notes = []
-        for row in results:
-            note_id = str(row[0]).split('/')[-1]
-            note = self.find_note(note_id)
-            if note:
-                notes.append(note)
-        return notes
-
     def neurosymbolic_query(self, question: str):
         """Query the KG using the NeurosymbolicClinicalReasoner."""
         return self.kg.neurosymbolic_query(question)
+
+    def run_pipeline(self):
+        """Run the complete Neurosymbolic pipeline."""
+        notes_dir = self.manifest_path.parent
+        navigator = Navigator(notes_dir, self.kg)
+        return navigator.run_pipeline()
+
+    def validate_coverage(self):
+        """Validate pipeline coverage."""
+        notes_dir = self.manifest_path.parent
+        navigator = Navigator(notes_dir, self.kg)
+        return navigator.validate_coverage()
 
     def query_notes_by_contributor(self, contributor: str) -> List[Note]:
         results = self.kg.query_notes_by_contributor(contributor)
