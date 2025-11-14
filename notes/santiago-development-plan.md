@@ -9,6 +9,7 @@ Launch the first Santiago iteration as a lightweight, self-reflective PM/PM-AI h
 - Establish a Santiago-specific code home (`santiago-code/`) where experiments and connectors live.
 - Keep a human-readable, chronological narrative in `notes/santiago/` that maps to KG nodes and artifacts.
 - Build instrumentation that proves the Santiago graph can answer questions about its own plan, outcomes, and next steps.
+- Capture how humans and agents actually use notes, tasks, and chats so Santiago can infer the project rhythm (see "Team note practices" below).
 - Maintain the `notes/notes_manifest.json` file using the NuSy Notes CLI so every narrative entry stays queryable.
 
 ## Milestones
@@ -17,6 +18,7 @@ Launch the first Santiago iteration as a lightweight, self-reflective PM/PM-AI h
 2. **Launch knowledge capture** (Week 2) – Add a first Santiago note describing the domain, mirror it into the KG, and verify Navigator can reference the note via UUID.
 3. **Produce experimentation loop** (Week 3) – Implement BDD tests and code inside `santiago-code/`, run catchfish/fishnet loops, and log result metadata back into the KG.
 4. **Reflect and iterate** (Week 4) – Execute a knowledge debrief, document lessons in `notes/santiago/`, and add a new issue for the next refactor.
+5. **Conversation capture prep** (Future step) – Design adapters that ingest Slack/Matrix chats, issue comments, and Navigator-agent transcripts into the KG so Santiago records every human/AI conversation.
 
 ## Deliverables
 
@@ -42,6 +44,18 @@ Launch the first Santiago iteration as a lightweight, self-reflective PM/PM-AI h
 - NuSy knowledge graph schema for conversations (may reuse existing PM schema).
 - `navigator` instrumentation capable of tagging actions with system labels (graph vs external).
 - Access to the upcoming Santiago code components (to be created in `santiago-code/`).
+- Chat ingestion adapters (Slack/Matrix/MCP logs) to capture conversation histories as graph edges.
+
+## Team note practices
+
+- Humans capture what they did for each issue and call out modified files, completed features, experiments run, and blockers.
+- Agents mirror those summaries into Santiago notes, linking them to knowledge graph decisions and artifact URLs.
+- Use `notes create --tag issue` when working on `issues/` so the note knows which issue is being resolved and can record contributions.
+
+## Future architecture updates
+
+- Nikolay (Santiago) will treat each note as a graph event (feature completed, file modified, decision published) with timestamps and responsible agents, enabling question-driven queries such as "who completed feature X" or "which files changed just before release."
+- The graph should ingest chats/issues/traces later so narratives about blockers or decisions become queryable; this will eventually allow the PM AI to learn from the entire dialogue history.
 
 ## Risks & Mitigations
 
