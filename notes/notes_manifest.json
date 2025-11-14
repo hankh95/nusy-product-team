@@ -26,6 +26,21 @@
       "next_steps": [],
       "tags": [],
       "created_at": "2025-11-14T23:08:50.121686+00:00"
+    },
+    {
+      "id": "9852e5adb29e4106bfd2151a0f742c49",
+      "title": "Santiago Session - Web Interface Implementation",
+      "contributor": "Agent",
+      "summary": "Successfully implemented web interface for querying NuSy about ingested notes, following development practices",
+      "source_links": [],
+      "next_steps": [],
+      "tags": [
+        "santiago",
+        "web-interface",
+        "api",
+        "development-practices"
+      ],
+      "created_at": "2025-11-14T23:14:03.892674+00:00"
     }
   ],
   "links": []
