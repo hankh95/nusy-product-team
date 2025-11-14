@@ -71,6 +71,7 @@ Next steps:
 - The Santiago mini-project stores every idea, experiment, and retrospective in `notes/santiago/`. Start by reading `notes/santiago-development-plan.md` to see what we plan to test and ship in the first iteration.
 - All Santiago-specific code lives under `santiago-code/`; keep the README in that folder up to date as you add scripts, tests, or connectors.
 - Agents should use the `/issues` directory to discover the next Copilot task (ISSUES list is mirrored there so we can stay offline before pushing to GitHub).
+- Use `python -m src.nusy_pm_core.cli notes` to create/list notes (the tool writes to `notes/notes_manifest.json`) and link entries to KG nodes.
 
 This repo is designed to be friendly to VS Code + Copilot (GPT-5 Codex) and other AI IDEs.
 Start with the docs and CLI and let the AI help fill in the gaps iteratively.

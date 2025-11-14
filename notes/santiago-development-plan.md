@@ -9,6 +9,7 @@ Launch the first Santiago iteration as a lightweight, self-reflective PM/PM-AI h
 - Establish a Santiago-specific code home (`santiago-code/`) where experiments and connectors live.
 - Keep a human-readable, chronological narrative in `notes/santiago/` that maps to KG nodes and artifacts.
 - Build instrumentation that proves the Santiago graph can answer questions about its own plan, outcomes, and next steps.
+- Maintain the `notes/notes_manifest.json` file using the NuSy Notes CLI so every narrative entry stays queryable.
 
 ## Milestones
 
