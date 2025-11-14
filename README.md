@@ -49,9 +49,46 @@ This repo hosts the NuSy Product Manager and Product Team scaffolding:
 
   Then open:
   - http://localhost:8000/health
-  - http://localhost:8000/version
+  - **Web Interface**: Open `nusy_query_interface.html` in your browser to ask NuSy questions about ingested notes
 
-6. Use the CLI
+## Querying Notes with NuSy
+
+Once the system has ingested notes (via the Neurosymbolic pipeline), you can query them in several ways:
+
+### Web Interface (Recommended)
+1. Start the API server: `python -m nusy_pm_core.cli serve`
+2. Open `nusy_query_interface.html` in your web browser
+3. Ask natural language questions like "What is Santiago?" or "What notes are about the pipeline?"
+
+### CLI Commands
+```bash
+# Ask natural language questions
+python -m nusy_pm_core.cli notes query "What is Santiago?"
+
+# Execute SPARQL queries
+python -m nusy_pm_core.cli notes sparql "SELECT ?note ?title WHERE { ?note <http://www.w3.org/2000/01/rdf-schema#label> ?title }"
+
+# Run the ingestion pipeline
+python -m nusy_pm_core.cli notes run-pipeline
+
+# Check coverage
+python -m nusy_pm_core.cli notes validate-coverage
+```
+
+### API Endpoints
+
+- `POST /api/query` - Natural language queries
+- `POST /api/sparql` - SPARQL queries
+- `GET /api/notes` - List all notes
+- `POST /api/pipeline/run` - Run ingestion pipeline
+- `GET /api/coverage` - Get coverage statistics
+
+Then open:
+
+- `http://localhost:8000/health`
+- `http://localhost:8000/version`
+
+## Usage
 
   python -m src.nusy_pm_core.cli version
   python -m src.nusy_pm_core.cli scaffold_project "Example MCP"

@@ -15,6 +15,15 @@ def version():
     """Show CLI and core service version."""
     typer.echo(f"NuSy Product Team CLI v{__VERSION__}")
 
+@app.command()
+def serve(host: str = "127.0.0.1", port: int = 8000):
+    """Start the FastAPI web server."""
+    import uvicorn
+    from nusy_pm_core.api import app
+    typer.echo(f"Starting NuSy API server on http://{host}:{port}")
+    typer.echo("Press Ctrl+C to stop")
+    uvicorn.run(app, host=host, port=port)
+
 notes_app = typer.Typer(name="notes", help="Manage NuSy notes and knowledge graph links.")
 
 @app.command()
