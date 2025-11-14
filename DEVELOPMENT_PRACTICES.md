@@ -26,3 +26,10 @@
 - **Daily Vision Sync** – Share what hypothesis you’re testing today and what KG entities got updated.
 - **Knowledge Debrief** – Once an experiment finishes, summarize the outcome and update the KG with the new relationship triangles.
 - **Practices Backlog** – When a gap is spotted (missing role instructions, inconsistent testing), add a card and refine practice docs.
+
+## Santiago Notes Ritual
+
+- Write Santiago-session notes in `notes/santiago/` once per day or after a major experiment slice so humans can skim the story without exploring the KG.
+- Keep `notes/santiago-development-plan.md` active: add new milestones, blockers, and dependencies as the mini-project evolves.
+- When a note captures a decision, store the KG triple (or node) that references the note by filename so Navigator can cite the rationale seconds later.
+- Any code in `santiago-code/` should be documented in that folder’s README and referenced from the related note.
