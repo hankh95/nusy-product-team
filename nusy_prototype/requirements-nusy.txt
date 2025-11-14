@@ -1,0 +1,68 @@
+# Neurosymbolic Clinical Reasoner Prototype - Requirements
+# This file contains all Python packages needed to build and run the NuSy prototype
+# Compatible with Python 3.7+
+
+# Core Dependencies (Required)
+rdflib>=6.0.0          # RDF graph processing and manipulation
+typing>=3.7.4          # Type hints support (Python 3.7+)
+pathlib>=1.0.1         # Path handling utilities
+
+# Optional Extensions (Recommended for enhanced functionality)
+SPARQLWrapper>=1.8.5   # Advanced SPARQL querying capabilities
+networkx>=2.6.3        # Graph algorithms and network analysis
+scikit-learn>=1.0.0    # Machine learning components for future neural integration
+transformers>=4.0.0    # Neural NLP models (BERT, RoBERTa, BioBERT)
+torch>=1.9.0           # PyTorch for neural network computations
+numpy>=1.21.0          # Numerical computing for ML operations
+
+# Development and Testing
+pytest>=6.2.0          # Testing framework
+pytest-cov>=2.12.0     # Coverage reporting
+black>=21.0.0          # Code formatting
+flake8>=3.9.0          # Linting
+mypy>=0.910            # Type checking
+
+# Documentation and Examples
+jupyter>=1.0.0         # Jupyter notebook support
+matplotlib>=3.4.0      # Plotting and visualization
+pandas>=1.3.0          # Data manipulation for analysis
+
+# Clinical Ontology Support (Optional)
+owlready2>=0.35        # OWL ontology processing
+rdflib-jsonld>=0.6.0   # Enhanced JSON-LD support
+
+# Web Framework (for future API development)
+fastapi>=0.68.0        # Modern web framework
+uvicorn>=0.15.0        # ASGI server
+
+# Configuration and Logging
+python-dotenv>=0.19.0  # Environment variable management
+structlog>=21.5.0      # Structured logging
+
+# Data Validation
+pydantic>=1.8.0        # Data validation and serialization
+
+# Installation Instructions:
+# pip install -r requirements-nusy.txt
+#
+# For development with all optional packages:
+# pip install -r requirements-nusy.txt
+#
+# For minimal installation (core only):
+# pip install rdflib>=6.0.0
+
+# Version Compatibility Notes:
+# - Python 3.7+: Required for typing module features
+# - RDFLib 6.0+: Required for JSON-LD parsing improvements
+# - PyTorch: Install with CUDA support if GPU acceleration needed
+#   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+# Platform-Specific Notes:
+# - Linux/macOS: Full compatibility
+# - Windows: May require additional setup for some ML packages
+# - ARM64: Limited support for some ML packages
+
+# Security Considerations:
+# - Pin versions in production deployments
+# - Regularly update for security patches
+# - Use virtual environments for isolation
