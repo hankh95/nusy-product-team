@@ -2,9 +2,9 @@
 
 Store Santiago-specific scripts, prototypes, and tests under this folder. Treat each subdirectory as a standalone experiment or agent module.
 
-Suggested structure:
+Current structure:
 
-- `santiago-code/main/` – Primary orchestrator or CLI for Santiago.
+- `santiago-code/main/` – Primary orchestrator or CLI for Santiago notes app.
 - `santiago-code/tests/` – Minimal regression tests that prove catchfish/fishnet loops work.
 - `santiago-code/docs/` – Short write-ups explaining how the Santiago variant differs from the broader PM stack.
 

@@ -6,6 +6,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 from uuid import uuid4
+from rdflib import URIRef, Literal
+from rdflib.namespace import RDFS
+
+from .knowledge.graph import KnowledgeGraph, NUSY
+from .models.kg import KGNode, KGRelation
 
 DEFAULT_MANIFEST = Path(__file__).resolve().parents[2] / "notes" / "notes_manifest.json"
 
@@ -83,6 +88,7 @@ class NotesManager:
         if not self.manifest_path.exists():
             self._write({"notes": [], "links": []})
         self._data = self._read()
+        self.kg = KnowledgeGraph()
 
     def _read(self) -> Dict[str, List[Dict[str, object]]]:
         with open(self.manifest_path, "r", encoding="utf-8") as fh:
@@ -126,6 +132,21 @@ class NotesManager:
         )
         self._data.setdefault("notes", []).append(note.to_dict())
         self._commit()
+
+        # Add to KG
+        note_uri = URIRef(f"{NUSY}note/{note_id}")
+        self.kg.add_node(KGNode(note_uri, title, NUSY.Note))
+        self.kg.add_relation(KGRelation(note_uri, NUSY.contributor, Literal(contributor)))
+        self.kg.add_relation(KGRelation(note_uri, NUSY.summary, Literal(summary)))
+        self.kg.add_relation(KGRelation(note_uri, NUSY.created_at, Literal(note.created_at)))
+        for tag in note.tags:
+            self.kg.add_relation(KGRelation(note_uri, NUSY.hasTag, Literal(tag)))
+        for link in note.source_links:
+            self.kg.add_relation(KGRelation(note_uri, NUSY.sourceLink, Literal(link)))
+        for step in note.next_steps:
+            self.kg.add_relation(KGRelation(note_uri, NUSY.nextStep, Literal(step)))
+        self.kg.save()
+
         return note
 
     def link_to_graph(self, note_id: str, kg_node_id: str, rationale: str) -> NoteLink:
@@ -151,6 +172,36 @@ class NotesManager:
     def list_links(self) -> List[NoteLink]:
         return [NoteLink.from_dict(item) for item in self._data.get("links", [])]
 
-    def latest_notes(self, limit: int = 5) -> List[Note]:
-        notes = self.list_notes()
-        return sorted(notes, key=lambda note: note.created_at, reverse=True)[:limit]
+    def query_notes_by_contributor(self, contributor: str) -> List[Note]:
+        results = self.kg.get_notes_by_contributor(contributor)
+        notes = []
+        for row in results:
+            note_id = str(row[0]).split('/')[-1]
+            note = self.find_note(note_id)
+            if note:
+                notes.append(note)
+        return notes
+
+    def neurosymbolic_query(self, question: str):
+        """Query the KG using the NeurosymbolicClinicalReasoner."""
+        return self.kg.neurosymbolic_query(question)
+
+    def query_notes_by_contributor(self, contributor: str) -> List[Note]:
+        results = self.kg.query_notes_by_contributor(contributor)
+        notes = []
+        for row in results:
+            note_id = str(row[0]).split('/')[-1]
+            note = self.find_note(note_id)
+            if note:
+                notes.append(note)
+        return notes
+
+    def query_notes_by_tag(self, tag: str) -> List[Note]:
+        results = self.kg.query_notes_by_tag(tag)
+        notes = []
+        for row in results:
+            note_id = str(row[0]).split('/')[-1]
+            note = self.find_note(note_id)
+            if note:
+                notes.append(note)
+        return notes

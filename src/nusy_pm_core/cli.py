@@ -86,12 +86,26 @@ def link(
     manager.link_to_graph(note_id=note_id, kg_node_id=kg_node_id, rationale=rationale)
     typer.secho(f"Linked note {note_id} to {kg_node_id}", fg=typer.colors.CYAN)
 
-@notes_app.command("links")
-def links() -> None:
-    """Show all note-to-graph links."""
+@notes_app.command("query-contributor")
+def query_contributor(contributor: str = typer.Argument(..., help="Contributor name")) -> None:
+    """Query notes by contributor."""
     manager = NotesManager()
-    for link in manager.list_links():
-        typer.echo(f"- Note {link.note_id} → KG {link.kg_node_id} ({link.rationale})")
+    notes = manager.query_notes_by_contributor(contributor)
+    if not notes:
+        typer.echo(f"No notes found for contributor '{contributor}'.")
+        return
+    for note in notes:
+        typer.echo(f"- {note.id} | {note.title}")
+        typer.echo(f"  Summary: {note.summary}")
+
+@notes_app.command("query")
+def query(question: str = typer.Argument(..., help="Question to ask the KG")) -> None:
+    """Query the knowledge graph using NeurosymbolicClinicalReasoner."""
+    manager = NotesManager()
+    result = manager.neurosymbolic_query(question)
+    typer.echo(f"Keywords: {', '.join(result['keywords'])}")
+    typer.echo(f"Triples: {result['triples']}")
+    typer.echo(f"Entities: {', '.join(result['entities'])}")
 
 app.add_typer(notes_app)
 
