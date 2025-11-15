@@ -111,6 +111,66 @@ quality_gates:
     actions: actions if criteria not met
 ```
 
+## Visualization
+
+### Mermaid Diagram Support
+
+Passages can be automatically visualized using Mermaid diagrams to provide clear flowcharts of the passage execution logic. This enables both human understanding and automated diagram generation for documentation and monitoring.
+
+#### Mermaid Generation Rules
+
+Passages are converted to Mermaid flowcharts using the following mapping:
+
+- **Triggers** → Start nodes (rounded rectangles)
+- **Steps** → Process nodes (rectangles)
+- **Decisions** → Diamond nodes
+- **Transitions** → Arrows with labels
+- **Quality Gates** → Validation checkpoints
+- **Outputs** → End nodes (rounded rectangles)
+
+#### Mermaid Diagram Format
+
+```mermaid
+flowchart TD
+    %% Triggers
+    T1[Trigger: event/schedule/manual] --> S1
+    
+    %% Steps
+    S1[Step: step-name<br/>Actor: actor-id<br/>Type: task/decision/automated]
+    
+    %% Decisions
+    D1{Decision Point}
+    
+    %% Transitions
+    S1 -->|condition| S2
+    S2 --> D1
+    D1 -->|yes| S3
+    D1 -->|no| S4
+    
+    %% Quality Gates
+    S3 --> Q1{Quality Gate<br/>criteria}
+    Q1 -->|pass| O1
+    Q1 -->|fail| S5
+    
+    %% Outputs
+    O1[Output: artifact/notification]
+```
+
+#### Diagram Generation Process
+
+1. **Parse Passage YAML**: Extract actors, steps, transitions, and outputs
+2. **Map Components**: Convert passage elements to Mermaid syntax
+3. **Add Styling**: Apply consistent colors and shapes for different component types
+4. **Generate Diagram**: Output complete Mermaid flowchart code
+
+#### Visualization Categories
+
+- **Execution Flow**: Shows the complete passage execution path
+- **Actor Assignment**: Highlights which actors perform which steps
+- **Decision Points**: Emphasizes conditional logic and branching
+- **Quality Gates**: Shows validation and approval points
+- **Integration Points**: Displays external system interactions
+
 ## Execution Engine
 
 ### Passage Execution States
@@ -259,5 +319,23 @@ steps:
     name: Generate Tests
     actor: santiago
     type: automated
+```
+
+#### Mermaid Diagram Example
+
+```mermaid
+flowchart TD
+    T1[Trigger: manual<br/>Code Generation Request] --> S1
+    
+    S1[Step: spec-analysis<br/>Actor: santiago<br/>Type: automated<br/>Analyze Specifications]
+    S1 --> S2
+    
+    S2[Step: code-generation<br/>Actor: santiago<br/>Type: automated<br/>Generate Code]
+    S2 --> S3
+    
+    S3[Step: test-generation<br/>Actor: santiago<br/>Type: automated<br/>Generate Tests]
+    S3 --> O1
+    
+    O1[Output: Generated Code + Tests<br/>Location: repository]
 ```</content>
 <parameter name="filePath">/Users/hankhead/Projects/Personal/nusy-product-team/nusy_pm/workflows/workflow-system.md
