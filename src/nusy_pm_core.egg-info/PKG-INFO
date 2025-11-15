@@ -1,0 +1,14 @@
+Metadata-Version: 2.4
+Name: nusy-pm-core
+Version: 0.1.0
+Summary: NuSy Product Manager Core
+Author-email: NuSy Team <nusy@example.com>
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Requires-Dist: typer
+Requires-Dist: pydantic
+Requires-Dist: python-dotenv
+Requires-Dist: rdflib
+Requires-Dist: networkx
+Requires-Dist: pytest
+Requires-Dist: pytest-bdd

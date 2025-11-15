@@ -1,5 +1,6 @@
 import typer
 from typing import List, Optional
+from pathlib import Path
 
 from nusy_pm_core.notes import NotesManager
 
@@ -24,21 +25,31 @@ def serve(host: str = "127.0.0.1", port: int = 8000):
     typer.echo("Press Ctrl+C to stop")
     uvicorn.run(app, host=host, port=port)
 
+plans_app = typer.Typer(name="plans", help="Manage development plans")
+issues_app = typer.Typer(name="issues", help="Manage issues")
+
 notes_app = typer.Typer(name="notes", help="Manage NuSy notes and knowledge graph links.")
 
 @app.command()
 def scaffold_project(
     name: str = typer.Argument(..., help="Project name to scaffold"),
+    target_dir: Optional[Path] = typer.Option(None, help="Target directory (defaults to current directory)"),
 ):
     """
-    Scaffold a new NuSy product project using the 'scaffold the project' feature.
-
-    In early versions this will:
-    - Validate repo structure.
-    - Ensure core docs and directories exist.
-    - Optionally create initial features and tests.
+    Scaffold a new NuSy-powered project with all services and interfaces.
     """
-    typer.echo(f"[scaffold_project] Would scaffold project '{name}' here.")
+    from .scaffold import ScaffoldGenerator
+
+    generator = ScaffoldGenerator()
+    project_dir = generator.generate_project(name, target_dir)
+
+    typer.secho(f"✅ Project '{name}' scaffolded successfully!", fg=typer.colors.GREEN)
+    typer.echo(f"📁 Created at: {project_dir}")
+    typer.echo("\n🚀 Next steps:")
+    typer.echo("1. cd " + str(project_dir.name))
+    typer.echo("2. python scripts/setup.py  # Install dependencies")
+    typer.echo("3. python -m project_core.cli serve  # Start the server")
+    typer.echo("4. Open nusy_query_interface.html in your browser")
 
 @notes_app.command("create")
 def create(
@@ -149,5 +160,91 @@ def sparql_query(query: str = typer.Argument(..., help="SPARQL query to execute"
 
 app.add_typer(notes_app)
 
+plans_app = typer.Typer(name="plans", help="Manage development plans")
+issues_app = typer.Typer(name="issues", help="Manage issues")
+
+app.add_typer(plans_app)
+app.add_typer(issues_app)
+
+@plans_app.command("list")
+def list_plans():
+    """List all development plans."""
+    from nusy_pm_core.development_plans import DevelopmentPlansService
+    service = DevelopmentPlansService()
+    plans = service.list_plans()
+    if not plans:
+        typer.echo("No development plans found.")
+        return
+    for plan in plans:
+        typer.echo(f"- {plan.title} (ID: {plan.id}) - Status: {plan.status.value}")
+
+@plans_app.command("create")
+def create_plan(title: str, description: str = ""):
+    """Create a new development plan."""
+    from nusy_pm_core.development_plans import DevelopmentPlansService
+    service = DevelopmentPlansService()
+    plan = service.create_plan(title, description)
+    typer.echo(f"Created development plan: {plan.title} (ID: {plan.id})")
+
+@plans_app.command("show")
+def show_plan(plan_id: str):
+    """Show details of a development plan."""
+    from nusy_pm_core.development_plans import DevelopmentPlansService
+    service = DevelopmentPlansService()
+    plan = service.get_plan(plan_id)
+    if not plan:
+        typer.echo(f"Plan with ID {plan_id} not found.")
+        return
+    typer.echo(f"Plan: {plan.title}")
+    typer.echo(f"Description: {plan.description}")
+    typer.echo(f"Status: {plan.status.value}")
+    typer.echo(f"Progress: {plan.progress:.1f}%")
+    typer.echo(f"Milestones: {len(plan.milestones)}")
+    for milestone in plan.milestones:
+        typer.echo(f"  - {milestone.title} ({milestone.status.value}) - {len(milestone.tasks)} tasks")
+
+@issues_app.command("list")
+def list_issues():
+    """List all issues."""
+    from nusy_pm_core.issues import IssuesService
+    service = IssuesService()
+    issues = service.list_issues()
+    if not issues:
+        typer.echo("No issues found.")
+        return
+    for issue in issues:
+        typer.echo(f"- {issue.title} (ID: {issue.id}) - Status: {issue.status.value}")
+
+@issues_app.command("create")
+def create_issue(title: str, description: str = "", labels: str = ""):
+    """Create a new issue."""
+    from nusy_pm_core.issues import IssuesService
+    service = IssuesService()
+    label_list = [label.strip() for label in labels.split(",") if label.strip()]
+    issue = service.create_issue(title, description, label_list)
+    typer.echo(f"Created issue: {issue.title} (ID: {issue.id})")
+
+@issues_app.command("show")
+def show_issue(issue_id: str):
+    """Show details of an issue."""
+    from nusy_pm_core.issues import IssuesService
+    service = IssuesService()
+    issue = service.get_issue(issue_id)
+    if not issue:
+        typer.echo(f"Issue with ID {issue_id} not found.")
+        return
+    typer.echo(f"Issue: {issue.title}")
+    typer.echo(f"Description: {issue.description}")
+    typer.echo(f"Status: {issue.status.value}")
+    typer.echo(f"Priority: {issue.priority.value}")
+    typer.echo(f"Labels: {', '.join(issue.labels)}")
+    typer.echo(f"Comments: {len(issue.comments)}")
+    for comment in issue.comments:
+        typer.echo(f"  - {comment.author}: {comment.body[:50]}...")
+
 if __name__ == "__main__":
+    app()
+
+def main():
+    """Main entry point for the CLI."""
     app()

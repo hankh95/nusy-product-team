@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+typer
+pydantic
+python-dotenv
+rdflib
+networkx
+pytest
+pytest-bdd
