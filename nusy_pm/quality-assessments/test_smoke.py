@@ -6,7 +6,7 @@ def test_repo_scaffold_exists():
         "README.md",
         "DEVELOPMENT_PLAN.md",
         "DEVELOPMENT_PRACTICES.md",
-        "features/scaffold_project.feature",
+        "nusy_pm/cargo-manifests/scaffold_project.feature",
         "src/nusy_pm_core/api.py",
         "src/nusy_pm_core/cli.py",
     ]

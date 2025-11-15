@@ -243,7 +243,7 @@ A NuSy-powered project management system for tracking development plans, issues,
 ├── src/project_core/          # Core application code
 ├── data/                      # Data storage (KG, issues, plans)
 ├── notes/                     # Project notes and documentation
-├── features/                  # BDD feature specifications
+├── nusy_pm/cargo-manifests/   # BDD feature specifications
 ├── tests/                     # Test suite
 ├── docs/                      # Documentation
 └── scripts/                   # Utility scripts
@@ -280,7 +280,7 @@ python -m project_core.cli query "What is the current project status?"
 ## Development
 
 This project uses:
-- **TDD/BDD**: Tests first, features in `features/`
+- **TDD/BDD**: Tests first, features in `nusy_pm/cargo-manifests/`
 - **Knowledge Graph**: RDF-based knowledge storage
 - **FastAPI**: Modern Python web framework
 - **Typer**: Command-line interface framework
