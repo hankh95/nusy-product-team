@@ -27,6 +27,7 @@ def serve(host: str = "127.0.0.1", port: int = 8000):
 
 plans_app = typer.Typer(name="plans", help="Manage development plans")
 issues_app = typer.Typer(name="issues", help="Manage issues")
+experiments_app = typer.Typer(name="experiments", help="Manage experiments")
 
 notes_app = typer.Typer(name="notes", help="Manage NuSy notes and knowledge graph links.")
 
@@ -165,6 +166,7 @@ issues_app = typer.Typer(name="issues", help="Manage issues")
 
 app.add_typer(plans_app)
 app.add_typer(issues_app)
+app.add_typer(experiments_app)
 
 @plans_app.command("list")
 def list_plans():
@@ -241,6 +243,46 @@ def show_issue(issue_id: str):
     typer.echo(f"Comments: {len(issue.comments)}")
     for comment in issue.comments:
         typer.echo(f"  - {comment.author}: {comment.body[:50]}...")
+
+@experiments_app.command("list")
+def list_experiments():
+    """List all experiments."""
+    from nusy_pm_core.experiments import ExperimentsService
+    service = ExperimentsService()
+    experiments = service.list_experiments()
+    if not experiments:
+        typer.echo("No experiments found.")
+        return
+    for exp in experiments:
+        typer.echo(f"- {exp.experiment_name} - Status: {exp.status}, Phases: {exp.phases_completed}/{exp.total_phases}")
+
+@experiments_app.command("start")
+def start_experiment(experiment_name: str):
+    """Start a new experiment."""
+    from nusy_pm_core.experiments import ExperimentsService
+    service = ExperimentsService()
+    exp = service.start_experiment(experiment_name)
+    if not exp:
+        typer.echo(f"Experiment config for {experiment_name} not found.")
+        return
+    typer.echo(f"Started experiment: {exp.experiment_name}")
+
+@experiments_app.command("show")
+def show_experiment(experiment_name: str):
+    """Show details of an experiment."""
+    from nusy_pm_core.experiments import ExperimentsService
+    service = ExperimentsService()
+    exp = service.get_experiment(experiment_name)
+    if not exp:
+        typer.echo(f"Experiment {experiment_name} not found.")
+        return
+    typer.echo(f"Experiment: {exp.experiment_name}")
+    typer.echo(f"Status: {exp.status}")
+    typer.echo(f"Phases: {exp.phases_completed}/{exp.total_phases}")
+    typer.echo(f"Start: {exp.start_time}")
+    if exp.end_time:
+        typer.echo(f"End: {exp.end_time}")
+    typer.echo(f"Success Metrics: {exp.success_metrics}")
 
 if __name__ == "__main__":
     app()
