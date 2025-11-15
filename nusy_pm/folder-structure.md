@@ -9,11 +9,16 @@ The `nusy_pm/` folder serves as the centralized domain for Product Management ar
 ```
 nusy_pm/
 ├── folder-structure.md          # This document
+├── notes-domain-model.md        # Notes domain specification
+├── status-system.md             # Universal status system spec
+├── status_query.py              # [DEPRECATED: moved to modules/]
 ├── cargo-manifests/             # Feature specifications
 ├── ships-logs/                  # Issue tracking
 ├── voyage-trials/               # Experiment management
 ├── navigation-charts/           # Development plans
 ├── captains-journals/           # Knowledge capture
+├── expeditions/                 # Experiment artifacts
+├── modules/                     # Implementation modules
 └── crew-standards.md            # Agent naming standards
 ```
 
@@ -53,6 +58,21 @@ nusy_pm/
 - **Nautical Meaning**: Personal reflections and discoveries
 - **Contents**: Notes, learnings, research findings
 - **KG Integration**: Core knowledge graph nodes
+
+### modules/ (Implementation Modules)
+
+- **Purpose**: Code implementations of domain concepts
+- **Contents**: Python modules corresponding to domain specifications
+- **Organization**: Each module implements specs from parent directory
+- **Santiago Integration**: Target for autonomous code generation
+
+### tackle/ (Implementation Tackle)
+
+- **Purpose**: Code implementations of domain concepts
+- **Nautical Meaning**: Ship's equipment and rigging for implementation
+- **Contents**: Python tackle corresponding to domain specifications
+- **Organization**: Each tackle implements specs from parent directory
+- **Santiago Integration**: Target for autonomous code generation
 
 ## Naming Conventions
 

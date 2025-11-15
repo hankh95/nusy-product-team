@@ -20,14 +20,21 @@
    - Hypothesis: AI agents can autonomously develop features without human intervention
 
 3. **Automate NuSy Knowledge Imports** *(Week 2-4)*
-   - Define KG schemas with Architect – NuSy.
-   - Create data transformation agents that populate the KG from product stories.
+   - Implement Secrets Management Service for secure API key storage
+   - Reorganize PM-related files under `domains/pm-expert/` folder structure
+   - Define KG schemas with Architect – NuSy
+   - Create Source Knowledge Loading System for ingesting domain expertise:
+     - Jeff Patton (user story mapping, discovery)
+     - Jeff Gothelf (Lean UX, continuous discovery)
+     - Popular methodologies: Agile, Scrum, Kanban, XP, Lean, SAFe, DAD
+   - Create data transformation agents that populate the KG from product stories
    - Hypothesis: A reusable KG adapter accelerates future feature planning by 30%.
 
-4. **Ship Core MVP Feature Loop** *(Week 3-6)*
-   - Deliver first MCP service feature with Developer/QA pair.
-   - Validate deployment via Platform pipelines and capture learnings in the KG.
-   - Hypothesis: Automated CI + Git workflow reduces regressions for MVP scoping.
+4. **Implement Core Tackle** *(Week 4-6)*
+   - Complete status tackle (✅ COMPLETED - production ready)
+   - Implement notes tackle with relationship features
+   - Build experiments tackle for autonomous execution
+   - Hypothesis: Modular tackle architecture enables autonomous code generation and maintainable implementations
 
 ## Backlog Sketch (Hypotheses + Experiments)
 
@@ -44,6 +51,17 @@
 
 ## Next Steps
 
-1. Review this plan with Architect roles and align on KG needs.
-2. Create initial feature file (`features/scaffold_project.feature`).
-3. Feed these artifacts into the NuSy knowledge graph to bootstrap reasoning.
+1. Run the autonomous multi-agent experiment using `experiment_runner.py`
+2. Implement Secrets Management Service for API key storage
+3. Create `domains/pm-expert/` folder structure and reorganize PM files
+4. Develop Source Knowledge Loading System for domain expertise ingestion
+5. Complete notes and experiments tackle implementations (see individual `tackle/*/development-plan.md` files)
+
+## Tackle Development Approach
+
+Each tackle (implementation module) follows a structured development process:
+
+- **Domain Specification**: Requirements defined in `nusy_pm/` directory
+- **Implementation**: Code generated in `nusy_pm/tackle/` subdirectories
+- **Individual Plans**: Each tackle has its own `development-plan.md`
+- **Santiago Integration**: Autonomous code generation reads specs and writes implementations

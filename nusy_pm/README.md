@@ -19,6 +19,7 @@ Inspired by the Santiago ship metaphor, NuSy PM uses nautical terminology to cre
 | crew-manifests | Roles | Agent roles, responsibilities, and capabilities |
 | quality-assessments | Tests | Test suites, quality metrics, and assessments |
 | strategic-charts | Vision | Strategic vision, goals, and long-term planning |
+| **tackle** | **Implementations** | Python modules, CLI tools, and KG integrations |
 
 ## Folder Details
 
@@ -86,6 +87,50 @@ NuSy PM integrates with Santiago's core components:
 - **Web API**: RESTful access for external integrations
 - **Evolution Engine**: Continuous improvement of PM processes
 
+## Implementation Architecture
+
+NuSy PM uses a **domain-driven design** with clear separation between specifications and implementations:
+
+### Domain Specifications
+
+The main `nusy_pm/` folders contain **domain specifications** - the "what" and "why" of each component:
+
+- Feature requirements (cargo-manifests/)
+- Issue definitions (ships-logs/)
+- Experiment designs (voyage-trials/)
+- Strategic plans (navigation-charts/)
+- Knowledge capture (captains-journals/)
+
+### Tackle Implementations
+
+The `tackle/` subdirectory contains **implementations** - the "how" of each component:
+
+- Python modules that realize domain specifications
+- CLI tools for human and agent interaction
+- Knowledge graph integration
+- Testing and validation suites
+
+### Santiago Integration
+
+Santiago reads domain specifications from the main folders and autonomously generates corresponding tackle implementations, creating a complete feedback loop between specification and execution.
+
+## Current Tackle
+
+| Tackle | Status | Purpose |
+|--------|--------|---------|
+| **status** | ✅ **PRODUCTION READY** | Universal status tracking system |
+| **notes** | 🚧 **PLANNED** | Notes management with relationships |
+| **experiments** | 🚧 **PLANNED** | Experiment execution framework |
+
+Each tackle follows the standard structure:
+
+- `models.py` - Data models and business logic
+- `services.py` - Core functionality
+- `cli.py` - Command-line interface
+- `kg.py` - Knowledge graph integration
+- `test_*.py` - Comprehensive test suite
+- `development-plan.md` - Individual implementation plan
+
 ## Development Workflow
 
 1. **Feature Definition**: Create cargo manifests with BDD scenarios
@@ -100,6 +145,7 @@ NuSy PM integrates with Santiago's core components:
 
 As features are implemented, the following CLI commands will be available:
 
+- `nusy status` - ✅ **IMPLEMENTED** (universal status tracking)
 - `nusy features` - Manage feature specifications
 - `nusy research` - Handle research documentation
 - `nusy roles` - Define and manage roles
