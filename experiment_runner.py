@@ -76,6 +76,11 @@ class AutonomousExperimentRunner:
             with open(self.config_path, 'r') as f:
                 config_data = json.load(f)
 
+            # Convert phase dictionaries to ExperimentPhase objects
+            from nusy_pm_core.models.experiment import ExperimentPhase
+            phases = [ExperimentPhase(**phase_data) for phase_data in config_data.get('phases', [])]
+            config_data['phases'] = phases
+
             self.config = ExperimentConfig(**config_data)
 
             # Initialize services
