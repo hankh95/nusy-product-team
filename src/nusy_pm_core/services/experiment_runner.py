@@ -85,7 +85,6 @@ class ExperimentRunnerService:
                 "pm_user_story_mapping": self._pm_user_story_mapping,
                 "pm_discovery_session": self._pm_discovery_session,
             }
-            }
 
             handler = behavior_handlers.get(behavior)
             if not handler:
