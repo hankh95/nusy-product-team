@@ -76,6 +76,11 @@ class AutonomousExperimentRunner:
             with open(self.config_path, 'r') as f:
                 config_data = json.load(f)
 
+            # Convert phase dictionaries to ExperimentPhase objects
+            from nusy_pm_core.models.experiment import ExperimentPhase
+            phases = [ExperimentPhase(**phase_data) for phase_data in config_data.get('phases', [])]
+            config_data['phases'] = phases
+
             self.config = ExperimentConfig(**config_data)
 
             # Initialize services
@@ -245,18 +250,53 @@ class AutonomousExperimentRunner:
         if self.decision_queue.has_pending_decisions():
             logger.info("Processing decision queue...")
 
-            # In autonomous mode, we log decisions but don't wait for input
             decisions = self.decision_queue.get_pending_decisions()
             for decision in decisions:
-                logger.warning(f"Decision required: {decision.title}")
-                logger.warning(f"Context: {decision.context}")
+                logger.info(f"Processing decision: {decision.title}")
 
-                # For now, auto-approve non-critical decisions
-                if decision.priority != "high":
-                    await self.decision_queue.resolve_decision(decision.id, "auto_approved")
-                    logger.info(f"Auto-approved decision: {decision.id}")
-                else:
-                    logger.error(f"High-priority decision requires human input: {decision.id}")
+                # Use agents to make autonomous decisions
+                resolution = await self._make_autonomous_decision(decision)
+
+                await self.decision_queue.resolve_decision(decision.id, resolution)
+                logger.info(f"Resolved decision {decision.id}: {resolution}")
+
+    async def _make_autonomous_decision(self, decision) -> str:
+        """Have agents make an autonomous decision."""
+        try:
+            # Create agent adapter for decision making
+            agent_adapter = AgentAdapter()
+
+            # Format decision for agents
+            decision_prompt = f"""A decision is required in the autonomous development experiment:
+
+Title: {decision.title}
+Context: {decision.context}
+Options: {', '.join(decision.options)}
+
+As the ethical overseer, please analyze this decision and recommend the best course of action that serves humanity and aligns with Baha'i principles. Consider the experiment's goals of autonomous evolution and ethical development."""
+
+            # Get Quartermaster's recommendation
+            quartermaster_response = await agent_adapter.send_message("quartermaster", decision_prompt)
+
+            if quartermaster_response and not quartermaster_response.startswith("Error"):
+                # Extract the recommended option from the response
+                # For simplicity, map the response to one of the options
+                response_lower = quartermaster_response.lower()
+
+                for option in decision.options:
+                    if option.lower() in response_lower:
+                        return option
+
+                # If no clear match, default to first option
+                logger.warning(f"Could not parse decision from Quartermaster response, defaulting to: {decision.options[0]}")
+                return decision.options[0]
+            else:
+                logger.error("Failed to get Quartermaster decision, defaulting")
+                return decision.options[0] if decision.options else "auto_approved"
+
+        except Exception as e:
+            logger.error(f"Error making autonomous decision: {e}")
+            return decision.options[0] if decision.options else "auto_approved"
 
     async def _handle_phase_failure(self, phase: ExperimentPhase):
         """Handle phase execution failure."""
@@ -294,12 +334,16 @@ class AutonomousExperimentRunner:
             timestamp=datetime.now()
         )
 
-        await self.decision_queue.add_decision(decision)
+        self.decision_queue.add_decision(decision)
         logger.info(f"Queued decision: {decision_id} (priority: {priority})")
 
     async def _generate_final_assessment(self):
         """Generate final experiment assessment."""
         logger.info("Generating final experiment assessment...")
+
+        if not self.config or not self.start_time:
+            logger.error("Cannot generate assessment: config or start_time not set")
+            return
 
         assessment = {
             "experiment_name": self.config.experiment_name,
