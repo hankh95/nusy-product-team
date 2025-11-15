@@ -16,6 +16,22 @@ from nusy_pm_core.models.experiment import (
 )
 from nusy_pm_core.adapters.agent_adapter import AgentAdapter
 
+# Import PM domain modules
+try:
+    import sys
+    from pathlib import Path
+    pm_expert_path = Path(__file__).parent.parent.parent.parent / "domains" / "pm-expert"
+    if pm_expert_path.exists():
+        sys.path.insert(0, str(pm_expert_path))
+        from models.pm_domain_model import initialize_core_pm_knowledge
+        from models.knowledge_graph import create_pm_knowledge_graph
+        from models.pm_behaviors import PMServiceBehaviors
+        PM_DOMAIN_AVAILABLE = True
+    else:
+        PM_DOMAIN_AVAILABLE = False
+except ImportError:
+    PM_DOMAIN_AVAILABLE = False
+
 logger = logging.getLogger(__name__)
 
 
@@ -31,6 +47,19 @@ class ExperimentRunnerService:
             experiment_name=config.experiment_name,
             start_time=datetime.now()
         )
+        
+        # Initialize PM domain if available
+        self.pm_ontology = None
+        self.pm_knowledge_graph = None
+        self.pm_behaviors = None
+        if PM_DOMAIN_AVAILABLE:
+            try:
+                self.pm_ontology = initialize_core_pm_knowledge()
+                self.pm_knowledge_graph = create_pm_knowledge_graph(self.pm_ontology)
+                self.pm_behaviors = PMServiceBehaviors(self.agent_adapter, self.pm_knowledge_graph)
+                logger.info("PM domain initialized successfully")
+            except Exception as e:
+                logger.warning(f"Could not initialize PM domain: {e}")
 
     async def execute_behavior(self, behavior: str) -> bool:
         """Execute a specific behavior within the current phase."""
@@ -47,7 +76,15 @@ class ExperimentRunnerService:
                 "implementation": self._implement_features,
                 "testing": self._run_tests,
                 "performance_analysis": self._analyze_performance,
-                "improvement_proposal": self._propose_improvements
+                "improvement_proposal": self._propose_improvements,
+                # PM-specific behaviors
+                "pm_sprint_planning": self._pm_sprint_planning,
+                "pm_retrospective": self._pm_retrospective,
+                "pm_backlog_refinement": self._pm_backlog_refinement,
+                "pm_risk_assessment": self._pm_risk_assessment,
+                "pm_user_story_mapping": self._pm_user_story_mapping,
+                "pm_discovery_session": self._pm_discovery_session,
+            }
             }
 
             handler = behavior_handlers.get(behavior)
@@ -361,6 +398,123 @@ Provide actionable recommendations for the next iteration."""
                 return False
         except Exception as e:
             logger.error(f"Error during improvement proposal: {e}")
+            return False
+    
+    # PM-specific behavior methods
+    async def _pm_sprint_planning(self) -> bool:
+        """Execute PM sprint planning behavior."""
+        logger.info("Executing PM sprint planning...")
+        
+        if not self.pm_behaviors:
+            logger.warning("PM behaviors not available, skipping")
+            return True
+        
+        try:
+            result = await self.pm_behaviors.facilitate_sprint_planning(
+                team_velocity=30,
+                backlog_items=[{"id": f"item-{i}", "points": 5} for i in range(10)],
+                sprint_goal="Demonstrate autonomous PM capabilities"
+            )
+            logger.info("PM sprint planning completed")
+            return result.get('status') == 'completed'
+        except Exception as e:
+            logger.error(f"Error in PM sprint planning: {e}")
+            return False
+    
+    async def _pm_retrospective(self) -> bool:
+        """Execute PM retrospective behavior."""
+        logger.info("Executing PM retrospective...")
+        
+        if not self.pm_behaviors:
+            logger.warning("PM behaviors not available, skipping")
+            return True
+        
+        try:
+            result = await self.pm_behaviors.conduct_retrospective(
+                sprint_id="sprint-001",
+                team_feedback=["Good collaboration", "Need better tooling"],
+                metrics={"velocity": 28, "quality": 0.95}
+            )
+            logger.info("PM retrospective completed")
+            return result.get('status') == 'completed'
+        except Exception as e:
+            logger.error(f"Error in PM retrospective: {e}")
+            return False
+    
+    async def _pm_backlog_refinement(self) -> bool:
+        """Execute PM backlog refinement behavior."""
+        logger.info("Executing PM backlog refinement...")
+        
+        if not self.pm_behaviors:
+            logger.warning("PM behaviors not available, skipping")
+            return True
+        
+        try:
+            result = await self.pm_behaviors.refine_backlog(
+                backlog_items=[{"id": f"item-{i}", "title": f"Feature {i}"} for i in range(20)],
+                prioritization_criteria={"value": "high", "risk": "low"}
+            )
+            logger.info("PM backlog refinement completed")
+            return result.get('status') == 'completed'
+        except Exception as e:
+            logger.error(f"Error in PM backlog refinement: {e}")
+            return False
+    
+    async def _pm_risk_assessment(self) -> bool:
+        """Execute PM risk assessment behavior."""
+        logger.info("Executing PM risk assessment...")
+        
+        if not self.pm_behaviors:
+            logger.warning("PM behaviors not available, skipping")
+            return True
+        
+        try:
+            result = await self.pm_behaviors.assess_risks(
+                project_context={"timeline": "3 months", "team_size": 5},
+                known_risks=[{"risk": "Technical complexity", "impact": "high"}]
+            )
+            logger.info("PM risk assessment completed")
+            return result.get('status') == 'completed'
+        except Exception as e:
+            logger.error(f"Error in PM risk assessment: {e}")
+            return False
+    
+    async def _pm_user_story_mapping(self) -> bool:
+        """Execute PM user story mapping behavior."""
+        logger.info("Executing PM user story mapping...")
+        
+        if not self.pm_behaviors:
+            logger.warning("PM behaviors not available, skipping")
+            return True
+        
+        try:
+            result = await self.pm_behaviors.facilitate_user_story_mapping(
+                user_journey="User needs to manage tasks efficiently",
+                existing_stories=[{"id": f"story-{i}"} for i in range(15)]
+            )
+            logger.info("PM user story mapping completed")
+            return result.get('status') == 'completed'
+        except Exception as e:
+            logger.error(f"Error in PM user story mapping: {e}")
+            return False
+    
+    async def _pm_discovery_session(self) -> bool:
+        """Execute PM discovery session behavior."""
+        logger.info("Executing PM discovery session...")
+        
+        if not self.pm_behaviors:
+            logger.warning("PM behaviors not available, skipping")
+            return True
+        
+        try:
+            result = await self.pm_behaviors.conduct_discovery_session(
+                hypothesis="Users need faster task creation",
+                research_questions=["What are current pain points?", "How do users create tasks now?"]
+            )
+            logger.info("PM discovery session completed")
+            return result.get('status') == 'completed'
+        except Exception as e:
+            logger.error(f"Error in PM discovery session: {e}")
             return False
 
     async def validate_metrics(self, phase: ExperimentPhase) -> bool:

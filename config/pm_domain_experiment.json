@@ -1,0 +1,128 @@
+{
+  "experiment_name": "santiago-pm-domain-synthesis",
+  "duration_days": 21,
+  "description": "Autonomous PM domain expert synthesis through self-directed learning cycles",
+  "phases": [
+    {
+      "name": "pm_knowledge_synthesis",
+      "duration_days": 4,
+      "behaviors": [
+        "agent_initialization",
+        "communication_setup",
+        "source_ingestion",
+        "knowledge_validation"
+      ],
+      "success_metrics": [
+        "agent_startup_time",
+        "knowledge_coverage",
+        "ethical_compliance"
+      ]
+    },
+    {
+      "name": "pm_behavior_demonstration",
+      "duration_days": 7,
+      "behaviors": [
+        "pm_sprint_planning",
+        "pm_backlog_refinement",
+        "pm_retrospective",
+        "pm_risk_assessment"
+      ],
+      "success_metrics": [
+        "behavior_success_rate",
+        "guidance_quality",
+        "ethical_alignment"
+      ]
+    },
+    {
+      "name": "pm_advanced_practices",
+      "duration_days": 5,
+      "behaviors": [
+        "pm_user_story_mapping",
+        "pm_discovery_session",
+        "feature_proposal",
+        "implementation"
+      ],
+      "success_metrics": [
+        "methodology_application",
+        "learning_effectiveness",
+        "knowledge_graph_growth"
+      ]
+    },
+    {
+      "name": "pm_learning_cycle",
+      "duration_days": 5,
+      "behaviors": [
+        "performance_analysis",
+        "improvement_proposal",
+        "testing",
+        "knowledge_validation"
+      ],
+      "success_metrics": [
+        "learning_rate",
+        "performance_improvement",
+        "autonomy_level"
+      ]
+    }
+  ],
+  "decision_triggers": [
+    "ethical_dilemmas",
+    "knowledge_gaps",
+    "behavior_failures",
+    "quality_issues",
+    "learning_opportunities"
+  ],
+  "success_criteria": {
+    "pm_concept_coverage": 0.9,
+    "behavior_success_rate": 0.95,
+    "ethical_compliance": 1.0,
+    "learning_rate": 0.5,
+    "autonomy_level": 1.0
+  },
+  "api_keys": {},
+  "resource_limits": {
+    "max_api_calls_per_hour": 500,
+    "max_cost_per_day": 5.0,
+    "max_execution_time_per_task": 300
+  },
+  "pm_domain_config": {
+    "methodologies": [
+      "agile",
+      "scrum",
+      "kanban",
+      "lean_ux",
+      "user_story_mapping",
+      "continuous_discovery"
+    ],
+    "knowledge_sources": [
+      {
+        "name": "Jeff Patton",
+        "topics": ["user_story_mapping", "discovery_practices"],
+        "priority": "high"
+      },
+      {
+        "name": "Jeff Gothelf",
+        "topics": ["lean_ux", "continuous_discovery", "hypothesis_driven"],
+        "priority": "high"
+      },
+      {
+        "name": "Agile Manifesto",
+        "topics": ["agile_values", "agile_principles"],
+        "priority": "high"
+      },
+      {
+        "name": "Scrum Guide",
+        "topics": ["scrum_roles", "scrum_ceremonies", "scrum_artifacts"],
+        "priority": "high"
+      }
+    ],
+    "ethical_principles": [
+      "service_to_humanity",
+      "unity_in_diversity",
+      "consultation",
+      "progressive_revelation",
+      "elimination_of_prejudice",
+      "justice",
+      "trustworthiness"
+    ]
+  }
+}
