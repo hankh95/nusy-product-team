@@ -99,6 +99,13 @@
     ns1:hasTag "other" ;
     ns1:summary "Third note" .
 
+<http://nusy.ai/note/1891e7d2d97545df9b3927c4285e9a10> a ns1:Note ;
+    rdfs:label "Test Note 2" ;
+    ns1:contributor "Bob" ;
+    ns1:created_at "2025-11-15T06:16:21.126090+00:00" ;
+    ns1:hasTag "test" ;
+    ns1:summary "Second note" .
+
 <http://nusy.ai/note/1d56d1b3a9f5448fb8c7de9d41dabb6f> a ns1:Note ;
     rdfs:label "Initial Santiago Sync" ;
     ns1:contributor "Human - Hank" ;
@@ -178,6 +185,13 @@
     ns1:hasTag "test" ;
     ns1:summary "First note" .
 
+<http://nusy.ai/note/3c9561f2d37a4d1f9708564fe258912f> a ns1:Note ;
+    rdfs:label "Test Note 3" ;
+    ns1:contributor "Alice" ;
+    ns1:created_at "2025-11-15T06:16:21.318473+00:00" ;
+    ns1:hasTag "other" ;
+    ns1:summary "Third note" .
+
 <http://nusy.ai/note/41baf47c0a9942d7804d84584e8e127d> a ns1:Note ;
     rdfs:label "Test Note 2" ;
     ns1:contributor "Bob" ;
@@ -215,6 +229,13 @@
     ns1:created_at "2025-11-15T02:59:33.901571+00:00" ;
     ns1:hasTag "test" ;
     ns1:summary "First note" .
+
+<http://nusy.ai/note/4746d6daca5e4b1892b8fdbda2dca665> a ns1:Note ;
+    rdfs:label "Test Note 3" ;
+    ns1:contributor "Alice" ;
+    ns1:created_at "2025-11-15T06:16:21.142574+00:00" ;
+    ns1:hasTag "other" ;
+    ns1:summary "Third note" .
 
 <http://nusy.ai/note/483f4cd7e8834a8abc5c3cab9276fb33> a ns1:Note ;
     rdfs:label "Test Note 2" ;
@@ -288,6 +309,13 @@
     ns1:created_at "2025-11-14T23:03:17.950673+00:00" ;
     ns1:hasTag "test" ;
     ns1:summary "First note" .
+
+<http://nusy.ai/note/6adcd242e8d34729a3e7c5cf1b3860a9> a ns1:Note ;
+    rdfs:label "Test Note 2" ;
+    ns1:contributor "Bob" ;
+    ns1:created_at "2025-11-15T06:16:21.301316+00:00" ;
+    ns1:hasTag "test" ;
+    ns1:summary "Second note" .
 
 <http://nusy.ai/note/6eaf028250f04ba69483cd7981838307> a ns1:Note ;
     rdfs:label "Test Note 2" ;
@@ -543,12 +571,29 @@
     ns1:sourceLink "notes/santiago-development-plan.md" ;
     ns1:summary "Captured the kickoff decisions." .
 
+<http://nusy.ai/note/d9d5ff4f9ec44f6e8d9c075061952b85> a ns1:Note ;
+    rdfs:label "Test Note 1" ;
+    ns1:contributor "Alice" ;
+    ns1:created_at "2025-11-15T06:16:21.109449+00:00" ;
+    ns1:hasTag "test" ;
+    ns1:summary "First note" .
+
 <http://nusy.ai/note/db03209780cf4187a499ad2aacef3b34> a ns1:Note ;
     rdfs:label "Test Note 1" ;
     ns1:contributor "Alice" ;
     ns1:created_at "2025-11-14T23:03:28.174239+00:00" ;
     ns1:hasTag "test" ;
     ns1:summary "First note" .
+
+<http://nusy.ai/note/e0317969865d4488b694371f327e2f62> a ns1:Note ;
+    rdfs:label "Initial Santiago Sync" ;
+    ns1:contributor "Human - Hank" ;
+    ns1:created_at "2025-11-15T06:16:21.037572+00:00" ;
+    ns1:hasTag "kickoff",
+        "santiago" ;
+    ns1:nextStep "Run KG import" ;
+    ns1:sourceLink "notes/santiago-development-plan.md" ;
+    ns1:summary "Captured the kickoff decisions." .
 
 <http://nusy.ai/note/e5ad09e66f4f4f75b90bbc0be5adb554> a ns1:Note ;
     rdfs:label "Test Note 2" ;
@@ -584,4 +629,11 @@
     ns1:created_at "2025-11-14T23:03:17.977125+00:00" ;
     ns1:hasTag "other" ;
     ns1:summary "Third note" .
+
+<http://nusy.ai/note/fd91f8fc96f64bcaaa502fc1966edfb1> a ns1:Note ;
+    rdfs:label "Test Note 1" ;
+    ns1:contributor "Alice" ;
+    ns1:created_at "2025-11-15T06:16:21.284083+00:00" ;
+    ns1:hasTag "test" ;
+    ns1:summary "First note" .
 
