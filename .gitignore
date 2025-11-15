@@ -156,3 +156,6 @@ data/
 
 # Logs
 *.log
+
+# Agent instructions (sensitive configuration)
+.github/agents/
