@@ -1,0 +1,190 @@
+id: nusy-pm-tackle-development
+name: NuSy PM Tackle Development Workflow
+description: Domain-specific workflow for developing new tackle in the NuSy PM system
+category: hybrid
+version: 1.0.0
+
+metadata:
+  created_by: hank
+  created_at: 2025-11-15T00:00:00Z
+  updated_at: 2025-11-15T00:00:00Z
+  tags: [tackle-development, domain-specific, hybrid]
+
+actors:
+  - id: product-manager
+    name: Product Manager
+    type: human
+    role: Defines requirements and validates outcomes
+  - id: domain-expert
+    name: Domain Expert
+    type: human
+    role: Provides domain knowledge and validation
+  - id: santiago
+    name: Santiago
+    type: agent
+    role: Generates specifications and implementation code
+  - id: architect
+    name: Architect Agent
+    type: agent
+    role: Designs system architecture and validates technical approach
+
+triggers:
+  - type: manual
+    condition: New tackle requirement identified
+    parameters:
+      domain_concept: The domain concept to implement
+      priority: high | medium | low
+
+steps:
+  - id: requirement-gathering
+    name: Gather Requirements
+    description: Collect and document tackle requirements from domain specifications
+    actor: product-manager
+    type: task
+    inputs:
+      - domain_concept
+    outputs:
+      - requirements_doc: Structured requirements document
+      - acceptance_criteria: Clear success criteria
+    timeout: 14400  # 4 hours
+
+  - id: domain-validation
+    name: Validate Domain Understanding
+    description: Ensure correct understanding of domain concepts
+    actor: domain-expert
+    type: approval
+    inputs:
+      - requirements_doc
+    outputs:
+      - domain_validation: Expert validation results
+    timeout: 7200  # 2 hours
+
+  - id: spec-generation
+    name: Generate Technical Specifications
+    description: Create detailed technical specifications from requirements
+    actor: santiago
+    type: automated
+    inputs:
+      - requirements_doc
+      - domain_validation
+    outputs:
+      - technical_spec: Complete technical specification
+      - api_design: API and interface definitions
+    timeout: 1800
+
+  - id: architecture-review
+    name: Review Architecture Design
+    description: Validate technical approach and architecture decisions
+    actor: architect
+    type: automated
+    inputs:
+      - technical_spec
+      - api_design
+    outputs:
+      - architecture_review: Review results and recommendations
+    timeout: 900
+
+  - id: implementation
+    name: Implement Tackle
+    description: Generate complete tackle implementation
+    actor: santiago
+    type: automated
+    inputs:
+      - technical_spec
+      - architecture_review
+    outputs:
+      - tackle_code: Complete implementation
+      - test_suite: Comprehensive tests
+      - documentation: README and API docs
+    timeout: 3600
+
+  - id: integration-testing
+    name: Integration Testing
+    description: Test tackle integration with existing system
+    actor: santiago
+    type: automated
+    inputs:
+      - tackle_code
+    outputs:
+      - integration_results: Test results and coverage report
+    timeout: 1800
+
+  - id: final-review
+    name: Final Human Review
+    description: Human validation of implementation quality
+    actor: product-manager
+    type: approval
+    inputs:
+      - tackle_code
+      - test_suite
+      - documentation
+      - integration_results
+    outputs:
+      - final_approval: Approval decision and feedback
+    timeout: 14400  # 4 hours
+
+transitions:
+  - from: requirement-gathering
+    to: domain-validation
+    condition: requirements_complete
+  - from: domain-validation
+    to: spec-generation
+    condition: domain_validation_approved
+  - from: spec-generation
+    to: architecture-review
+    condition: specs_generated
+  - from: architecture-review
+    to: implementation
+    condition: architecture_approved
+  - from: implementation
+    to: integration-testing
+    condition: implementation_complete
+  - from: integration-testing
+    to: final-review
+    condition: integration_tests_pass
+  - from: final-review
+    to: workflow_complete
+    condition: final_approval_granted
+
+  # Error handling transitions
+  - from: domain-validation
+    to: requirement-gathering
+    condition: domain_validation_rejected
+    actions: [update_requirements]
+  - from: architecture-review
+    to: spec-generation
+    condition: architecture_rejected
+    actions: [revise_specifications]
+  - from: integration-testing
+    to: implementation
+    condition: integration_failed
+    actions: [fix_integration_issues]
+
+outputs:
+  - name: tackle-implementation
+    type: artifact
+    location: nusy_pm/tackle/{tackle_name}/
+    format: Complete tackle directory structure
+  - name: tackle-documentation
+    type: artifact
+    location: nusy_pm/tackle/{tackle_name}/README.md
+    format: Comprehensive tackle documentation
+  - name: development-report
+    type: artifact
+    location: nusy_pm/ships-logs/{date}-tackle-{tackle_name}-development.md
+    format: Development process documentation
+  - name: team-notification
+    type: notification
+    location: chat
+    format: Tackle development completion announcement
+
+quality_gates:
+  - step: spec-generation
+    criteria: Technical specifications cover all requirements with clear acceptance criteria
+    actions: [request_specification_review, escalate_to_architect]
+  - step: implementation
+    criteria: Generated code passes all automated quality checks (linting, type checking, basic tests)
+    actions: [fix_code_quality_issues, request_manual_review]
+  - step: integration-testing
+    criteria: Integration tests pass with >95% success rate and adequate coverage
+    actions: [debug_integration_failures, request_help_from_architect]
