@@ -8,17 +8,23 @@
 
 ## Phased Milestones
 
-1. **Scaffold the NuSy PM Core** *(Week 0-1)*
+1. **Scaffold the NuSy PM Core** *(Week 0-1)* ✅ **COMPLETED**
    - Create repo-level practices, plans, roles instructions, and backlog artifacts.
    - Establish the NuSy knowledge graph contract and define the initial MCP service endpoints.
    - Hypothesis: If we have clear artifacts mapping vision → backlog → BDD, then the team can start delivering testable features faster.
 
-2. **Automate NuSy Knowledge Imports** *(Week 1-3)*
+2. **Implement Autonomous Multi-Agent Experiment** *(Week 1-2)* ✅ **COMPLETED**
+   - Build AI agent framework with OpenAI integration
+   - Implement autonomous decision-making and collaboration
+   - Create full experiment runner with ethical oversight
+   - Hypothesis: AI agents can autonomously develop features without human intervention
+
+3. **Automate NuSy Knowledge Imports** *(Week 2-4)*
    - Define KG schemas with Architect – NuSy.
    - Create data transformation agents that populate the KG from product stories.
    - Hypothesis: A reusable KG adapter accelerates future feature planning by 30%.
 
-3. **Ship Core MVP Feature Loop** *(Week 2-5)*
+4. **Ship Core MVP Feature Loop** *(Week 3-6)*
    - Deliver first MCP service feature with Developer/QA pair.
    - Validate deployment via Platform pipelines and capture learnings in the KG.
    - Hypothesis: Automated CI + Git workflow reduces regressions for MVP scoping.
