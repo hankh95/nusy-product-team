@@ -10,7 +10,7 @@ labels: ["type:feature", "priority:high", "component:status-system"]
 epic: nusy-pm-core
 related_experiments: []
 related_artifacts:
-  - ../status-system.md
+  - ../tackle/status/status-system.md
 ---
 
 Feature: NuSy PM Status System

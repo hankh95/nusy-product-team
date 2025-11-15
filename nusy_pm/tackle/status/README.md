@@ -1,6 +1,6 @@
 # NuSy PM Status Module
 
-This module implements the comprehensive status tracking system for all NuSy PM artifacts as specified in `../status-system.md`.
+This module implements the comprehensive status tracking system for all NuSy PM artifacts as specified in `status-system.md`.
 
 ## Features
 

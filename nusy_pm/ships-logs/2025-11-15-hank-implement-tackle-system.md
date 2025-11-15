@@ -115,6 +115,6 @@ Implement the tackle system architecture for NuSy PM, including the complete sta
   - `development_planning` (enhanced with modular approach)
 
 - **Related Entities**:
-  - Link to `status-system.md` domain specification
+  - Link to `tackle/status/status-system.md` domain specification
   - Link to `notes-domain-model.md` for future implementation
-  - Link to `folder-structure.md` for architectural documentation
+  - Link to `tackle/folder-structure.md` for architectural documentation

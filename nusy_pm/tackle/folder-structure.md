@@ -8,9 +8,9 @@ The `nusy_pm/` folder serves as the centralized domain for Product Management ar
 
 ```
 nusy_pm/
-├── folder-structure.md          # This document
+├── folder-structure.md          # This document (moved to tackle/)
 ├── notes-domain-model.md        # Notes domain specification
-├── status-system.md             # Universal status system spec
+├── status-system.md             # Universal status system spec (moved to tackle/status/)
 ├── status_query.py              # [DEPRECATED: moved to modules/]
 ├── cargo-manifests/             # Feature specifications
 ├── ships-logs/                  # Issue tracking

@@ -17,7 +17,7 @@ tackle/
 ### Code Generation Source
 
 - **Domain Specifications**: Read from parent `nusy_pm/` directory
-- **Status System**: `../status-system.md`
+- **Status System**: `status/status-system.md`
 - **Notes Domain**: `../notes-domain-model.md`
 - **Experiments**: `../expeditions/` artifacts
 
@@ -48,7 +48,7 @@ tackle_name/
 ### status/
 
 - **Purpose**: Universal status tracking system
-- **Source**: `../status-system.md`
+- **Source**: `status/status-system.md`
 - **Contents**: CLI tools for querying artifact status
 - **Plan**: `[STATUS] Status Tackle Development Plan`
 

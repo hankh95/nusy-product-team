@@ -3,7 +3,7 @@
 ## Overview
 
 **Tackle Name**: status
-**Domain Specification**: `../status-system.md`
+**Domain Specification**: `status-system.md`
 **Purpose**: Universal status tracking system for all NuSy PM artifacts
 
 ## Current Status

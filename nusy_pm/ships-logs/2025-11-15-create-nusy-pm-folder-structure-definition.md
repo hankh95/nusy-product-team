@@ -6,7 +6,7 @@ Create a comprehensive markdown document defining the nusy_pm folder hierarchy, 
 
 ## Acceptance Criteria
 
-- `nusy_pm/folder-structure.md` exists
+- `nusy_pm/tackle/folder-structure.md` exists
 - Defines all subfolders with purposes
 - Includes nautical naming mappings
 - Documents KG integration points
