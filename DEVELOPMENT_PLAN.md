@@ -6,6 +6,11 @@
 - Primary domains: AI agents, MCP services, and domain experts built on a shared NuSy knowledge graph.
 - Primary goal: Deliver a continuous stream of validated features that are grounded in hypotheses, executable BDD specs, and knowledge graph reasoning.
 
+## Strategic Canonicals
+
+- Canonical strategic doc (Santiago-PM): `santiago-pm/strategic-charts/Santiago-Trains-Manolin.md`
+- Index for strategic charts: `santiago-pm/strategic-charts/README.md`
+
 ## Phased Milestones
 
 1. **Scaffold the NuSy PM Core** *(Week 0-1)* ✅ **COMPLETED**
