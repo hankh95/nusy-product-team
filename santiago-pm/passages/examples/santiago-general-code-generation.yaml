@@ -1,0 +1,129 @@
+id: santiago-general-code-generation
+name: Santiago General Code Generation Passage
+description: Generalized passage for Santiago to generate code from specifications across any domain
+category: agent
+version: 1.0.0
+
+metadata:
+  created_by: santiago
+  created_at: 2025-11-15T00:00:00Z
+  updated_at: 2025-11-15T00:00:00Z
+  tags: [code-generation, autonomous, generalized]
+
+actors:
+  - id: santiago
+    name: Santiago
+    type: agent
+    role: Primary autonomous development agent
+
+triggers:
+  - type: manual
+    condition: User requests code generation
+    parameters:
+      specification_path: Path to specification document
+      output_directory: Target directory for generated code
+
+steps:
+  - id: spec-analysis
+    name: Analyze Specification
+    description: Parse and understand the specification document
+    actor: santiago
+    type: automated
+    inputs:
+      - specification_path
+    outputs:
+      - parsed_spec: Structured specification data
+      - requirements: Extracted requirements list
+    timeout: 300
+    quality_gate:
+      criteria: Specification successfully parsed with >90% confidence
+      actions: [retry, escalate_to_human]
+
+  - id: architecture-design
+    name: Design Architecture
+    description: Design the software architecture based on requirements
+    actor: santiago
+    type: automated
+    inputs:
+      - requirements
+    outputs:
+      - architecture: Architecture design document
+      - component_list: List of components to implement
+    timeout: 600
+
+  - id: code-generation
+    name: Generate Code
+    description: Generate implementation code for all components
+    actor: santiago
+    type: automated
+    inputs:
+      - architecture
+      - component_list
+    outputs:
+      - generated_code: Complete codebase
+      - file_manifest: List of generated files
+    timeout: 1800
+
+  - id: test-generation
+    name: Generate Tests
+    description: Generate comprehensive test suite
+    actor: santiago
+    type: automated
+    inputs:
+      - generated_code
+      - requirements
+    outputs:
+      - test_suite: Complete test files
+      - test_manifest: Test file inventory
+    timeout: 900
+
+  - id: documentation-generation
+    name: Generate Documentation
+    description: Generate README and API documentation
+    actor: santiago
+    type: automated
+    inputs:
+      - generated_code
+      - architecture
+    outputs:
+      - documentation: README and docs
+    timeout: 300
+
+transitions:
+  - from: spec-analysis
+    to: architecture-design
+    condition: spec_analysis_successful
+  - from: architecture-design
+    to: code-generation
+    condition: architecture_complete
+  - from: code-generation
+    to: test-generation
+    condition: code_generation_successful
+  - from: test-generation
+    to: documentation-generation
+    condition: tests_generated
+  - from: documentation-generation
+    to: passage_complete
+    condition: documentation_complete
+
+outputs:
+  - name: complete_codebase
+    type: artifact
+    location: output_directory
+    format: Directory structure with source code, tests, and docs
+  - name: generation_report
+    type: artifact
+    location: output_directory/generation-report.md
+    format: Markdown report of generation process and decisions
+  - name: notification
+    type: notification
+    location: chat
+    format: Summary of completed code generation
+
+quality_gates:
+  - step: code-generation
+    criteria: Generated code compiles without syntax errors
+    actions: [retry_generation, request_human_review]
+  - step: test-generation
+    criteria: Generated tests cover >80% of code
+    actions: [enhance_test_coverage, flag_for_review]
