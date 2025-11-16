@@ -11,13 +11,41 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Markdown Lint
+      - name: Compute changed markdown files (PR only)
+        if: ${{ github.event_name == 'pull_request' }}
+        id: md_changed
+        run: |
+          set -euo pipefail
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.sha }}"
+          git fetch --no-tags --prune --depth=1 origin "$BASE_SHA" || true
+          mapfile -t FILES < <(git diff --name-only "$BASE_SHA" "$HEAD_SHA" -- '**/*.md')
+          if (( ${#FILES[@]} == 0 )); then
+            echo "has_md_changes=false" >> "$GITHUB_OUTPUT"
+            printf "files=\n" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_md_changes=true" >> "$GITHUB_OUTPUT"
+            printf "files=%s\n" "${FILES[*]}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Markdown Lint (changed only)
+        if: ${{ github.event_name == 'pull_request' && steps.md_changed.outputs.has_md_changes == 'true' }}
+        run: |
+          set -euo pipefail
+          read -r -a FILES <<< "${{ steps.md_changed.outputs.files }}"
+          echo "Linting changed Markdown files: ${FILES[*]}"
+          npx --yes markdownlint-cli2 "${FILES[@]}"
+
+      - name: Markdown Lint (full)
+        if: ${{ github.event_name != 'pull_request' }}
         run: |
           npx --yes markdownlint-cli2 "**/*.md" "#node_modules" "#.git"
 
