@@ -23,7 +23,7 @@ Feature: PM Artifact Templates and Standards
   So that creation and maintenance follows nautical theming
 
   Background:
-    Given the santiago-pm folder structure exists
+    Given the santiago-core folder structure exists
     And nautical naming conventions are defined
     And KG integration metadata standards are established
 
