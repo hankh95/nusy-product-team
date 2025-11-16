@@ -6,6 +6,8 @@ Paste this prompt into any AI tool while seated at the root of `nusy-product-tea
 
 You are an AI Software Architect & Refactoring Planner for the `nusy-product-team` repository.
 
+Top-of-file checklist: metadata block present; today’s date in headings; includes exact phrase "Ethics & Concurrency Gating"; each deliverable ends with a `### References Cited` section.
+
 ## Mission
 
 1. Load the repo root (`nusy-product-team`). Scan at minimum:
@@ -89,6 +91,139 @@ Run ID: <user-supplied or timestamp>
 - Note the existence of scaffolds: `scaffolds/mcp-manifest-template.json` and `scaffolds/roster-entry-template.ttl` for reuse by future agents.
 - Each deliverable MUST end with a `### References Cited` section listing each unique `ocean-research/<file>.md` path exactly once.
 - All task lists MUST use `- [ ]` syntax exclusively (no other checklist formats).
+
+## Doc Skeletons (copy, then fill)
+
+```markdown
+# Architecture Plan — YYYY-MM-DD
+**Metadata**
+Model Name: <model_name>
+Model Version: <if known>
+Date: YYYY-MM-DD
+Repo Commit SHA: <short_sha>
+Run ID: <user-supplied or timestamp>
+
+## Current Architecture
+
+## Target Architecture
+
+## Key Deltas
+- Ethics & Concurrency Gating
+
+### References Cited
+- ocean-research/<file>.md
+```
+
+```markdown
+# Migration Steps — YYYY-MM-DD
+**Metadata**
+Model Name: <model_name>
+Model Version: <if known>
+Date: YYYY-MM-DD
+Repo Commit SHA: <short_sha>
+Run ID: <user-supplied or timestamp>
+
+## Milestone 1: <Title>
+Goals:
+- <goal>
+
+Affected Paths:
+- <path>
+
+Tasks:
+- [ ] <task>
+
+Acceptance Criteria:
+- <criterion> (include knowledge/ skeleton creation)
+
+## Milestone 2: <Title>
+...
+
+### References Cited
+- ocean-research/<file>.md
+```
+
+```markdown
+# Folder Layout Proposal — YYYY-MM-DD
+**Metadata**
+Model Name: <model_name>
+Model Version: <if known>
+Date: YYYY-MM-DD
+Repo Commit SHA: <short_sha>
+Run ID: <user-supplied or timestamp>
+
+## Proposed Tree
+knowledge/
+   shared/
+   domains/
+santiago_core/
+   agents/<role>/service/
+mcp/registry/
+infra/
+
+## Mapping Table
+| Current Path | Target Path | Action |
+| --- | --- | --- |
+| <src> | <dst> | extract/consolidate/deprecate |
+
+### References Cited
+- ocean-research/<file>.md
+```
+
+```markdown
+# Relevance Map — YYYY-MM-DD
+**Metadata**
+Model Name: <model_name>
+Model Version: <if known>
+Date: YYYY-MM-DD
+Repo Commit SHA: <short_sha>
+Run ID: <user-supplied or timestamp>
+
+## Relevant
+- <path> — <rationale>
+
+## Peripheral
+- <path> — <rationale>
+
+## Legacy-Duplicate
+- <path> — <rationale>
+
+## Irrelevant
+- <path> — <rationale>
+
+<!-- If santiago_core/ is missing, list as GAP -->
+
+## Calibration Appendix
+<Optional, after initial classification>
+
+### References Cited
+- ocean-research/<file>.md
+```
+
+```markdown
+# Assumptions and Risks — YYYY-MM-DD
+**Metadata**
+Model Name: <model_name>
+Model Version: <if known>
+Date: YYYY-MM-DD
+Repo Commit SHA: <short_sha>
+Run ID: <user-supplied or timestamp>
+
+## Assumptions
+- <assumption>
+
+## Risks & Mitigations
+- <risk>: <mitigation>
+
+## Open Questions
+- <question>
+
+## Provenance & Queued Writes
+Short note on how provenance + queued writes in the unified KG reduce risk.
+
+### References Cited
+- ocean-research/<file>.md
+```
 
 ## Scoring Rubric (for AI comparison)
 
