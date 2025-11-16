@@ -27,6 +27,12 @@
 - **Knowledge Debrief** – Once an experiment finishes, summarize the outcome and update the KG with the new relationship triangles.
 - **Practices Backlog** – When a gap is spotted (missing role instructions, inconsistent testing), add a card and refine practice docs.
 
+## Strategic Canonicals
+
+- Canonical strategic doc (Santiago-PM): `santiago-pm/strategic-charts/Santiago-Trains-Manolin.md`
+- Index for strategic charts: `santiago-pm/strategic-charts/README.md`
+
+
 ## Santiago Notes Ritual
 
 - Write Santiago-session notes in `notes/santiago/` once per day or after a major experiment slice so humans can skim the story without exploring the KG.
