@@ -1,24 +1,8 @@
 # NuSy Product Team Core
 
-This repo hosts the NuSy Product Manager and Product Team scaffolding:
+> ARCHIVE NOTICE (2025-11-16): Prototype runtime code (`src/nusy_pm_core/` and `santiago-code/`) has been archived and removed to reduce cognitive load for architecture reviewers. An annotated snapshot is preserved via the git tag `prototype-archive-2025-11-16`. See `docs/PROTOTYPE_LEGACY.md` for lessons learned and migration rationale. The active focus of this repository is the v2 architecture planning artifacts under `ocean-arch-redux/arch-redux-gpt-5-v2-plan/`.
 
-- A NuSy Product Manager agent (Hank’s PM) that coordinates:
-  - Architect – NuSy
-  - Architect – Systems/Platform
-  - Developer
-  - QA Specialist
-  - UX Researcher / Designer
-  - Platform / Deployment Engineer
-- A FastAPI service (`src/nusy_pm_core/api.py`) acting as the core PM / MCP surface.
-- A Typer CLI (`src/nusy_pm_core/cli.py`) for commands like `scaffold_project`.
-- Starter docs:
-  - `DEVELOPMENT_PLAN.md` — phased plan for building this system.
-  - `DEVELOPMENT_PRACTICES.md` — TDD/BDD/CI and AI–human collaboration rules.
-  - `roles/` — role specs and instructions for all team roles.
-  - `features/` — BDD feature files, starting with `scaffold_project.feature`.
-- Human-friendly scaffolding:
-  - `notes/` — Santiago-specific notes, plans, and retrospectives for this mini-project.
-  - `santiago-code/` — any code, scripts, or connectors built specifically for the Santiago agent.
+This repo now emphasizes planning, strategic reasoning, and architecture evolution. The former prototype implementation (FastAPI service, Typer CLI, multi-agent experiment runner, KG pipeline) has been retired and documented. Future runtime code will be regenerated following the migration steps outlined in `ocean-arch-redux/arch-redux-gpt-5-v2-plan/MIGRATION_STEPS_v2.md`.
 
 ## Reviewers Quick Start
 
@@ -30,7 +14,7 @@ For architecture reviewers (humans and AIs), start here:
 - Calibration pointer: `calibration/README.md` (do not read until after initial deliverables)
 - Latest v2 plan outputs: `ocean-arch-redux/arch-redux-gpt-5-v2-plan/`
 
-## Quick Start
+## Quick Start (Planning Focus)
 
 1. **Clone the repo**
 
@@ -53,72 +37,24 @@ For architecture reviewers (humans and AIs), start here:
   cp .env.example .env
   # edit .env as needed
 
-5. Run the API
+5. Review architecture & migration artifacts
+  - `ARCHITECTURE_PLAN_v2.md`
+  - `MIGRATION_STEPS_v2.md`
+  - `FOLDER_LAYOUT_PROPOSAL_v2.md`
+  - `RELEVANCE_MAP.md`
 
-  uvicorn src.nusy_pm_core.api:app --reload
+Runtime commands are intentionally absent until the migration phase begins.
 
-  Then open:
-  - http://localhost:8000/health
-  - **Web Interface**: Open `nusy_query_interface.html` in your browser to ask NuSy questions about ingested notes
+## Prototype Legacy
 
-## Querying Notes with NuSy
+The archived prototype exposed note ingestion, KG decoration, neurosymbolic querying stubs, and autonomous experiment orchestration. It served as a learning scaffold; details and lessons are captured in `docs/PROTOTYPE_LEGACY.md`.
 
-Once the system has ingested notes (via the Neurosymbolic pipeline), you can query them in several ways:
+## Usage Focus Shift
 
-### Web Interface (Recommended)
-1. Start the API server: `python -m nusy_pm_core.cli serve`
-2. Open `nusy_query_interface.html` in your web browser
-3. Ask natural language questions like "What is Santiago?" or "What notes are about the pipeline?"
+Active work now centers on refining architecture artifacts, validating migration sequencing, and preparing for a clean, modular rebuild (KG interaction layer, unified persistence, agent orchestration).
 
-### CLI Commands
-```bash
-# Ask natural language questions
-python -m nusy_pm_core.cli notes query "What is Santiago?"
+## Santiago Mini-Project Artifacts
 
-# Execute SPARQL queries
-python -m nusy_pm_core.cli notes sparql "SELECT ?note ?title WHERE { ?note <http://www.w3.org/2000/01/rdf-schema#label> ?title }"
+Santiago-related knowledge and retrospectives remain in `notes/santiago/` and strategic vision in `santiago-pm/strategic-charts/`. Execution code has been archived; only conceptual and strategic materials are active.
 
-# Run the ingestion pipeline
-python -m nusy_pm_core.cli notes run-pipeline
-
-# Check coverage
-python -m nusy_pm_core.cli notes validate-coverage
-```
-
-### API Endpoints
-
-- `POST /api/query` - Natural language queries
-- `POST /api/sparql` - SPARQL queries
-- `GET /api/notes` - List all notes
-- `POST /api/pipeline/run` - Run ingestion pipeline
-- `GET /api/coverage` - Get coverage statistics
-
-Then open:
-
-- `http://localhost:8000/health`
-- `http://localhost:8000/version`
-
-## Usage
-
-  python -m src.nusy_pm_core.cli version
-  python -m src.nusy_pm_core.cli scaffold_project "Example MCP"
-
-Next steps:
-
-- Implement the “Scaffold the Project” feature according to features/scaffold_project.feature.
-- Flesh out DEVELOPMENT_PLAN.md and DEVELOPMENT_PRACTICES.md to guide AI agents (Copilot, etc.).
-- Gradually add:
-  - Git forge integration (Gitea/GitLab).
-  - PM tool integration (Taiga).
-  - Chat integration (Matrix).
-  - NuSy knowledge graph loading and reasoning.
-
-## Santiago Mini-Project
-
-- The Santiago mini-project stores every idea, experiment, and retrospective in `notes/santiago/`. Start by reading `notes/santiago-development-plan.md` to see what we plan to test and ship in the first iteration.
-- All Santiago-specific code lives under `santiago-code/`; keep the README in that folder up to date as you add scripts, tests, or connectors.
-- Agents should use the `/issues` directory to discover the next Copilot task (ISSUES list is mirrored there so we can stay offline before pushing to GitHub).
-- Use `python -m src.nusy_pm_core.cli notes` to create/list notes (the tool writes to `notes/notes_manifest.json`) and link entries to KG nodes.
-
-This repo is designed to be friendly to VS Code + Copilot (GPT-5 Codex) and other AI IDEs.
-Start with the docs and CLI and let the AI help fill in the gaps iteratively.
+AI reviewers should ignore runtime concerns until migration steps authorize regeneration.
