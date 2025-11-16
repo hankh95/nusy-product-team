@@ -166,13 +166,14 @@ The experiment includes comprehensive usability testing:
 
 ### Common Issues
 
-#### Import Errors
+#### Import Errors (Prototype Runtime Archived)
+
+The former `nusy_pm_core` module was archived (tag `prototype-archive-2025-11-16`). Import checks against it are historical. For current planning-only phase just ensure environment activation works:
 
 ```bash
-# Ensure you're in the correct directory and virtual env is activated
 cd /path/to/nusy-product-team
 source .venv/bin/activate
-PYTHONPATH=src python -c "import nusy_pm_core"
+python -c "print('env ok')"
 ```
 
 #### API Key Issues

@@ -9,7 +9,7 @@ You are an AI Software Architect & Refactoring Planner for the `nusy-product-tea
 ## Mission
 
 1. Load the repo root (`nusy-product-team`). Scan at minimum:
-   - `src/nusy_pm_core/`
+   - `src/nusy_pm_core/` (ARCHIVED prototype runtime; treat contents via tag `prototype-archive-2025-11-16` if needed, do not assume active code)
    - `santiago_core/`
    - `knowledge/` (if missing, note it as a gap)
    - `notes/`, `DEVELOPMENT_PLAN.md`, `DEVELOPMENT_PRACTICES.md`
@@ -24,20 +24,36 @@ You are an AI Software Architect & Refactoring Planner for the `nusy-product-tea
 
 ## Required Deliverables (Use today’s date in headings)
 
+Each deliverable MUST begin with a metadata block:
+
+```text
+**Metadata**
+Model Name: <model_name>
+Model Version: <if known>
+Date: YYYY-MM-DD
+Repo Commit SHA: <short_sha>
+Run ID: <user-supplied or timestamp>
+```text
+
 1. `ARCHITECTURE_PLAN.md`
    - Current architecture summary (FastAPI orchestrator, `santiago_core` local agents, lack of shared knowledge).
    - Target architecture (MCP services per role, shared knowledge tree, ethics guardrails, DGX deployment).
    - Key deltas: MCP manifests, shared memory contracts, orchestrator evolution, DGX readiness, concurrency + ethics enforcement.
+   - MUST contain the exact phrase: **"Ethics & Concurrency Gating"** at least once.
 2. `MIGRATION_STEPS.md`
-   - 3–7 milestones. For each: goals, affected paths, concrete tasks (checklists or BDD scenarios), and acceptance criteria.
-   - Ensure coverage of: shared knowledge folder, MCP manifests (PM and Ethicist first), NuSy orchestrator refactor, concurrency/test harness, DGX deployment.
-3. `FOLDER_LAYOUT_PROPOSAL.md` (strongly recommended)
+   - 3–7 milestones. For each: goals, affected paths, concrete tasks (checklists using ONLY `- [ ]` syntax), and acceptance criteria.
+   - Milestone heading format MUST be: `## Milestone <n>: <Title>`.
+   - Ensure coverage of: shared knowledge folder (include acceptance criterion for initial skeleton creation), MCP manifests (PM and Ethicist first), NuSy orchestrator refactor, concurrency/test harness, DGX deployment.
+3. `FOLDER_LAYOUT_PROPOSAL.md` (required)
    - Proposed tree for `knowledge/`, `santiago_core/agents/<role>/service`, MCP registry, infrastructure scripts.
    - Mapping table from current paths to target locations with actions (extract, consolidate, deprecate).
 4. `RELEVANCE_MAP.md`
    - Classify folders/files as Relevant / Peripheral / Legacy-Duplicate / Irrelevant with short rationale.
+   - If `santiago_core/` is missing, explicitly list it as GAP.
+   - Calibration appendix, if included AFTER initial classification, MUST use the exact heading: `## Calibration Appendix`.
 5. `ASSUMPTIONS_AND_RISKS.md` (1 page)
    - Explicit assumptions, key risks, mitigations, and open questions.
+   - Include a short section referencing how provenance and queued writes in the future unified KG layer reduce risk.
 
 ## Independence & Calibration
 
@@ -66,19 +82,22 @@ You are an AI Software Architect & Refactoring Planner for the `nusy-product-tea
 ## Output Expectations
 
 - Use today’s date in top-level headings across all deliverables.
+- Do NOT copy large verbatim blocks from research; summarize and cite (improves novelty and reduces token overlap).
 - Cross-link tasks to the knowledge folder (e.g., “Writes to `knowledge/shared/ships-log/YYYY-MM-DD-<slug>.md`).
 - Call out how Hank (Captain) participates (ships logs, approvals, DGX ordering).
 - Emphasize concurrency + ethics gating derived from `ocean-research/nusy_manolin_multi_agent_test_plans.md`.
 - Note the existence of scaffolds: `scaffolds/mcp-manifest-template.json` and `scaffolds/roster-entry-template.ttl` for reuse by future agents.
+- Each deliverable MUST end with a `### References Cited` section listing each unique `ocean-research/<file>.md` path exactly once.
+- All task lists MUST use `- [ ]` syntax exclusively (no other checklist formats).
 
 ## Scoring Rubric (for AI comparison)
 
-- Coverage: MCP, knowledge, DGX, ethics/concurrency all addressed.
+- Coverage: MCP, knowledge, DGX, ethics/concurrency all addressed (explicit phrase “Ethics & Concurrency Gating”).
 - Evidence: Specific citations to `ocean-research/*` and concrete code paths.
-- Specificity: Clear interfaces/contracts and actionable migration tasks.
-- Feasibility: Sensible sequencing, risks, and acceptance criteria.
-- Independence: Own relevance map produced before calibration.
-- Quality: Lint-ready Markdown and coherent cross-linking.
+- Specificity: Clear interfaces/contracts and actionable migration tasks with standardized milestone headings.
+- Feasibility: Sensible sequencing, risks, and acceptance criteria (knowledge skeleton acceptance included).
+- Independence: Own relevance map produced before optional `## Calibration Appendix`.
+- Quality: Lint-ready Markdown, coherent cross-linking, metadata block + references section present.
 
 ## Submission Checklist
 

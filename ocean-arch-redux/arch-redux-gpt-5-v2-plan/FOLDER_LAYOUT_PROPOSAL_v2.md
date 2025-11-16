@@ -36,7 +36,7 @@ services/
 
 | Current Path | Target | Action |
 | --- | --- | --- |
-| `src/nusy_pm_core/` | `orchestrator/` + `services/mcp-pm` (adapters) | Extract orchestrator APIs; map PM behaviors as MCP tools. |
+| `src/nusy_pm_core/` | Archived | Prototype runtime removed; future orchestrator will be regenerated under `orchestrator/` and `services/mcp-*`. |
 | `santiago_core/agents/` | `services/*` | Split agent behaviors into role-specific MCP services. |
 | `santiago_core/core/` | `orchestrator/` | Reuse ethics/concurrency patterns for middleware design. |
 | `notes/kg.ttl` | `knowledge/domains/core/graph.ttl` | Consolidate with provenance. |
@@ -49,7 +49,7 @@ services/
 
 | Path | Category |
 | --- | --- |
-| `src/nusy_pm_core/` | Relevant |
+| `src/nusy_pm_core/` | Archived |
 | `santiago_core/` | Relevant |
 | `ocean-research/` | Relevant |
 | `notes/` | Relevant |

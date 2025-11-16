@@ -6,7 +6,7 @@ This map classifies folders/files by their relevance to the Architecture Redux t
 
 | Path | Category | Notes |
 | --- | --- | --- |
-| `src/nusy_pm_core/` | Relevant | Current FastAPI/CLI PM core; candidate to evolve into NuSy Orchestrator. |
+| `src/nusy_pm_core/` | Archived | Prototype FastAPI/CLI core removed (tag `prototype-archive-2025-11-16`); to be superseded by regenerated orchestrator. |
 | `santiago_core/` | Relevant | Multi-agent prototype (agents, framework, knowledge); source for MCP service extraction. |
 | `ocean-research/` | Relevant | Target-state references (DGX/Manolin, fake-team, concurrency plans, capabilities). |
 | `ocean-arch-redux/` | Relevant | Prior plan runs; do not read for bias, but keep our outputs here (`arch-redux-gpt-5-v2-plan`). |
@@ -28,9 +28,9 @@ This map classifies folders/files by their relevance to the Architecture Redux t
 | `architecture-redux-prompt.md` | Relevant | The planning prompt we follow. |
 | `DEVELOPMENT_PLAN.md` | Relevant | Phased goals; align with migration. |
 | `DEVELOPMENT_PRACTICES.md` | Relevant | Working agreements to seed shared memory. |
-| `src/nusy_pm_core/api.py` | Relevant | Current service surface; informs orchestrator extraction. |
-| `src/nusy_pm_core/cli.py` | Relevant | CLI entry points; extend for evolution cycles. |
-| `src/nusy_pm_core/knowledge/graph.py` | Relevant | KG access pattern; migrate to root `knowledge/`. |
+| `src/nusy_pm_core/api.py` | Archived | Service surface preserved in tag for reference only. |
+| `src/nusy_pm_core/cli.py` | Archived | CLI entry archived; future CLI regenerated post-migration. |
+| `src/nusy_pm_core/knowledge/graph.py` | Archived | KG pattern retained historically; new KG layer will unify writes. |
 | `santiago_core/core/agent_framework.py` | Relevant | Agent base + ethics stub; guide MCP boundary. |
 | `santiago_core/agents/santiago_pm.py` | Relevant | PM behavior; basis for a PM MCP service. |
 | `ocean-research/building-on-DGX/dgx_spark_nusy_report.md` | Relevant | DGX target. |

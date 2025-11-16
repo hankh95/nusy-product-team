@@ -22,7 +22,7 @@ dependencies = [
 ]
 
 [project.scripts]
-nusy = "nusy_pm_core.cli:main"
+# Archived prototype entry point removed (nusy_pm_core.cli). Runtime scripts will be reintroduced post-migration.
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

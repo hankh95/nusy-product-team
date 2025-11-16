@@ -6,11 +6,11 @@
 
 ## Inputs
 - Vision statements, backlog hypotheses, and feature-level outcomes from `DEVELOPMENT_PLAN.md`.
-- Existing KG artifacts (nodes, edges, rules) stored in `src/nusy_pm_core/knowledge`.
+- Existing KG artifacts formerly in `src/nusy_pm_core/knowledge` are archived (tag `prototype-archive-2025-11-16`); future KG layer will live under the root `knowledge/` tree.
 - BDD scenarios from `features/*.feature` that need reasoning context.
 
 ## Outputs
-- Schema descriptions (nodes, edges, properties, provenance) inserted into the KG and documented in `src/nusy_pm_core/knowledge/README.md`.
+- Schema descriptions (nodes, edges, properties, provenance) inserted into the KG and documented under forthcoming `knowledge/` locations (prototype README paths archived).
 - Rule sets that embed constraints (hypothesized outcome → metric) so inference can drive future backlog prioritization.
 - Feedback to the Product Manager when hypotheses lack KG coverage.
 

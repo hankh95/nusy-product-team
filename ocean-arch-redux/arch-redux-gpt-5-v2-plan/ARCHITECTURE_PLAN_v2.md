@@ -11,7 +11,7 @@ This is a plan-only artifact. It reflects a full-repo review and updates the tar
 
 ## Current State Summary (From Full-Repo Read)
 
-- Implementation centers on `src/nusy_pm_core` (FastAPI, Typer) and `santiago_core` (agents + framework).
+- (Historical) Implementation previously centered on `src/nusy_pm_core` (FastAPI, Typer) and `santiago_core` (agents + framework); `src/nusy_pm_core` has since been archived (tag `prototype-archive-2025-11-16`) and will be replaced by a regenerated orchestrator layer per migration steps.
 - Multiple documentation silos: `santiago/`, `santiago_core/docs`, `notes/`, `santiago-pm/ships-logs`, `ocean-research/`.
 - Knowledge artifacts exist but lack a canonical root `knowledge/` hierarchy.
 - Prior architecture redux outputs exist under `ocean-arch-redux/` (keep for history; avoid biasing decisions).

@@ -165,8 +165,8 @@ If any of these inputs are missing, propose minimal scaffolding (e.g., a stub `D
 
 #### Developer
 
-- Implement code inside `src/nusy_pm_core/` guided by BDD scenarios.
-- Reference the corresponding `features/*.feature` file in commits/PRs.
+- Prototype runtime (`src/nusy_pm_core/`) has been archived; future implementation will target regenerated orchestrator/service paths defined in migration artifacts.
+- Reference the corresponding `features/*.feature` file in commits/PRs for planning-only changes.
 - Capture assumptions as KG triples (`feature → assumption`).
 
 #### QA Specialist

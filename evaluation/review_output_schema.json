@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "title": "Architecture Review Metrics",
+  "type": "object",
+  "properties": {
+    "model_name": {"type": "string"},
+    "plan_path": {"type": "string"},
+    "presence": {"type": "object", "properties": {
+      "architecture_plan": {"type": "boolean"},
+      "migration_steps": {"type": "boolean"},
+      "folder_layout": {"type": "boolean"},
+      "relevance_map": {"type": "boolean"},
+      "assumptions_and_risks": {"type": "boolean"}
+    }, "required": ["architecture_plan","migration_steps","relevance_map","assumptions_and_risks"]},
+    "headings": {"type": "object", "properties": {"date_present": {"type": "boolean"}}},
+    "coverage": {"type": "object", "properties": {"mcp": {"type": "boolean"}, "knowledge": {"type": "boolean"}, "dgx": {"type": "boolean"}, "ethics_concurrency": {"type": "boolean"}}},
+    "citations": {"type": "object", "properties": {"total": {"type": "integer"}, "coverage_ratio": {"type": "number"}}},
+    "specificity": {"type": "object", "properties": {"interfaces": {"type": "integer"}}},
+    "migration": {"type": "object", "properties": {"milestone_count": {"type": "integer"}, "avg_tasks_per_milestone": {"type": "number"}, "acceptance_criteria_count": {"type": "integer"}}},
+    "relevance": {"type": "object", "properties": {"independence": {"type": "boolean"}}},
+    "risks": {"type": "object", "properties": {"risk_count": {"type": "integer"}, "mitigation_count": {"type": "integer"}}},
+    "knowledge": {"type": "object", "properties": {"cross_links": {"type": "integer"}, "ships_log_links": {"type": "integer"}}},
+    "lexical": {"type": "object", "properties": {"token_count": {"type": "integer"}, "type_token_ratio": {"type": "number"}}},
+    "readability": {"type": "object", "properties": {"flesch": {"type": "number"}}},
+    "lint": {"type": "object", "properties": {"markdown_pass": {"type": "boolean"}}},
+    "novelty": {"type": "object", "properties": {"embedding_similarity_baseline": {"type": "number"}}},
+    "ethics": {"type": "object", "properties": {"concurrency_mentions": {"type": "integer"}}},
+    "assumptions": {"type": "object", "properties": {"assumption_count": {"type": "integer"}}},
+    "checklist": {"type": "object", "properties": {"total": {"type": "integer"}}},
+    "manual": {"type": "object", "properties": {"feasibility_score": {"type": "integer"}, "clarity_score": {"type": "integer"}, "risk_depth_score": {"type": "integer"}, "delta_quality_notes": {"type": "string"}}}
+  },
+  "required": ["model_name","plan_path","presence"]
+}

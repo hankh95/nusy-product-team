@@ -1,0 +1,74 @@
+# Multi-Model Architecture Review Configuration
+# Each entry defines a model run producing plan artifacts under ocean-arch-redux/arch-redux-<model_name>-v2-plan/
+# After generating outputs per prompt, run the evaluation script.
+
+models:
+  - id: gpt-5
+    provider: openai
+    role: baseline
+    invocation:
+      temperature: 0.2
+      top_p: 1.0
+    plan_dir: ocean-arch-redux/arch-redux-gpt-5-v2-plan
+    expected_deliverables:
+      - ARCHITECTURE_PLAN.md
+      - MIGRATION_STEPS.md
+      - RELEVANCE_MAP.md
+      - ASSUMPTIONS_AND_RISKS.md
+      - FOLDER_LAYOUT_PROPOSAL.md
+    notes: "Baseline reference used for novelty overlap heuristic."
+
+  - id: claude-3-5-sonnet
+    provider: anthropic
+    role: challenger
+    invocation:
+      temperature: 0.2
+    plan_dir: ocean-arch-redux/arch-redux-claude-3-5-sonnet-v2-plan
+    expected_deliverables: *default_deliverables
+    notes: "Compare planning specificity and citation breadth."
+
+  - id: llama-3-70b
+    provider: meta
+    role: challenger
+    invocation:
+      temperature: 0.3
+    plan_dir: ocean-arch-redux/arch-redux-llama-3-70b-v2-plan
+    expected_deliverables: *default_deliverables
+    notes: "Evaluate open-model performance vs closed models."
+
+  - id: mixtral-8x22b
+    provider: mistral
+    role: challenger
+    invocation:
+      temperature: 0.25
+    plan_dir: ocean-arch-redux/arch-redux-mixtral-8x22b-v2-plan
+    expected_deliverables: *default_deliverables
+    notes: "Assess diversity and risk surfacing."
+
+# Anchor alias for expected_deliverables to reduce duplication.
+# YAML anchor defined at end then referenced above via *default_deliverables
+expected_deliverables_anchor: &default_deliverables
+  - ARCHITECTURE_PLAN.md
+  - MIGRATION_STEPS.md
+  - RELEVANCE_MAP.md
+  - ASSUMPTIONS_AND_RISKS.md
+  - FOLDER_LAYOUT_PROPOSAL.md
+
+# Scoring weight suggestions (can be consumed manually)
+weights:
+  presence: 2.0
+  coverage: 2.0
+  citations: 1.5
+  specificity: 1.0
+  migration: 1.5
+  risks: 1.0
+  readability: 0.5
+  novelty: 0.5
+  manual: 2.0
+
+# Manual scoring template suggestion (separate file evaluation/manual_scores.yaml):
+# model: gpt-5
+# feasibility: 5
+# clarity: 5
+# risk_depth: 4
+# notes: "Strong baseline; clear DGX steps."

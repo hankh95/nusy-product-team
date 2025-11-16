@@ -1,0 +1,27 @@
+# Manual review scores appended post automated evaluation
+# Use: python evaluation/evaluate_arch_reviews.py --append-manual --input <metrics.json> --manual evaluation/manual_scores.yaml
+# Format: blocks starting with 'model:' then key: value pairs
+
+model: gpt-5
+feasibility: 5
+clarity: 5
+risk_depth: 4
+notes: "Strong baseline; comprehensive DGX path; ethics gating clear."
+
+model: claude-3-5-sonnet
+feasibility: 4
+clarity: 4
+risk_depth: 5
+notes: "Excellent risk surfacing; slightly less concrete migration acceptance criteria."
+
+model: llama-3-70b
+feasibility: 3
+clarity: 4
+risk_depth: 3
+notes: "Good folder layout creativity; citations coverage lower."
+
+model: mixtral-8x22b
+feasibility: 4
+clarity: 3
+risk_depth: 4
+notes: "Balanced plan; could expand concurrency test harness details."

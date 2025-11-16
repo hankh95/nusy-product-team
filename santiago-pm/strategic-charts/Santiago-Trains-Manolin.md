@@ -622,7 +622,7 @@ Raw Knowledge Sources          Structured Knowledge           Computable Logic  
 
 - ✅ **COMPLETED:** Passage specification with Mermaid visualization
 - ✅ **COMPLETED:** Cargo manifest for passage system
-- **Next:** Implement passage execution engine in `src/nusy_pm_core/`
+- **Next (Adjusted):** Passage execution engine will be implemented during future runtime regeneration (prototype archived; see git tag `prototype-archive-2025-11-16`).
 - **Architecture Decision:** Keep `nusy_pm/passages/` as builder toolkit, create domain passages in `santiago/passages/`
 
 **Step 1.2: Resolve Architecture Separation** *(Week 1-2)*

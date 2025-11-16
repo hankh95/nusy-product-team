@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD010 MD033 MD029 MD022 MD032 MD031 MD040 MD009 MD047 -->
+
 # ChatGPT 5.1 taking Hanks Idea soup and making sense 1.0
 
 Here’s a concrete starting outline and tool stack that gives your NuSy Product Manager enough bones to start evolving itself, while staying Python-friendly, MCP-ready, and modifiable.

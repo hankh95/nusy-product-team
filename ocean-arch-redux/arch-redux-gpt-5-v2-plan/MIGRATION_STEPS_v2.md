@@ -28,9 +28,10 @@ This plan refines milestones based on a full-repo read. It assumes no production
 - Outline provisioning automation steps referencing `ocean-research/building-on-DGX/*` docs.
 - Identify model backends and data connectors (Spark, vector store, vLLM) and their config surfaces.
 
-## Milestone 5 — Consolidation and Cleanup
+## Milestone 5 — Consolidation and Cleanup (Partial Complete)
 
-- Choose `santiago_core/` as canonical over `santiago/` and `santiago-code/`; mark duplicates for retirement.
+- (Completed) Archive `src/nusy_pm_core/` and `santiago-code/` (tag `prototype-archive-2025-11-16`).
+- Choose `santiago_core/` as canonical over `santiago/`; mark remaining duplicates for retirement.
 - Normalize documentation locations; link ships-logs and development practices into `knowledge/shared/`.
 - Update templates to align with MCP service scaffolds.
 

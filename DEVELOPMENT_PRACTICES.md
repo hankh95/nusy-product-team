@@ -11,7 +11,7 @@
 
 - The `features/` directory holds BDD scenarios (Gherkin).
 - The `roles/` directory hosts `*.agent.instructions.md` files describing expectations per role.
-- The `nusy_pm_core/` service exposes MCP endpoints; all changes must ship with documentation or API contracts.
+- Prototype runtime (`src/nusy_pm_core/`) was archived (tag `prototype-archive-2025-11-16`); MCP endpoint work will resume only after migration regeneration. Any past references to that service are historical.
 
 ## Quality Gates
 
@@ -38,4 +38,4 @@
 - Write Santiago-session notes in `notes/santiago/` once per day or after a major experiment slice so humans can skim the story without exploring the KG.
 - Keep `notes/santiago-development-plan.md` active: add new milestones, blockers, and dependencies as the mini-project evolves.
 - When a note captures a decision, store the KG triple (or node) that references the note by filename so Navigator can cite the rationale seconds later.
-- Any code in `santiago-code/` should be documented in that folder’s README and referenced from the related note.
+- `santiago-code/` was archived; retain references only for historical context. New domain runtime code will emerge under future regenerated service folders defined by migration plans.
