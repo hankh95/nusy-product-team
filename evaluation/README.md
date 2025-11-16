@@ -1,13 +1,14 @@
 # Architecture Review Evaluation Harness
 
-This harness compares multi-model outputs produced from `architecture-redux-prompt-v2.md`.
+This harness compares multi-model outputs produced from `architecture-redux-prompt-v2.md` or `architecture-redux-prompt-v3.md`.
 
 ## Directory Conventions
 
 Each model writes deliverables under:
 
 ```text
-ocean-arch-redux/arch-redux-<model_name>-v2-plan/
+ocean-arch-redux/arch-redux-<model_name>-v2-plan/  (for v2 prompt)
+ocean-arch-redux/arch-redux-<model_name>-v3-plan/  (for v3 prompt)
 ```
 
 Required files (from prompt):
@@ -56,8 +57,10 @@ Stored at `evaluation/review_output_schema.json` for aggregator validation.
 
 ## Workflow
 
-1. Generate model outputs by running the prompt separately for each model.
+1. Generate model outputs by running the prompt separately for each model (v2 or v3).
 2. Place plan directory under `ocean-arch-redux/` exactly matching naming convention.
+   - For v2: `arch-redux-<model>-v2-plan/`
+   - For v3: `arch-redux-<model>-v3-plan/`
 3. Configure models/weights in `evaluation/models-config.yaml`.
 4. Run metrics collection:
 
@@ -84,7 +87,13 @@ python evaluation/evaluate_arch_reviews.py --leaderboard evaluation/results/metr
 
 ## Baseline
 
-The directory `arch-redux-gpt-5-v2-plan` is treated as baseline for novelty calculations.
+The script automatically detects baseline directories in this order:
+1. `arch-redux-gpt-5-v3-plan` (v3 preferred)
+2. `arch-redux-gpt-5-v2-plan` (v2 fallback)
+3. `arch-redux-claude-sonnet-4.5-v3-plan`
+4. `arch-redux-claude-sonnet-4.5-v2-plan`
+
+Baseline is used for novelty calculations.
 
 ## Security / Independence
 

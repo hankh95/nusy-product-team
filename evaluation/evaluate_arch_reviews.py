@@ -118,7 +118,14 @@ def checklist_total(texts: Dict[str,str]) -> int:
     return sum(len(re.findall(r"- \[ \]", t)) for t in texts.values())
 
 def evaluate_plan_dir(plan_dir: Path, baseline_dir: Path|None) -> Dict:
-    model_name = plan_dir.name.replace("arch-redux-", "").replace("-v2-plan", "")
+    # Extract model name and version from directory name (supports both v2 and v3)
+    dir_name = plan_dir.name.replace("arch-redux-", "")
+    # Remove version suffix (-v2-plan or -v3-plan)
+    model_name = re.sub(r"-v[23]-plan$", "", dir_name)
+    # Extract version if present
+    version_match = re.search(r"v([23])", dir_name)
+    prompt_version = version_match.group(1) if version_match else "unknown"
+    
     files = {f.name: f for f in plan_dir.glob("*.md")}
     presence = {
         "architecture_plan": "ARCHITECTURE_PLAN.md" in files,
@@ -164,6 +171,7 @@ def evaluate_plan_dir(plan_dir: Path, baseline_dir: Path|None) -> Dict:
 
     result = {
         "model_name": model_name,
+        "prompt_version": prompt_version,
         "plan_path": str(plan_dir),
         "presence": presence,
         "headings": {"date_present": date_present},
@@ -313,10 +321,19 @@ def main():
         print(f"Plans root {root} not found", file=sys.stderr)
         sys.exit(1)
 
-    baseline = root / "arch-redux-gpt-5-v2-plan"
+    # Try to find baseline (v2 or v3, prefer same version as majority of plans)
+    baseline_candidates = [
+        root / "arch-redux-gpt-5-v3-plan",
+        root / "arch-redux-gpt-5-v2-plan",
+        root / "arch-redux-claude-sonnet-4.5-v3-plan",
+        root / "arch-redux-claude-sonnet-4.5-v2-plan"
+    ]
+    baseline = next((b for b in baseline_candidates if b.exists()), None)
+    
     results = []
     for sub in root.iterdir():
-        if sub.is_dir() and sub.name.startswith("arch-redux-") and sub.name.endswith("-v2-plan"):
+        # Match both v2 and v3 plan directories
+        if sub.is_dir() and sub.name.startswith("arch-redux-") and re.search(r"-v[23]-plan$", sub.name):
             results.append(evaluate_plan_dir(sub, baseline))
     Path(args.out).write_text(json.dumps(results, indent=2))
     print(f"Metrics written to {args.out}")

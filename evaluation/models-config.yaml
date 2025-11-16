@@ -1,5 +1,7 @@
 # Multi-Model Architecture Review Configuration
-# Each entry defines a model run producing plan artifacts under ocean-arch-redux/arch-redux-<model_name>-v2-plan/
+# Each entry defines a model run producing plan artifacts under:
+#   ocean-arch-redux/arch-redux-<model_name>-v2-plan/ (for v2 prompt)
+#   ocean-arch-redux/arch-redux-<model_name>-v3-plan/ (for v3 prompt)
 # After generating outputs per prompt, run the evaluation script.
 
 models:

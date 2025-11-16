@@ -4,6 +4,7 @@
   "type": "object",
   "properties": {
     "model_name": {"type": "string"},
+    "prompt_version": {"type": "string", "description": "Version of prompt used (2 or 3)"},
     "plan_path": {"type": "string"},
     "presence": {"type": "object", "properties": {
       "architecture_plan": {"type": "boolean"},
