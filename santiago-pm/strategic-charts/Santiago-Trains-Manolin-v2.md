@@ -14,7 +14,7 @@ Santiago-Trains-Manolin v2 represents the clarified evolution from a NuSy protot
 **Key Clarifications from v1:**
 - **Santiago** = Core NuSy AI system (the boat builder)
 - **santiago-pm** = Product management domain AI (what we're building in current `santiago-pm/`)
-- **santiago-core/** = Separate directory for the core Santiago system
+- **santiago_core/** = Separate directory for the core Santiago system
 - **MVP Team:** Start with 3 core roles, expand to 7+ as system matures
 - **Ethical oversight** built into every agent from the beginning
 
@@ -54,7 +54,7 @@ Raw Knowledge Sources          Structured Knowledge           Computable Logic  
 - **Navigator:** Orchestration engine for knowledge processing cycles
 - **Passage System:** Workflow orchestration with nautical theming
 
-**Location:** `santiago-core/` (New separate directory for core system)
+**Location:** `santiago_core/` (New separate directory for core system)
 
 #### 2. Santiago Orchestrator (The Captain)
 
@@ -93,7 +93,7 @@ Raw Knowledge Sources          Structured Knowledge           Computable Logic  
 
 **Directory Structure:**
 ```
-santiago-core/          # Core Santiago system
+santiago_core/          # Core Santiago system
 santiago-pm/            # Product management domain AI
 santiago-medical/       # Healthcare domain AI (future)
 santiago-finance/       # Finance domain AI (future)
@@ -212,7 +212,7 @@ santiago-finance/       # Finance domain AI (future)
 
 **Step 1.1: Directory Restructuring** *(Week 1)*
 - ✅ **COMPLETED:** Rename `nusy_pm/` → `santiago-pm/` to clarify it's the PM domain AI
-- Create `santiago-core/` directory for the core Santiago system
+- Create `santiago_core/` directory for the core Santiago system
 - Update all references and imports to use new directory structure
 
 **Step 1.2: MVP Autonomous Team Setup** *(Week 1-2)*
@@ -237,7 +237,7 @@ santiago-finance/       # Finance domain AI (future)
 **Goal:** Develop the core Santiago system using the autonomous team
 
 **Step 2.1: Santiago Core Architecture** *(Week 5)*
-- Define Santiago core components in `santiago-core/`
+- Define Santiago core components in `santiago_core/`
 - Implement core knowledge processing pipeline
 - Build Passage system integration
 - Create core agent framework
@@ -321,7 +321,7 @@ santiago-finance/       # Finance domain AI (future)
 **Question:** How to structure directories to reflect Santiago hierarchy?
 
 **Resolution:** ✅ **APPROVED**
-- `santiago-core/` - Core Santiago system (boat builder)
+- `santiago_core/` - Core Santiago system (boat builder)
 - `santiago-pm/` - Product management domain AI (formerly `nusy_pm/`)
 - `santiago-{domain}/` - Future domain-specific AIs
 - **Rationale:** Clear separation between core system and domain implementations
@@ -418,7 +418,7 @@ santiago-finance/       # Finance domain AI (future)
 
 ### v1 → v2 Changes
 - **Clarified Santiago Hierarchy:** Core Santiago vs domain Santiagos
-- **Directory Restructuring:** `nusy_pm/` → `santiago-pm/`, added `santiago-core/`
+- **Directory Restructuring:** `nusy_pm/` → `santiago-pm/`, added `santiago_core/`
 - **Autonomous Team Focus:** MVP 3-agent team, expand to 7+ roles
 - **Ethical Integration:** Built into every agent from beginning
 - **Workflow Experiment:** Combined architect planning + PM task management

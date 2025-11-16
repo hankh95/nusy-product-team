@@ -17,7 +17,7 @@ sys.path.insert(0, str(project_root))
 import sys
 from pathlib import Path
 
-# Add the santiago-core directory to Python path
+# Add the santiago_core directory to Python path
 current_dir = Path(__file__).parent
 sys.path.insert(0, str(current_dir))
 

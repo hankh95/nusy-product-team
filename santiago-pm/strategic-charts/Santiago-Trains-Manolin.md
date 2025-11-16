@@ -476,8 +476,8 @@ R01 - Yes, renaming to `santiago-pm/` would clarify its purpose as the product m
 **Q2.** For the MVP autonomous team, should we start with just the 3 core roles (PM + Architect + Developer) and add the others incrementally, or try to build all 7 from the beginning?
 R02 - Start with the 3 core roles to get the development process underway quickly, using agents, prompts, working agreements. Each new domain team member is scaffolded into the project so we can start to capture information about it's behaviors, expertise etc. As alpha versions of Santiago start to work, we use the information in that scaffold to start to populate the domain-specific agents in their own santiago,  incrementally add the other roles as the system matures and more complex needs arise.
 
-**Q3.** How should the core Santiago system be structured? Should it be in a separate `santiago-core/` directory, or should the entire project become the Santiago system with domain AIs as subdirectories?
-R03 - The core Santiago system should be in a separate `santiago-core/` directory alongside `santiago-pm/` and future domain-specific directories. This keeps the core builder distinct from the domain implementations.
+**Q3.** How should the core Santiago system be structured? Should it be in a separate `santiago_core/` directory, or should the entire project become the Santiago system with domain AIs as subdirectories?
+R03 - The core Santiago system should be in a separate `santiago_core/` directory alongside `santiago-pm/` and future domain-specific directories. This keeps the core builder distinct from the domain implementations.
 
 **Q4.** For the autonomous team workflow, which experiment should we try first:
 - A) Little development → feedback from architect/Hank → continue

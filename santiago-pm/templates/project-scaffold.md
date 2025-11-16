@@ -11,7 +11,7 @@ This template defines the folder structure and initial files for a new Santiago 
 ├── requirements.txt            # Python dependencies
 ├── .gitignore                  # Git ignore patterns
 ├── .env.example               # Environment variables template
-├── santiago-core/             # AI implementation (KG + agents)
+├── santiago_core/             # AI implementation (KG + agents)
 │   ├── README.md
 │   ├── __init__.py
 │   ├── agents/                 # Autonomous agents
@@ -44,7 +44,7 @@ A Santiago domain expert for [domain description].
 
 ## Architecture
 
-- **santiago-core/**: Contains the AI implementation with knowledge graph and autonomous agents
+- **santiago_core/**: Contains the AI implementation with knowledge graph and autonomous agents
 - **PM Folders**: Human-readable artifacts for product management and development coordination
 
 ## Getting Started
@@ -147,7 +147,7 @@ tmp/
 ### .env.example
 ```
 # Knowledge Graph Configuration
-KG_PATH=./santiago-core/knowledge/
+KG_PATH=./santiago_core/knowledge/
 KG_FORMAT=turtle
 
 # Agent Configuration
@@ -194,7 +194,7 @@ When santiago-pm scaffolds a new project:
 
 1. Create the folder structure
 2. Copy template files to each PM folder
-3. Initialize santiago-core with basic agent framework
+3. Initialize santiago_core with basic agent framework
 4. Create initial KG with project metadata
 5. Set up basic configuration files
 6. Initialize git repository

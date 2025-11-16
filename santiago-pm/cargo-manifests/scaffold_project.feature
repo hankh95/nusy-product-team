@@ -31,7 +31,7 @@ Feature: Scaffold new Santiago domain expert projects
   Background:
     Given santiago-pm has access to project scaffolding templates
     And the target domain is well-defined with clear boundaries
-    And santiago-core scaffold structure exists as reference
+    And santiago_core scaffold structure exists as reference
 
   Scenario Outline: Scaffold complete project structure for new domain expert
     Given a new domain expert project "<project_name>" is requested
@@ -49,12 +49,12 @@ Feature: Scaffold new Santiago domain expert projects
       | strategic-charts/        | Vision and strategy              |
       | quality-assessments/     | QA and testing                   |
       | research-logs/           | Research findings                |
-      | santiago-core/           | AI implementation (KG + agents)  |
+      | santiago_core/           | AI implementation (KG + agents)  |
     And each PM folder contains:
       | file_name                | content_type                     |
       | README.md                | Folder purpose and usage guide   |
       | [folder]-template.md     | Artifact creation template       |
-    And santiago-core/ is initialized with:
+    And santiago_core/ is initialized with:
       | component                | status                           |
       | basic agent framework    | scaffolded                       |
       | knowledge graph          | initialized                      |
@@ -80,9 +80,9 @@ Feature: Scaffold new Santiago domain expert projects
       | santiago-research-assistant | Academic research support     |
       | santiago-software-architect | System architecture design    |
 
-  Scenario: Initialize Santiago-core with domain-specific configuration
+  Scenario: Initialize Santiago_core with domain-specific configuration
     Given a new project scaffold is created
-    When santiago-core is initialized
+    When santiago_core is initialized
     Then the knowledge graph contains project metadata:
       | metadata_field           | value_source                     |
       | project_name             | scaffold parameter               |
@@ -121,4 +121,4 @@ Feature: Scaffold new Santiago domain expert projects
     And captains-journals/ captures lessons learned
     And research-logs/ documents domain discoveries
     And all artifacts integrate with the project KG
-    And santiago-core agents can read/write PM artifacts autonomously
+    And santiago_core agents can read/write PM artifacts autonomously

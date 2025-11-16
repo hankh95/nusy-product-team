@@ -46,7 +46,7 @@ The Santiago system consists of:
 ## Running the Team
 
 ```bash
-cd santiago-core
+cd santiago_core
 python run_team.py
 ```
 
