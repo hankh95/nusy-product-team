@@ -20,6 +20,16 @@ This repo hosts the NuSy Product Manager and Product Team scaffolding:
   - `notes/` — Santiago-specific notes, plans, and retrospectives for this mini-project.
   - `santiago-code/` — any code, scripts, or connectors built specifically for the Santiago agent.
 
+## Reviewers Quick Start
+
+For architecture reviewers (humans and AIs), start here:
+
+- Prompt: `architecture-redux-prompt-v2.md` (at repo root)
+- Strategic canonical: `santiago-pm/strategic-charts/Santiago-Trains-Manolin.md`
+- Strategic index: `santiago-pm/strategic-charts/README.md`
+- Calibration pointer: `calibration/README.md` (do not read until after initial deliverables)
+- Latest v2 plan outputs: `ocean-arch-redux/arch-redux-gpt-5-v2-plan/`
+
 ## Quick Start
 
 1. **Clone the repo**

@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD022 MD032 MD031 MD040 MD009 MD047 MD024 -->
+
 # Contributing to Clinical Intelligence Starter
 
 This document outlines the contribution process and provides detailed examples for the Clinical Intelligence Starter project.
@@ -10,6 +12,14 @@ This document outlines the contribution process and provides detailed examples f
 - **[.cursorrules](.cursorrules)**: AI agent work practices
 - **[README.md](README.md)**: Project overview and quick start
 - **[DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md)**: Project roadmap
+
+## Documentation Canonicalization
+
+To prevent duplicate drift and speed up reviews:
+
+- Superseded docs: Keep only the latest version under the canonical filename. Use a "Version History" section inside the doc to summarize prior changes. Rely on Git history for previous versions rather than keeping `-v1`, `-v2` file copies.
+- Canonical strategic doc (Santiago-PM): `santiago-pm/strategic-charts/Santiago-Trains-Manolin.md` (see index in `santiago-pm/strategic-charts/README.md`).
+- When replacing a document: remove the old file, promote the new content to the canonical name, and add a brief note to the top indicating the effective version/date if helpful.
 
 ---
 
