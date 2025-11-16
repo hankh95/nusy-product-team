@@ -1,0 +1,28 @@
+{
+  "name": "nusy-mcp-service-template",
+  "version": "0.1.0",
+  "description": "MCP service manifest template for NuSy role-based services.",
+  "entry": "python -m service.main",
+  "capabilities": [
+    {
+      "tool": "plan.create",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "goals": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["title", "goals"]
+      }
+    }
+  ],
+  "knowledgeMounts": [
+    { "name": "shared", "path": "../../knowledge/shared" },
+    { "name": "domain-core", "path": "../../knowledge/domains/core" }
+  ],
+  "audit": {
+    "enabled": true,
+    "destination": "stdout",
+    "fields": ["timestamp", "actor", "tool", "input", "output", "policy"]
+  }
+}
