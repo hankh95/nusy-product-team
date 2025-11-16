@@ -1,0 +1,605 @@
+[
+  {
+    "model_name": "copilot-gpt-5",
+    "prompt_version": "2",
+    "plan_path": "ocean-arch-redux/arch-redux-copilot-gpt-5-v2-plan",
+    "presence": {
+      "architecture_plan": true,
+      "migration_steps": true,
+      "folder_layout": true,
+      "relevance_map": true,
+      "assumptions_and_risks": true
+    },
+    "headings": {
+      "date_present": true
+    },
+    "coverage": {
+      "mcp": true,
+      "knowledge": true,
+      "dgx": true,
+      "ethics_concurrency": true
+    },
+    "citations": {
+      "total": 38,
+      "coverage_ratio": 1.0
+    },
+    "specificity": {
+      "interfaces": 35
+    },
+    "migration": {
+      "milestone_count": 7,
+      "avg_tasks_per_milestone": 7.0,
+      "acceptance_criteria_count": 14
+    },
+    "relevance": {
+      "independence": true
+    },
+    "risks": {
+      "risk_count": 5,
+      "mitigation_count": 2
+    },
+    "knowledge": {
+      "cross_links": 31,
+      "ships_log_links": 6
+    },
+    "lexical": {
+      "token_count": 2604,
+      "type_token_ratio": 0.3756
+    },
+    "readability": {
+      "flesch": -2.47
+    },
+    "lint": {
+      "markdown_pass": null
+    },
+    "novelty": {
+      "embedding_similarity_baseline": 0.2275
+    },
+    "ethics": {
+      "concurrency_mentions": 19
+    },
+    "assumptions": {
+      "assumption_count": 3
+    },
+    "checklist": {
+      "total": 49
+    },
+    "manual": {}
+  },
+  {
+    "model_name": "combined",
+    "prompt_version": "3",
+    "plan_path": "ocean-arch-redux/arch-redux-combined-v3-plan",
+    "presence": {
+      "architecture_plan": true,
+      "migration_steps": true,
+      "folder_layout": true,
+      "relevance_map": true,
+      "assumptions_and_risks": true
+    },
+    "headings": {
+      "date_present": false
+    },
+    "coverage": {
+      "mcp": true,
+      "knowledge": true,
+      "dgx": true,
+      "ethics_concurrency": true
+    },
+    "citations": {
+      "total": 0,
+      "coverage_ratio": 0.0
+    },
+    "specificity": {
+      "interfaces": 19
+    },
+    "migration": {
+      "milestone_count": 7,
+      "avg_tasks_per_milestone": 3.71,
+      "acceptance_criteria_count": 14
+    },
+    "relevance": {
+      "independence": true
+    },
+    "risks": {
+      "risk_count": 3,
+      "mitigation_count": 5
+    },
+    "knowledge": {
+      "cross_links": 27,
+      "ships_log_links": 0
+    },
+    "lexical": {
+      "token_count": 2629,
+      "type_token_ratio": 0.321
+    },
+    "readability": {
+      "flesch": 10.5
+    },
+    "lint": {
+      "markdown_pass": null
+    },
+    "novelty": {
+      "embedding_similarity_baseline": 0.3679
+    },
+    "ethics": {
+      "concurrency_mentions": 5
+    },
+    "assumptions": {
+      "assumption_count": 2
+    },
+    "checklist": {
+      "total": 26
+    },
+    "manual": {}
+  },
+  {
+    "model_name": "gpt-5",
+    "prompt_version": "2",
+    "plan_path": "ocean-arch-redux/arch-redux-gpt-5-v2-plan",
+    "presence": {
+      "architecture_plan": false,
+      "migration_steps": false,
+      "folder_layout": false,
+      "relevance_map": true,
+      "assumptions_and_risks": false
+    },
+    "headings": {
+      "date_present": true
+    },
+    "coverage": {
+      "mcp": false,
+      "knowledge": false,
+      "dgx": false,
+      "ethics_concurrency": false
+    },
+    "citations": {
+      "total": 3,
+      "coverage_ratio": 0.333
+    },
+    "specificity": {
+      "interfaces": 0
+    },
+    "migration": {
+      "milestone_count": 1,
+      "avg_tasks_per_milestone": 0.0,
+      "acceptance_criteria_count": 0
+    },
+    "relevance": {
+      "independence": true
+    },
+    "risks": {
+      "risk_count": 0,
+      "mitigation_count": 0
+    },
+    "knowledge": {
+      "cross_links": 25,
+      "ships_log_links": 10
+    },
+    "lexical": {
+      "token_count": 1590,
+      "type_token_ratio": 0.3987
+    },
+    "readability": {
+      "flesch": 13.56
+    },
+    "lint": {
+      "markdown_pass": null
+    },
+    "novelty": {
+      "embedding_similarity_baseline": 0.1967
+    },
+    "ethics": {
+      "concurrency_mentions": 0
+    },
+    "assumptions": {
+      "assumption_count": 0
+    },
+    "checklist": {
+      "total": 0
+    },
+    "manual": {}
+  },
+  {
+    "model_name": "gpt-5",
+    "prompt_version": "3",
+    "plan_path": "ocean-arch-redux/arch-redux-gpt-5-v3-plan",
+    "presence": {
+      "architecture_plan": true,
+      "migration_steps": true,
+      "folder_layout": true,
+      "relevance_map": true,
+      "assumptions_and_risks": true
+    },
+    "headings": {
+      "date_present": false
+    },
+    "coverage": {
+      "mcp": true,
+      "knowledge": true,
+      "dgx": true,
+      "ethics_concurrency": true
+    },
+    "citations": {
+      "total": 0,
+      "coverage_ratio": 0.0
+    },
+    "specificity": {
+      "interfaces": 8
+    },
+    "migration": {
+      "milestone_count": 7,
+      "avg_tasks_per_milestone": 4.14,
+      "acceptance_criteria_count": 15
+    },
+    "relevance": {
+      "independence": true
+    },
+    "risks": {
+      "risk_count": 2,
+      "mitigation_count": 5
+    },
+    "knowledge": {
+      "cross_links": 30,
+      "ships_log_links": 6
+    },
+    "lexical": {
+      "token_count": 2713,
+      "type_token_ratio": 0.3494
+    },
+    "readability": {
+      "flesch": 18.04
+    },
+    "lint": {
+      "markdown_pass": null
+    },
+    "novelty": {
+      "embedding_similarity_baseline": null
+    },
+    "ethics": {
+      "concurrency_mentions": 8
+    },
+    "assumptions": {
+      "assumption_count": 2
+    },
+    "checklist": {
+      "total": 29
+    },
+    "manual": {}
+  },
+  {
+    "model_name": "grok-code-fast-1",
+    "prompt_version": "3",
+    "plan_path": "ocean-arch-redux/arch-redux-grok-code-fast-1-v3-plan",
+    "presence": {
+      "architecture_plan": true,
+      "migration_steps": true,
+      "folder_layout": true,
+      "relevance_map": true,
+      "assumptions_and_risks": true
+    },
+    "headings": {
+      "date_present": false
+    },
+    "coverage": {
+      "mcp": true,
+      "knowledge": true,
+      "dgx": true,
+      "ethics_concurrency": true
+    },
+    "citations": {
+      "total": 1,
+      "coverage_ratio": 0.167
+    },
+    "specificity": {
+      "interfaces": 12
+    },
+    "migration": {
+      "milestone_count": 5,
+      "avg_tasks_per_milestone": 5.0,
+      "acceptance_criteria_count": 10
+    },
+    "relevance": {
+      "independence": true
+    },
+    "risks": {
+      "risk_count": 3,
+      "mitigation_count": 0
+    },
+    "knowledge": {
+      "cross_links": 19,
+      "ships_log_links": 0
+    },
+    "lexical": {
+      "token_count": 1907,
+      "type_token_ratio": 0.3519
+    },
+    "readability": {
+      "flesch": 15.87
+    },
+    "lint": {
+      "markdown_pass": null
+    },
+    "novelty": {
+      "embedding_similarity_baseline": 0.3402
+    },
+    "ethics": {
+      "concurrency_mentions": 5
+    },
+    "assumptions": {
+      "assumption_count": 2
+    },
+    "checklist": {
+      "total": 25
+    },
+    "manual": {}
+  },
+  {
+    "model_name": "gemini-2.5-Pro",
+    "prompt_version": "3",
+    "plan_path": "ocean-arch-redux/arch-redux-gemini-2.5-Pro-v3-plan",
+    "presence": {
+      "architecture_plan": true,
+      "migration_steps": true,
+      "folder_layout": true,
+      "relevance_map": true,
+      "assumptions_and_risks": true
+    },
+    "headings": {
+      "date_present": false
+    },
+    "coverage": {
+      "mcp": true,
+      "knowledge": true,
+      "dgx": true,
+      "ethics_concurrency": true
+    },
+    "citations": {
+      "total": 3,
+      "coverage_ratio": 0.333
+    },
+    "specificity": {
+      "interfaces": 12
+    },
+    "migration": {
+      "milestone_count": 7,
+      "avg_tasks_per_milestone": 4.43,
+      "acceptance_criteria_count": 14
+    },
+    "relevance": {
+      "independence": true
+    },
+    "risks": {
+      "risk_count": 7,
+      "mitigation_count": 5
+    },
+    "knowledge": {
+      "cross_links": 36,
+      "ships_log_links": 9
+    },
+    "lexical": {
+      "token_count": 3810,
+      "type_token_ratio": 0.3218
+    },
+    "readability": {
+      "flesch": 9.29
+    },
+    "lint": {
+      "markdown_pass": null
+    },
+    "novelty": {
+      "embedding_similarity_baseline": 0.4237
+    },
+    "ethics": {
+      "concurrency_mentions": 6
+    },
+    "assumptions": {
+      "assumption_count": 7
+    },
+    "checklist": {
+      "total": 31
+    },
+    "manual": {}
+  },
+  {
+    "model_name": "claude-sonnet-4.5",
+    "prompt_version": "2",
+    "plan_path": "ocean-arch-redux/arch-redux-claude-sonnet-4.5-v2-plan",
+    "presence": {
+      "architecture_plan": true,
+      "migration_steps": true,
+      "folder_layout": true,
+      "relevance_map": true,
+      "assumptions_and_risks": true
+    },
+    "headings": {
+      "date_present": true
+    },
+    "coverage": {
+      "mcp": true,
+      "knowledge": true,
+      "dgx": true,
+      "ethics_concurrency": true
+    },
+    "citations": {
+      "total": 16,
+      "coverage_ratio": 0.333
+    },
+    "specificity": {
+      "interfaces": 25
+    },
+    "migration": {
+      "milestone_count": 8,
+      "avg_tasks_per_milestone": 7.0,
+      "acceptance_criteria_count": 14
+    },
+    "relevance": {
+      "independence": true
+    },
+    "risks": {
+      "risk_count": 16,
+      "mitigation_count": 10
+    },
+    "knowledge": {
+      "cross_links": 63,
+      "ships_log_links": 7
+    },
+    "lexical": {
+      "token_count": 12593,
+      "type_token_ratio": 0.1991
+    },
+    "readability": {
+      "flesch": 11.11
+    },
+    "lint": {
+      "markdown_pass": null
+    },
+    "novelty": {
+      "embedding_similarity_baseline": 0.2287
+    },
+    "ethics": {
+      "concurrency_mentions": 22
+    },
+    "assumptions": {
+      "assumption_count": 2
+    },
+    "checklist": {
+      "total": 94
+    },
+    "manual": {}
+  },
+  {
+    "model_name": "claude-sonnet-4.5",
+    "prompt_version": "3",
+    "plan_path": "ocean-arch-redux/arch-redux-claude-sonnet-4.5-v3-plan",
+    "presence": {
+      "architecture_plan": true,
+      "migration_steps": true,
+      "folder_layout": true,
+      "relevance_map": true,
+      "assumptions_and_risks": true
+    },
+    "headings": {
+      "date_present": false
+    },
+    "coverage": {
+      "mcp": true,
+      "knowledge": true,
+      "dgx": true,
+      "ethics_concurrency": true
+    },
+    "citations": {
+      "total": 4,
+      "coverage_ratio": 0.333
+    },
+    "specificity": {
+      "interfaces": 21
+    },
+    "migration": {
+      "milestone_count": 7,
+      "avg_tasks_per_milestone": 4.43,
+      "acceptance_criteria_count": 14
+    },
+    "relevance": {
+      "independence": true
+    },
+    "risks": {
+      "risk_count": 7,
+      "mitigation_count": 5
+    },
+    "knowledge": {
+      "cross_links": 39,
+      "ships_log_links": 11
+    },
+    "lexical": {
+      "token_count": 3891,
+      "type_token_ratio": 0.3166
+    },
+    "readability": {
+      "flesch": 6.54
+    },
+    "lint": {
+      "markdown_pass": null
+    },
+    "novelty": {
+      "embedding_similarity_baseline": 0.4156
+    },
+    "ethics": {
+      "concurrency_mentions": 14
+    },
+    "assumptions": {
+      "assumption_count": 7
+    },
+    "checklist": {
+      "total": 31
+    },
+    "manual": {}
+  },
+  {
+    "model_name": "gpt-5.1-codex",
+    "prompt_version": "3",
+    "plan_path": "ocean-arch-redux/arch-redux-gpt-5.1-codex-v3-plan",
+    "presence": {
+      "architecture_plan": true,
+      "migration_steps": true,
+      "folder_layout": true,
+      "relevance_map": true,
+      "assumptions_and_risks": true
+    },
+    "headings": {
+      "date_present": false
+    },
+    "coverage": {
+      "mcp": true,
+      "knowledge": true,
+      "dgx": true,
+      "ethics_concurrency": true
+    },
+    "citations": {
+      "total": 3,
+      "coverage_ratio": 0.333
+    },
+    "specificity": {
+      "interfaces": 21
+    },
+    "migration": {
+      "milestone_count": 7,
+      "avg_tasks_per_milestone": 3.43,
+      "acceptance_criteria_count": 14
+    },
+    "relevance": {
+      "independence": true
+    },
+    "risks": {
+      "risk_count": 2,
+      "mitigation_count": 5
+    },
+    "knowledge": {
+      "cross_links": 30,
+      "ships_log_links": 10
+    },
+    "lexical": {
+      "token_count": 3229,
+      "type_token_ratio": 0.3369
+    },
+    "readability": {
+      "flesch": 17.76
+    },
+    "lint": {
+      "markdown_pass": null
+    },
+    "novelty": {
+      "embedding_similarity_baseline": 0.4308
+    },
+    "ethics": {
+      "concurrency_mentions": 15
+    },
+    "assumptions": {
+      "assumption_count": 2
+    },
+    "checklist": {
+      "total": 24
+    },
+    "manual": {}
+  }
+]
