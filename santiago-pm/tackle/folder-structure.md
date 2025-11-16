@@ -2,12 +2,12 @@
 
 ## Overview
 
-The `nusy_pm/` folder serves as the centralized domain for Product Management artifacts in the NuSy system. It follows nautical theming inspired by the Santiago ship metaphor, providing intuitive organization for autonomous agents and human developers.
+The `santiago-pm/` folder serves as the centralized domain for Product Management artifacts in the Santiago system. It follows nautical theming inspired by the Santiago ship metaphor, providing intuitive organization for autonomous agents and human developers.
 
 ## Folder Hierarchy
 
 ```
-nusy_pm/
+santiago-pm/
 ├── folder-structure.md          # This document (moved to tackle/)
 ├── notes-domain-model.md        # Notes domain specification
 ├── status-system.md             # Universal status system spec (moved to tackle/status/)

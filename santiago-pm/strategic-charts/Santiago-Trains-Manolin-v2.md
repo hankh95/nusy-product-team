@@ -13,7 +13,7 @@ Santiago-Trains-Manolin v2 represents the clarified evolution from a NuSy protot
 
 **Key Clarifications from v1:**
 - **Santiago** = Core NuSy AI system (the boat builder)
-- **santiago-pm** = Product management domain AI (what we're building in current `nusy_pm/`)
+- **santiago-pm** = Product management domain AI (what we're building in current `santiago-pm/`)
 - **santiago-core/** = Separate directory for the core Santiago system
 - **MVP Team:** Start with 3 core roles, expand to 7+ as system matures
 - **Ethical oversight** built into every agent from the beginning

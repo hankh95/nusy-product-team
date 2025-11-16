@@ -1,6 +1,6 @@
 # NuSy PM Tackle
 
-This directory contains the implementation tackle for NuSy PM functionality. Each tackle corresponds to a domain concept defined in the parent `nusy_pm/` directory specifications.
+This directory contains the implementation tackle for Santiago PM functionality. Each tackle corresponds to a domain concept defined in the parent `santiago-pm/` directory specifications.
 
 ## Tackle Organization
 
@@ -16,7 +16,7 @@ tackle/
 
 ### Code Generation Source
 
-- **Domain Specifications**: Read from parent `nusy_pm/` directory
+- **Domain Specifications**: Read from parent `santiago-pm/` directory
 - **Status System**: `status/status-system.md`
 - **Notes Domain**: `../notes-domain-model.md`
 - **Experiments**: `../expeditions/` artifacts
