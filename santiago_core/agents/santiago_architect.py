@@ -11,12 +11,13 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 from santiago_core.core.agent_framework import SantiagoAgent, Task, Message, EthicalOversight
+from santiago_core.services.knowledge_graph import SantiagoKnowledgeGraph
 
 
 class SantiagoArchitect(SantiagoAgent):
     """Architect agent for defining system architecture and technical approaches"""
 
-    def __init__(self, workspace_path: Path):
+    def __init__(self, workspace_path: Path, knowledge_graph: SantiagoKnowledgeGraph):
         super().__init__("santiago-architect", workspace_path)
         self.architecture_patterns: Dict[str, Dict] = {}
         self.current_architecture: Dict = {}
@@ -26,6 +27,7 @@ class SantiagoArchitect(SantiagoAgent):
             "infrastructure": ["docker", "kubernetes", "github-actions"],
             "storage": ["rdf", "postgresql", "redis"]
         }
+        self.knowledge_graph = knowledge_graph
 
     async def handle_custom_message(self, message: Message) -> None:
         """Handle architect-specific messages"""
@@ -216,11 +218,15 @@ graph TD
         """Start working on an architecture task"""
         self.logger.info(f"Starting architecture task: {task.title}")
 
+        # Record task in knowledge graph
+        self.knowledge_graph.record_task(task.id, task.title, task.description, "santiago-architect")
+
         # Evaluate task ethically
         ethical_review = EthicalOversight.evaluate_action(task.description)
         if not ethical_review["approved"]:
             self.logger.warning(f"Task failed ethical review: {ethical_review['concerns']}")
             await self.update_task_status(task.id, "blocked", ethical_concerns=ethical_review["concerns"])
+            self.knowledge_graph.record_learning("santiago-architect", "ethical_review", f"Task '{task.title}' failed ethical review", "blocked")
             return
 
         # Process architecture tasks
@@ -235,3 +241,5 @@ graph TD
             ))
 
         await self.update_task_status(task.id, "completed")
+        self.knowledge_graph.update_task_status(task.id, "completed", "santiago-architect")
+        self.knowledge_graph.record_learning("santiago-architect", "task_completion", f"Successfully completed architecture task '{task.title}'", "success")

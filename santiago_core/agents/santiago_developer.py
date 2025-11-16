@@ -13,16 +13,18 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 from santiago_core.core.agent_framework import SantiagoAgent, Task, Message, EthicalOversight
+from santiago_core.services.knowledge_graph import SantiagoKnowledgeGraph
 
 
 class SantiagoDeveloper(SantiagoAgent):
     """Developer agent for implementing features and writing code"""
 
-    def __init__(self, workspace_path: Path):
+    def __init__(self, workspace_path: Path, knowledge_graph: SantiagoKnowledgeGraph):
         super().__init__("santiago-developer", workspace_path)
         self.implemented_features: List[Dict] = []
         self.test_results: Dict[str, Dict] = {}
         self.code_quality_metrics: Dict[str, float] = {}
+        self.knowledge_graph = knowledge_graph
 
     async def handle_custom_message(self, message: Message) -> None:
         """Handle developer-specific messages"""
@@ -399,11 +401,15 @@ if __name__ == "__main__":
         """Start working on a development task"""
         self.logger.info(f"Starting development task: {task.title}")
 
+        # Record task in knowledge graph
+        self.knowledge_graph.record_task(task.id, task.title, task.description, "santiago-developer")
+
         # Evaluate task ethically
         ethical_review = EthicalOversight.evaluate_action(task.description)
         if not ethical_review["approved"]:
             self.logger.warning(f"Task failed ethical review: {ethical_review['concerns']}")
             await self.update_task_status(task.id, "blocked", ethical_concerns=ethical_review["concerns"])
+            self.knowledge_graph.record_learning("santiago-developer", "ethical_review", f"Task '{task.title}' failed ethical review", "blocked")
             return
 
         # Process development tasks
@@ -421,3 +427,5 @@ if __name__ == "__main__":
             await self.implement_feature(mock_message)
 
         await self.update_task_status(task.id, "completed")
+        self.knowledge_graph.update_task_status(task.id, "completed", "santiago-developer")
+        self.knowledge_graph.record_learning("santiago-developer", "task_completion", f"Successfully completed development task '{task.title}'", "success")

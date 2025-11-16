@@ -13,6 +13,7 @@ from typing import Dict, List, Optional
 from santiago_core.agents.santiago_pm import SantiagoProductManager
 from santiago_core.agents.santiago_architect import SantiagoArchitect
 from santiago_core.agents.santiago_developer import SantiagoDeveloper
+from santiago_core.services.knowledge_graph import SantiagoKnowledgeGraph
 from santiago_core.core.agent_framework import Message, SantiagoAgent, Task
 
 
@@ -23,10 +24,13 @@ class SantiagoTeamCoordinator:
         self.workspace_path = workspace_path
         self.logger = logging.getLogger("santiago-coordinator")
 
+        # Initialize knowledge graph
+        self.knowledge_graph = SantiagoKnowledgeGraph(workspace_path)
+
         # Initialize agents
-        self.product_manager = SantiagoProductManager(workspace_path)
-        self.architect = SantiagoArchitect(workspace_path)
-        self.developer = SantiagoDeveloper(workspace_path)
+        self.product_manager = SantiagoProductManager(workspace_path, self.knowledge_graph)
+        self.architect = SantiagoArchitect(workspace_path, self.knowledge_graph)
+        self.developer = SantiagoDeveloper(workspace_path, self.knowledge_graph)
 
         # Register peers for communication
         self._register_agent_peers()
@@ -53,6 +57,11 @@ class SantiagoTeamCoordinator:
     async def initialize_team(self) -> None:
         """Initialize the autonomous development team"""
         self.logger.info("Initializing Santiago autonomous development team")
+
+        # Register agents in knowledge graph
+        self.knowledge_graph.register_agent("santiago-pm", "Product Manager", ["vision_processing", "hypothesis_generation", "feature_specification", "backlog_management"])
+        self.knowledge_graph.register_agent("santiago-architect", "System Architect", ["technical_evaluation", "architecture_design", "pattern_application", "technology_recommendation"])
+        self.knowledge_graph.register_agent("santiago-developer", "Software Developer", ["feature_implementation", "code_generation", "testing", "quality_assurance"])
 
         # Start agent processing loops
         agent_tasks = [
