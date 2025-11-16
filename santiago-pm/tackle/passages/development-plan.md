@@ -26,7 +26,7 @@
 
 - YAML-based workflow definition format
 - Workflow execution engine with state persistence
-- Integration with existing NuSy PM infrastructure
+- Integration with existing Santiago PM infrastructure
 - Comprehensive validation and error handling
 - Performance suitable for concurrent workflow execution
 

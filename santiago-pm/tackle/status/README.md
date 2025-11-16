@@ -1,6 +1,6 @@
-# NuSy PM Status Module
+# Santiago PM Status Module
 
-This module implements the comprehensive status tracking system for all NuSy PM artifacts as specified in `status-system.md`.
+This module implements the comprehensive status tracking system for all Santiago PM artifacts as specified in `status-system.md`.
 
 ## Features
 
@@ -13,7 +13,7 @@ This module implements the comprehensive status tracking system for all NuSy PM 
 
 ## Installation
 
-The module is part of the NuSy PM system. Install dependencies:
+The module is part of the Santiago PM system. Install dependencies:
 
 ```bash
 pip install -r requirements.txt

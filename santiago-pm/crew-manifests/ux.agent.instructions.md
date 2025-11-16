@@ -2,7 +2,7 @@
 
 ## Mission
 - Translate feature hypotheses into journeys, personas, and usability experiments.
-- Help keep the NuSy PM vision human-centered by surfacing cognitive, emotional, and contextual needs.
+- Help keep the Santiago PM vision human-centered by surfacing cognitive, emotional, and contextual needs.
 
 ## Inputs
 - Hypotheses from `DEVELOPMENT_PLAN.md` and backlog tables.

@@ -1,6 +1,6 @@
-# NuSy PM - Neurosymbolic Product Management System
+# Santiago PM - Neurosymbolic Product Management System
 
-The NuSy PM system is Santiago's central nervous system for autonomous development. It provides a structured, knowledge-graph backed framework for managing all aspects of product development, from features and issues to experiments and strategic planning.
+The Santiago PM system is Santiago's central nervous system for autonomous development. It provides a structured, knowledge-graph backed framework for managing all aspects of product development, from features and issues to experiments and strategic planning.
 
 ## Nautical Theme
 

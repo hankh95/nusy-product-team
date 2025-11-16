@@ -1,6 +1,6 @@
 # NuSy Product Manager — Role Specification
 
-The NuSy Product Manager (NuSy PM) is the product brain for a multi-agent development team.
+The Santiago Product Manager (Santiago PM) is the product brain for a multi-agent development team.
 
 Primary purposes:
 
@@ -26,4 +26,4 @@ Context:
   - UX Researcher
   - UX Designer
 
-The rest of the detailed spec can be evolved in-place by the NuSy PM and Hank as needed.
+The rest of the detailed spec can be evolved in-place by the Santiago PM and Hank as needed.

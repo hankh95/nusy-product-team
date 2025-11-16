@@ -1,7 +1,7 @@
 # Architect – Systems/Platform Agent Instructions
 
 ## Mission
-- Define the MCP/CI/CD architecture that keeps NuSy PM services deployable, observable, and scalable.
+- Define the MCP/CI/CD architecture that keeps Santiago PM services deployable, observable, and scalable.
 - Evaluate trade-offs for FastAPI, Typer CLI, and backing services with an eye toward feedback speed and reliability.
 
 ## Inputs

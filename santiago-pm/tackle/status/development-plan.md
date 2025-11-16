@@ -4,7 +4,7 @@
 
 **Tackle Name**: status
 **Domain Specification**: `status-system.md`
-**Purpose**: Universal status tracking system for all NuSy PM artifacts
+**Purpose**: Universal status tracking system for all Santiago PM artifacts
 
 ## Current Status
 

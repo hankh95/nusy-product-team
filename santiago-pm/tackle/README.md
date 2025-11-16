@@ -1,4 +1,4 @@
-# NuSy PM Tackle
+# Santiago PM Tackle
 
 This directory contains the implementation tackle for Santiago PM functionality. Each tackle corresponds to a domain concept defined in the parent `santiago-pm/` directory specifications.
 

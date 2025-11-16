@@ -1,4 +1,4 @@
-# NuSy PM Passages
+# Santiago PM Passages
 
 This directory contains passage definitions and specifications for coordinating work between humans, agents, and automated systems in the NuSy development ecosystem.
 
@@ -24,9 +24,9 @@ These workflows enable Santiago to operate autonomously across different domains
 - **Quality Assurance**: Automated testing and validation processes
 - **Documentation**: Generating and maintaining project documentation
 
-### NuSy PM Domain Workflows
+### Santiago PM Domain Workflows
 
-These workflows are specific to the NuSy PM domain and tackle development:
+These workflows are specific to the Santiago PM domain and tackle development:
 
 - **Tackle Development**: End-to-end process for implementing new tackle
 - **Experiment Management**: Coordinating autonomous experiments
@@ -69,7 +69,7 @@ Santiago can use these passages to:
 3. **Coordinate with Humans**: Request approvals and provide status updates
 4. **Maintain Quality**: Execute quality gates and validation steps
 
-### For NuSy PM Team
+### For Santiago PM Team
 
 The team can use these passages to:
 
