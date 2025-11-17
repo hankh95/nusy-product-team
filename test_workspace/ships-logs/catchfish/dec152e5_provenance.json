@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "dec152e5-97fc-4869-a72c-c5d6555e575f",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/README.md",
+    "file_hash": "9528fe3aa4da70b8b65f654d9ebe0acfd4905c7f4fe52d27cd93b06ddd61d950",
+    "file_size_bytes": 6612,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:29:15.482780",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:29:15.482797",
+      "completed_at": "2025-11-17T01:29:15.584024",
+      "extraction_time_seconds": 0.10121393203735352,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:29:15.584074",
+      "completed_at": "2025-11-17T01:29:15.738354",
+      "extraction_time_seconds": 0.1542520523071289,
+      "entity_count": 10,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.8,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:29:15.738434",
+      "completed_at": "2025-11-17T01:29:15.840677",
+      "extraction_time_seconds": 0.10222578048706055,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:29:15.840758",
+      "completed_at": "2025-11-17T01:29:15.942280",
+      "extraction_time_seconds": 0.1014869213104248,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 10,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.4591786861419678,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

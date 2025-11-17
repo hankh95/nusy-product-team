@@ -1,0 +1,14 @@
+{
+  "service": {
+    "name": "test-mini",
+    "version": "1.0.0"
+  },
+  "tools": [
+    {
+      "name": "test_behavior_1"
+    },
+    {
+      "name": "test_behavior_2"
+    }
+  ]
+}
