@@ -1,0 +1,39 @@
+{
+  "service": {
+    "name": "santiago-pm-safe-xp",
+    "version": "1.0.0",
+    "description": "Domain-specific Santiago for santiago-pm-safe-xp"
+  },
+  "capabilities": {
+    "level": "journeyman",
+    "knowledge_scope": "lake"
+  },
+  "tools": [
+    {
+      "name": "create_backlog",
+      "type": "output"
+    },
+    {
+      "name": "prioritize_stories",
+      "type": "output"
+    },
+    {
+      "name": "define_acceptance_criteria",
+      "type": "output"
+    },
+    {
+      "name": "plan_iteration",
+      "type": "output"
+    },
+    {
+      "name": "track_velocity",
+      "type": "output"
+    }
+  ],
+  "metadata": {
+    "generated_at": "2025-11-16T21:57:49.064259",
+    "expedition_id": "8931abb0-d73f-4112-ab23-d8101abe8ec5",
+    "cycles_completed": 5,
+    "final_bdd_pass_rate": 0.9666666666666667
+  }
+}

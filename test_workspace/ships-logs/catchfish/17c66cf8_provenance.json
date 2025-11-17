@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "17c66cf8-d902-4172-9e5a-14a47d67d409",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/test_workspace/demo_sources/agile_practices.md",
+    "file_hash": "32662272d0614aa49f5ccc6fba53ab966846f7091c347b52f789140cdc2ad944",
+    "file_size_bytes": 692,
+    "file_type": ".md",
+    "extracted_at": "2025-11-16T22:00:22.907026",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-16T22:00:22.907110",
+      "completed_at": "2025-11-16T22:00:23.010215",
+      "extraction_time_seconds": 0.1030890941619873,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-16T22:00:23.010289",
+      "completed_at": "2025-11-16T22:00:23.164192",
+      "extraction_time_seconds": 0.15387797355651855,
+      "entity_count": 10,
+      "relationship_count": 5,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.7666666666666667,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-16T22:00:23.164257",
+      "completed_at": "2025-11-16T22:00:23.266921",
+      "extraction_time_seconds": 0.10264182090759277,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-16T22:00:23.267018",
+      "completed_at": "2025-11-16T22:00:23.369530",
+      "extraction_time_seconds": 0.10247182846069336,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 15,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.462080717086792,
+  "target_time_seconds": 900,
+  "meets_target": true
+}
