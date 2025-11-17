@@ -11,29 +11,74 @@
   "tools": [
     {
       "name": "create_backlog",
-      "type": "output"
+      "description": "Tool for create backlog",
+      "type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": true,
+      "mutates_kg": true
     },
     {
       "name": "prioritize_stories",
-      "type": "output"
+      "description": "Tool for prioritize stories",
+      "type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
     },
     {
       "name": "define_acceptance_criteria",
-      "type": "output"
+      "description": "Tool for define acceptance criteria",
+      "type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
     },
     {
       "name": "plan_iteration",
-      "type": "output"
+      "description": "Tool for plan iteration",
+      "type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
     },
     {
       "name": "track_velocity",
-      "type": "output"
+      "description": "Tool for track velocity",
+      "type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
     }
   ],
+  "budget_hint_usd_per_day": 25.0,
   "metadata": {
-    "generated_at": "2025-11-16T21:57:49.064259",
-    "expedition_id": "8931abb0-d73f-4112-ab23-d8101abe8ec5",
-    "cycles_completed": 5,
-    "final_bdd_pass_rate": 0.9666666666666667
+    "generated_at": "2025-11-16T22:04:27.929983",
+    "entity_count": 20,
+    "tool_count": 5
   }
 }
