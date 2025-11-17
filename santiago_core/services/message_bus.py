@@ -8,7 +8,7 @@ Supports async message passing between Santiago agents on the same machine.
 import asyncio
 import json
 import logging
-from typing import Any, Callable, Dict, Optional, Set
+from typing import Any, Awaitable, Callable, Dict, Optional, Set, Union
 from datetime import datetime
 
 try:
@@ -41,7 +41,7 @@ class MessageBus:
         self.redis_url = redis_url
         self.redis_client: Optional[redis.Redis] = None
         self.pubsub: Optional[redis.client.PubSub] = None
-        self.handlers: Dict[str, Set[Callable]] = {}
+        self.handlers: Dict[str, Set[Callable[[Dict[str, Any]], Awaitable[None]]]] = {}
         self.logger = logging.getLogger(__name__)
         self._running = False
     
@@ -93,7 +93,7 @@ class MessageBus:
     async def subscribe(
         self,
         topic: str,
-        handler: Callable[[Dict[str, Any]], None],
+        handler: Callable[[Dict[str, Any]], Awaitable[None]],
     ) -> None:
         """
         Subscribe to a topic.

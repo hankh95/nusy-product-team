@@ -16,6 +16,7 @@ from pydantic import BaseModel, Field, field_validator
 
 from santiago_core.core.agent_framework import SantiagoAgent, Message, Task
 from santiago_core.services.llm_router import LLMRouter, TaskComplexity
+from santiago_core.services.message_bus import get_message_bus, MessageBus
 
 
 class MCPTool(BaseModel):
@@ -88,6 +89,10 @@ class BaseProxyAgent(SantiagoAgent):
         
         # Initialize LLM router
         self.llm_router = LLMRouter()
+        
+        # Initialize message bus connection (lazy - connect on first use)
+        self.message_bus: Optional[MessageBus] = None
+        self._message_bus_connected = False
 
     async def invoke_tool(self, tool_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -276,3 +281,140 @@ class BaseProxyAgent(SantiagoAgent):
     def get_manifest_dict(self) -> Dict[str, Any]:
         """Get manifest as dictionary"""
         return self.manifest.model_dump()
+
+    async def connect_to_message_bus(self) -> None:
+        """Connect proxy to Redis message bus"""
+        if self._message_bus_connected:
+            return
+        
+        try:
+            self.message_bus = get_message_bus()
+            await self.message_bus.connect()
+            
+            # Subscribe to role-specific topic
+            role_topic = f"agent.{self.name}"
+            await self.message_bus.subscribe(role_topic, self._handle_bus_message)
+            
+            # Subscribe to broadcast topic
+            await self.message_bus.subscribe("agent.broadcast", self._handle_bus_message)
+            
+            self._message_bus_connected = True
+            self.logger.info(f"{self.name} connected to message bus")
+            
+        except Exception as e:
+            self.logger.error(f"Failed to connect to message bus: {e}")
+            raise
+
+    async def _handle_bus_message(self, envelope: Dict[str, Any]) -> None:
+        """
+        Handle message from message bus.
+        
+        Args:
+            envelope: Message envelope with sender, timestamp, payload
+        """
+        sender = envelope.get("sender", "unknown")
+        payload = envelope.get("payload", {})
+        
+        self.logger.info(f"{self.name} received message from {sender}: {payload}")
+        
+        # Handle different message types
+        message_type = payload.get("type", "")
+        
+        if message_type == "task_assignment":
+            await self._handle_task_assignment(payload, sender)
+        elif message_type == "collaboration_request":
+            await self._handle_collaboration_request(payload, sender)
+        elif message_type == "status_query":
+            await self._handle_status_query(payload, sender)
+        else:
+            # Delegate to proxy-specific handler
+            await self._handle_proxy_specific_message(payload, sender)
+
+    async def _handle_task_assignment(self, payload: Dict[str, Any], sender: str) -> None:
+        """Handle task assignment from message bus"""
+        task_id = payload.get("task_id", "")
+        task_description = payload.get("description", "")
+        
+        self.logger.info(f"Received task assignment: {task_id}")
+        
+        # Acknowledge receipt
+        await self.send_message(
+            sender,
+            {
+                "type": "task_acknowledged",
+                "task_id": task_id,
+                "status": "accepted",
+            }
+        )
+
+    async def _handle_collaboration_request(self, payload: Dict[str, Any], sender: str) -> None:
+        """Handle collaboration request from another agent"""
+        request_type = payload.get("request_type", "")
+        
+        self.logger.info(f"Collaboration request from {sender}: {request_type}")
+        
+        # Respond with availability
+        await self.send_message(
+            sender,
+            {
+                "type": "collaboration_response",
+                "request_type": request_type,
+                "available": True,
+            }
+        )
+
+    async def _handle_status_query(self, payload: Dict[str, Any], sender: str) -> None:
+        """Handle status query from another agent"""
+        self.logger.info(f"Status query from {sender}")
+        
+        # Send current metrics
+        metrics = self.get_metrics()
+        await self.send_message(
+            sender,
+            {
+                "type": "status_response",
+                "metrics": metrics,
+            }
+        )
+
+    async def _handle_proxy_specific_message(self, payload: Dict[str, Any], sender: str) -> None:
+        """
+        Handle proxy-specific messages.
+        
+        Override in subclasses for custom message handling.
+        """
+        self.logger.debug(f"No specific handler for message from {sender}: {payload}")
+
+    async def send_message(self, recipient: str, message: Dict[str, Any]) -> None:
+        """
+        Send message to another agent via message bus.
+        
+        Args:
+            recipient: Name of recipient agent (e.g., "pm-proxy")
+            message: Message payload
+        """
+        if not self._message_bus_connected:
+            await self.connect_to_message_bus()
+        
+        await self.message_bus.send_message(recipient, message, self.name)
+        self.logger.debug(f"Sent message to {recipient}: {message}")
+
+    async def broadcast_message(self, message: Dict[str, Any]) -> None:
+        """
+        Broadcast message to all agents.
+        
+        Args:
+            message: Message payload
+        """
+        if not self._message_bus_connected:
+            await self.connect_to_message_bus()
+        
+        await self.message_bus.broadcast(message, self.name)
+        self.logger.debug(f"Broadcast message: {message}")
+
+    async def disconnect_from_message_bus(self) -> None:
+        """Disconnect from message bus"""
+        if self.message_bus and self._message_bus_connected:
+            await self.message_bus.disconnect()
+            self._message_bus_connected = False
+            self.logger.info(f"{self.name} disconnected from message bus")
