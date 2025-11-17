@@ -71,10 +71,12 @@ class BaseProxyAgent(SantiagoAgent):
         workspace_path: Path,
         config: ProxyConfig,
         manifest: MCPManifest,
+        role_instructions: Optional[str] = None,
     ):
         super().__init__(name, workspace_path)
         self.config = config
         self.manifest = manifest
+        self.role_instructions = role_instructions or f"You are a {config.role_name}."
         self.budget_spent: float = 0.0
         self.session_start: datetime = datetime.now()
         self.call_count: int = 0
@@ -171,11 +173,60 @@ class BaseProxyAgent(SantiagoAgent):
         params: Dict[str, Any]
     ) -> Dict[str, Any]:
         """
-        Call xAI (Grok) API.
+        Call xAI (Grok) API using OpenAI-compatible interface.
         
-        Subclasses must implement actual API logic.
+        xAI's API is OpenAI-compatible, so we use the OpenAI SDK
+        with custom base_url and api_key.
         """
-        raise NotImplementedError("Subclasses must implement _call_xai_api")
+        try:
+            from openai import AsyncOpenAI
+            
+            # Create xAI client (OpenAI-compatible)
+            client = AsyncOpenAI(
+                api_key=llm_config.api_key,
+                base_url=llm_config.api_base,
+            )
+            
+            # Build prompt from tool and params
+            prompt = self._build_prompt(tool_name, params)
+            
+            # Call Grok API
+            response = await client.chat.completions.create(
+                model=llm_config.model,
+                messages=[
+                    {"role": "system", "content": self.role_instructions or f"You are a {self.config.role_name}."},
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=llm_config.temperature,
+                max_tokens=llm_config.max_tokens,
+            )
+            
+            # Parse response
+            content = response.choices[0].message.content
+            if not content:
+                return {
+                    "error": "Empty response from API",
+                    "tool": tool_name,
+                    "provider": "xai",
+                }
+            
+            # Try to parse as JSON, fallback to text
+            try:
+                return json.loads(content)
+            except json.JSONDecodeError:
+                return {
+                    "tool": tool_name,
+                    "result": content,
+                    "raw_response": content,
+                }
+                
+        except Exception as e:
+            self.logger.error(f"xAI API error: {e}")
+            return {
+                "error": str(e),
+                "tool": tool_name,
+                "provider": "xai",
+            }
     
     async def _call_openai_api(
         self, 
@@ -186,9 +237,103 @@ class BaseProxyAgent(SantiagoAgent):
         """
         Call OpenAI API.
         
-        Subclasses must implement actual API logic.
+        Uses OpenAI SDK with GPT-4, GPT-4o, or o1-preview based on complexity.
         """
-        raise NotImplementedError("Subclasses must implement _call_openai_api")
+        try:
+            from openai import AsyncOpenAI
+            
+            # Create OpenAI client
+            client = AsyncOpenAI(
+                api_key=llm_config.api_key,
+                base_url=llm_config.api_base,
+            )
+            
+            # Build prompt from tool and params
+            prompt = self._build_prompt(tool_name, params)
+            
+            # Handle o1-preview models differently (no system message, no temperature)
+            if llm_config.model.startswith("o1"):
+                response = await client.chat.completions.create(
+                    model=llm_config.model,
+                    messages=[
+                        {"role": "user", "content": f"{self.role_instructions or ''}\n\n{prompt}"},
+                    ],
+                    max_completion_tokens=llm_config.max_tokens,
+                )
+            else:
+                response = await client.chat.completions.create(
+                    model=llm_config.model,
+                    messages=[
+                        {"role": "system", "content": self.role_instructions or f"You are a {self.config.role_name}."},
+                        {"role": "user", "content": prompt},
+                    ],
+                    temperature=llm_config.temperature,
+                    max_tokens=llm_config.max_tokens,
+                )
+            
+            # Parse response
+            content = response.choices[0].message.content
+            if not content:
+                return {
+                    "error": "Empty response from API",
+                    "tool": tool_name,
+                    "provider": "openai",
+                }
+            
+            # Try to parse as JSON, fallback to text
+            try:
+                return json.loads(content)
+            except json.JSONDecodeError:
+                return {
+                    "tool": tool_name,
+                    "result": content,
+                    "raw_response": content,
+                }
+                
+        except Exception as e:
+            self.logger.error(f"OpenAI API error: {e}")
+            return {
+                "error": str(e),
+                "tool": tool_name,
+                "provider": "openai",
+            }
+    
+    def _build_prompt(self, tool_name: str, params: Dict[str, Any]) -> str:
+        """
+        Build prompt for LLM from tool name and parameters.
+        
+        Args:
+            tool_name: Name of the tool being invoked
+            params: Tool parameters
+            
+        Returns:
+            Formatted prompt string
+        """
+        # Find tool in manifest
+        all_tools = (
+            self.manifest.input_tools +
+            self.manifest.output_tools +
+            self.manifest.communication_tools
+        )
+        tool_def = next((t for t in all_tools if t.name == tool_name), None)
+        
+        if not tool_def:
+            return f"Execute tool: {tool_name}\nParameters: {json.dumps(params, indent=2)}"
+        
+        # Build structured prompt
+        prompt_parts = [
+            f"Execute the following tool:",
+            f"",
+            f"Tool: {tool_name}",
+            f"Description: {tool_def.description}",
+            f"",
+            f"Parameters:",
+            json.dumps(params, indent=2),
+            f"",
+            f"Please provide a structured JSON response following this tool's expected output format.",
+        ]
+        
+        return "\n".join(prompt_parts)
 
     def _tool_exists(self, tool_name: str) -> bool:
         """Check if tool exists in manifest"""
@@ -390,18 +535,19 @@ class BaseProxyAgent(SantiagoAgent):
         Send message to another agent via message bus.
         
         Args:
-            recipient: Name of recipient agent (e.g., "pm-proxy")
+            recipient: Name of the recipient agent
             message: Message payload
         """
         if not self._message_bus_connected:
             await self.connect_to_message_bus()
         
-        await self.message_bus.send_message(recipient, message, self.name)
+        if self.message_bus:
+            await self.message_bus.send_message(recipient, message, self.name)
         self.logger.debug(f"Sent message to {recipient}: {message}")
 
     async def broadcast_message(self, message: Dict[str, Any]) -> None:
         """
-        Broadcast message to all agents.
+        Broadcast message to all agents via message bus.
         
         Args:
             message: Message payload
@@ -409,7 +555,8 @@ class BaseProxyAgent(SantiagoAgent):
         if not self._message_bus_connected:
             await self.connect_to_message_bus()
         
-        await self.message_bus.broadcast(message, self.name)
+        if self.message_bus:
+            await self.message_bus.broadcast(message, self.name)
         self.logger.debug(f"Broadcast message: {message}")
 
     async def disconnect_from_message_bus(self) -> None:

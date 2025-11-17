@@ -124,11 +124,19 @@ class EthicistProxyAgent(BaseProxyAgent):
             budget_tracking=os.getenv("PROXY_BUDGET_TRACKING", "false").lower() == "true",
         )
 
+        # Load role instructions
+        role_card_path = workspace_path / "knowledge" / "proxy-instructions" / "ethicist.md"
+        role_instructions = None
+        if role_card_path.exists():
+            with open(role_card_path, 'r') as f:
+                role_instructions = f.read()
+
         super().__init__(
             name="ethicist-proxy",
             workspace_path=workspace_path,
             config=config,
             manifest=manifest,
+            role_instructions=role_instructions,
         )
 
         # Store Baha'i principles for access
@@ -137,9 +145,6 @@ class EthicistProxyAgent(BaseProxyAgent):
         # Get ethical mode from environment (async by default per user decision)
         import os
         self.ethical_mode = os.getenv("PROXY_ETHICAL_MODE", "async")
-
-        # Load role instructions
-        self._load_role_instructions()
 
     def _load_role_instructions(self) -> None:
         """Load Ethicist role card instructions"""
