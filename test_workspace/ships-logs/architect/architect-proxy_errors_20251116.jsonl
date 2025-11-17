@@ -1,0 +1,1 @@
+{"timestamp": "2025-11-16T21:01:17.965317", "proxy": "architect-proxy", "tool": "create_design", "params": {"requirements": "Design a message bus for multi-agent communication", "constraints": "Must support pub/sub and direct messaging"}, "error": "Unknown provider: LLMProvider.XAI", "type": "error"}

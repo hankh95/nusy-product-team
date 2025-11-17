@@ -111,9 +111,11 @@ class BaseProxyAgent(SantiagoAgent):
         if not self._tool_exists(tool_name):
             raise ValueError(f"Tool '{tool_name}' not found in manifest")
         
+        # Estimate cost for tracking
+        estimated_cost = self.estimate_tool_cost(tool_name)
+        
         # Check budget (optional, disabled by default)
         if self.config.budget_tracking:
-            estimated_cost = self.estimate_tool_cost(tool_name)
             budget_limit = getattr(self.config, "budget_per_day", float('inf'))
             if self.budget_spent + estimated_cost > budget_limit:
                 raise ProxyBudgetExceeded(
@@ -152,6 +154,9 @@ class BaseProxyAgent(SantiagoAgent):
         Determines task complexity and routes to appropriate provider/model.
         Subclasses can override for custom routing logic.
         """
+        # Import here to avoid circular dependency
+        from santiago_core.services.llm_router import LLMProvider
+        
         # Determine task complexity
         complexity = self.llm_router.get_task_complexity(tool_name)
         
@@ -159,9 +164,9 @@ class BaseProxyAgent(SantiagoAgent):
         llm_config = self.llm_router.get_config(self.config.role_name, complexity)
         
         # Make API call based on provider
-        if llm_config.provider == "xai":
+        if llm_config.provider == LLMProvider.XAI:
             return await self._call_xai_api(llm_config, tool_name, params)
-        elif llm_config.provider == "openai":
+        elif llm_config.provider == LLMProvider.OPENAI:
             return await self._call_openai_api(llm_config, tool_name, params)
         else:
             raise ValueError(f"Unknown provider: {llm_config.provider}")
