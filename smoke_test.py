@@ -114,6 +114,8 @@ async def test_architect_real_api():
         print("⚠️  Skipping (XAI_API_KEY not configured)")
         return True
     
+    print(f"🔑 xAI key loaded: {xai_key[:10]}... (length: {len(xai_key)})")
+    
     workspace = Path("./test_workspace")
     workspace.mkdir(exist_ok=True)
     
@@ -121,6 +123,15 @@ async def test_architect_real_api():
         # Create Architect proxy
         architect = ArchitectProxyAgent(workspace)
         print("✅ Architect Proxy instantiated")
+        
+        # Check what the router is using
+        from santiago_core.services.llm_router import TaskComplexity
+        config = architect.llm_router.get_config("architect_proxy", TaskComplexity.MODERATE)
+        print(f"🔀 Router config:")
+        print(f"   Provider: {config.provider.value}")
+        print(f"   Model: {config.model}")
+        print(f"   API Base: {config.api_base}")
+        print(f"   API Key: {config.api_key[:10]}... (length: {len(config.api_key)})")
         
         # Make a simple API call
         print("\n📐 Asking Architect to create a design...")

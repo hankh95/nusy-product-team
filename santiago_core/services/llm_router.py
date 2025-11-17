@@ -41,11 +41,11 @@ class LLMRouter:
     
     # Model mapping based on xAI and OpenAI capabilities
     MODEL_MAP = {
-        # xAI models
-        (LLMProvider.XAI, TaskComplexity.SIMPLE): "grok-beta",
-        (LLMProvider.XAI, TaskComplexity.MODERATE): "grok-beta",
-        (LLMProvider.XAI, TaskComplexity.COMPLEX): "grok-beta",
-        (LLMProvider.XAI, TaskComplexity.CRITICAL): "grok-beta",
+        # xAI models (grok-beta deprecated 2025-09-15, use grok-3)
+        (LLMProvider.XAI, TaskComplexity.SIMPLE): "grok-3",
+        (LLMProvider.XAI, TaskComplexity.MODERATE): "grok-3",
+        (LLMProvider.XAI, TaskComplexity.COMPLEX): "grok-3",
+        (LLMProvider.XAI, TaskComplexity.CRITICAL): "grok-3",
         
         # OpenAI models
         (LLMProvider.OPENAI, TaskComplexity.SIMPLE): "gpt-4o-mini",
