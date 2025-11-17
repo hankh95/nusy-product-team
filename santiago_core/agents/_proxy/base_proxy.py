@@ -256,25 +256,49 @@ class BaseProxyAgent(SantiagoAgent):
             # Build prompt from tool and params
             prompt = self._build_prompt(tool_name, params)
             
-            # Handle o1-preview models differently (no system message, no temperature)
-            if llm_config.model.startswith("o1"):
-                response = await client.chat.completions.create(
-                    model=llm_config.model,
-                    messages=[
+            # Build request parameters based on model series
+            # o1/o3 series: Use max_completion_tokens, no system message, no temperature
+            # GPT-5 series: Use max_completion_tokens
+            # Other models: Use max_tokens
+            is_reasoning_model = llm_config.model.startswith(("o1", "o3"))
+            is_gpt5_series = llm_config.model.startswith("gpt-5")
+            
+            if is_reasoning_model:
+                # o1/o3: max_completion_tokens, no system, no temperature
+                request_params = {
+                    "model": llm_config.model,
+                    "messages": [
                         {"role": "user", "content": f"{self.role_instructions or ''}\n\n{prompt}"},
                     ],
-                    max_completion_tokens=llm_config.max_tokens,
-                )
-            else:
-                response = await client.chat.completions.create(
-                    model=llm_config.model,
-                    messages=[
+                }
+                if llm_config.max_tokens:
+                    request_params["max_completion_tokens"] = llm_config.max_tokens
+            elif is_gpt5_series:
+                # GPT-5: max_completion_tokens, system message allowed, temperature allowed
+                request_params = {
+                    "model": llm_config.model,
+                    "messages": [
                         {"role": "system", "content": self.role_instructions or f"You are a {self.config.role_name}."},
                         {"role": "user", "content": prompt},
                     ],
-                    temperature=llm_config.temperature,
-                    max_tokens=llm_config.max_tokens,
-                )
+                    "temperature": llm_config.temperature,
+                }
+                if llm_config.max_tokens:
+                    request_params["max_completion_tokens"] = llm_config.max_tokens
+            else:
+                # GPT-4 and earlier: max_tokens
+                request_params = {
+                    "model": llm_config.model,
+                    "messages": [
+                        {"role": "system", "content": self.role_instructions or f"You are a {self.config.role_name}."},
+                        {"role": "user", "content": prompt},
+                    ],
+                    "temperature": llm_config.temperature,
+                }
+                if llm_config.max_tokens:
+                    request_params["max_tokens"] = llm_config.max_tokens
+            
+            response = await client.chat.completions.create(**request_params)
             
             # Parse response
             content = response.choices[0].message.content
