@@ -1,6 +1,9 @@
 """Base Strategy for BDD Generation
 
 Abstract base class and data structures for multi-strategy BDD test generation.
+
+This module provides the foundation for the Fishnet v2.0.0 strategy pattern,
+enabling pluggable BDD generation strategies from PM behavior specifications.
 """
 
 from abc import ABC, abstractmethod
