@@ -99,6 +99,7 @@ work_completed:
     - "666595b: Implement Fishnet v2.0.0 multi-strategy BDD generation"
     - "9970339: Add BottomUpStrategy and CLI interface"
   tests_passing: true
+  session_log_saved: true  # F-027 integration
   acceptance_criteria_met:
     - "base_strategy.py with abstract base class + data classes": true
     - "bottom_up_strategy.py fully implemented": true
@@ -110,22 +111,33 @@ work_completed:
 **When** I complete my work session
 
 **Then** the system should:
-1. Create a PR automatically with:
+1. Save session context (F-027):
+   ```bash
+   python save-chat-log.py --paste --with-summary --topic "fishnet-implementation"
+   ```
+   - Raw transcript saved to `santiago-pm/personal-logs/agents/raw-transcripts/`
+   - Summary log created with metadata extraction
+   - Both linked for full provenance
+
+2. Create a PR automatically with:
    - Title: "Closes #6: Implement Fishnet v2.0.0 multi-strategy BDD generation"
-   - Body: Generated from work session log
+   - Body: Generated from work session log (includes link to session context)
    - Labels: `autonomous`, `santiago`, `enhancement`
    - Reviewers: Assigned PM (hankh95)
    - Linked issue: #6
-2. Add PR link to issue #6 as comment
-3. Update issue status to "in-review"
-4. Notify PM via GitHub notification
+   - Session log reference for reviewer context
+
+3. Add PR link to issue #6 as comment
+4. Update issue status to "in-review"
+5. Notify PM via GitHub notification
 
 **Acceptance Criteria**:
 - [ ] Agent can trigger PR creation via CLI command or API
-- [ ] PR body includes: work summary, acceptance criteria checklist, test results, commits
+- [ ] Session context saved before PR creation (F-027 integration)
+- [ ] PR body includes: work summary, session log link, acceptance criteria checklist, test results, commits
 - [ ] PR automatically links to issue using "Closes #N" keyword
 - [ ] Issue gets comment with PR link
-- [ ] PM receives notification
+- [ ] PM receives notification with full context
 
 ---
 

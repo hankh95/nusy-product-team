@@ -42,10 +42,12 @@ class PersonalLogManager:
         self.personal_logs_dir = self.workspace_path / "santiago-pm" / "personal-logs"
         self.agents_dir = self.personal_logs_dir / "agents"
         self.humans_dir = self.personal_logs_dir / "humans"
+        self.raw_transcripts_dir = self.agents_dir / "raw-transcripts"
         
         # Ensure directories exist
         self.agents_dir.mkdir(parents=True, exist_ok=True)
         self.humans_dir.mkdir(parents=True, exist_ok=True)
+        self.raw_transcripts_dir.mkdir(parents=True, exist_ok=True)
     
     
     def save_chat_history(
@@ -87,8 +89,19 @@ class PersonalLogManager:
         filename = f"{session_date}-{agent_name}-{topic}.md"
         filepath = self.agents_dir / filename
         
+        # Save raw transcript first (optional but recommended)
+        raw_transcript_path = self._save_raw_transcript(
+            conversation=conversation,
+            agent_name=agent_name,
+            session_date=session_date,
+            topic=topic
+        )
+        
         # Extract metadata from conversation
         extracted_metadata = self._extract_metadata_from_conversation(conversation)
+        
+        # Add raw transcript reference
+        extracted_metadata['raw_transcript'] = str(raw_transcript_path.relative_to(self.workspace_path))
         
         # Merge with provided metadata
         if metadata:
@@ -384,6 +397,52 @@ class PersonalLogManager:
             return all_logs[0]
         
         return None
+    
+    def _save_raw_transcript(
+        self,
+        conversation: str,
+        agent_name: str,
+        session_date: str,
+        topic: str
+    ) -> Path:
+        """
+        Save raw conversation transcript without transformation.
+        
+        This preserves the exact Copilot chat format for:
+        - Full provenance and debugging
+        - Detailed review if needed
+        - Backup of complete conversation
+        
+        Args:
+            conversation: Raw conversation transcript
+            agent_name: Name of agent
+            session_date: Date (YYYY-MM-DD)
+            topic: Session topic
+        
+        Returns:
+            Path to raw transcript file
+        """
+        # Generate filename: YYYY-MM-DD-{agent-name}-{topic}-raw.md
+        filename = f"{session_date}-{agent_name}-{topic}-raw.md"
+        filepath = self.raw_transcripts_dir / filename
+        
+        # Create minimal header with metadata
+        timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+        header = f"""# Raw Chat Transcript
+**Session:** {session_date}
+**Agent:** {agent_name}
+**Topic:** {topic}
+**Saved:** {timestamp}
+**Type:** Verbatim transcript (no transformation)
+
+---
+
+"""
+        
+        # Save raw transcript
+        filepath.write_text(header + conversation, encoding='utf-8')
+        
+        return filepath
     
     
     def _parse_log_file(self, content: str) -> tuple[Dict[str, Any], str]:
