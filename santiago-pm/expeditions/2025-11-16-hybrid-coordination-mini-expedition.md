@@ -45,13 +45,13 @@ related_artifacts:
 
 ## Experimental Design
 
-### Phase 1: Architecture Foundation (Copilot) ⏱️ START: 2025-11-16T[TBD]
+### Phase 1: Architecture Foundation (Copilot) ⏱️ COMPLETE: ~45 minutes
 
 **Tasks**:
 - [x] Extend pm-domain-ontology.ttl with Layer 7: Passage orchestration (4 classes, 13 properties, 8 behaviors)
 - [x] Update santiago-pm-mcp-manifest.json from 20 → 28 tools (add 8 passage behaviors with full JSON schemas)
-- [ ] Create Fishnet architecture specification (multi-strategy BDD generation design)
-- [ ] Create Navigator architecture specification (10-step orchestration design)
+- [x] Create Fishnet architecture specification (multi-strategy BDD generation design)
+- [x] Create Navigator architecture specification (10-step orchestration design)
 - [ ] Write GitHub issues for agents with clear acceptance criteria
 
 **Why Copilot**: Requires understanding of:
@@ -61,12 +61,13 @@ related_artifacts:
 - Integration with existing behaviors
 
 **Deliverables**:
-- Extended ontology (v1.1.0)
-- Extended manifest (28 tools)
-- Architecture specs for agents
-- 3 GitHub issues (BDD generation, Fishnet impl, Navigator impl)
+- ✅ Extended ontology (v1.1.0) - commit a6977bc
+- ✅ Extended manifest (28 tools) - commit a6977bc
+- ✅ Fishnet architecture spec (850+ lines) - commit 2ec200d
+- ✅ Navigator architecture spec (700+ lines) - commit 2ec200d
+- ⏳ 3 GitHub issues (BDD generation, Fishnet impl, Navigator impl) - NEXT
 
-**Time Budget**: 30-45 minutes
+**Actual Time**: 45 minutes (✅ Within budget)
 
 ---
 
