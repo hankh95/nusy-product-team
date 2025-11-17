@@ -1,24 +1,14 @@
 """Fishnet - BDD Test + MCP Manifest Generation
 
-Generates behavior-driven development tests and service manifests from domain knowledge:
+Generates behavior-driven development tests and service manifests from domain knowledge.
 
-1. BDD Feature Files (.feature)
-   - Gherkin scenarios for each behavior/tool
-   - Linked to knowledge nodes for traceability
-   - Contract acceptance tests
-   - Coverage tracking
+Version 2.0.0 implements multi-strategy BDD generation from extracted PM behaviors.
 
-2. MCP Manifest (mcp-manifest.json)
-   - Service contract with tools
-   - Capability levels (Apprentice/Journeyman/Master)
-   - Knowledge scope (Pond/Lake/Sea/Ocean)
-   - Concurrency risk annotations
-   - Budget hints
-
-3. Test Coverage Analysis
-   - Coverage ratio per behavior
-   - Gap detection for missing tests
-   - Traceability to knowledge graph nodes
+Primary Features:
+1. Parse behavior markdown files (pm-behaviors-extracted.md, passage-behaviors-extracted.md)
+2. Generate .feature files with Gherkin scenarios
+3. Multi-strategy approach (BottomUp, TopDown, External, Logic, Experiment)
+4. CLI interface for standalone execution
 
 Capability Levels:
 - Apprentice: Basic operations, guided workflows, high supervision
@@ -33,14 +23,36 @@ Knowledge Scope:
 - Ocean: Cross-domain scope (multi-domain integration)
 """
 
+import argparse
 import json
 import re
+import sys
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from uuid import uuid4
+
+# Handle both relative and absolute imports for CLI usage
+try:
+    from .fishnet_strategies import (
+        BehaviorSpec,
+        BDDScenario,
+        BDDFeatureFile,
+        BDDGenerationStrategy,
+        BottomUpStrategy,
+    )
+except ImportError:
+    # Running as script - add parent to path
+    sys.path.insert(0, str(Path(__file__).parent))
+    from fishnet_strategies import (
+        BehaviorSpec,
+        BDDScenario,
+        BDDFeatureFile,
+        BDDGenerationStrategy,
+        BottomUpStrategy,
+    )
 
 
 class CapabilityLevel(Enum):
@@ -118,23 +130,296 @@ class CoverageReport:
     recommendations: List[str] = field(default_factory=list)
 
 
-class Fishnet:
+class FishnetV2:
     """
-    Generates BDD tests and MCP manifests from domain knowledge.
+    Multi-strategy BDD test generator for Santiago PM behaviors.
     
-    Analyzes knowledge graph (entities, relationships, behaviors)
-    and produces:
-    - .feature files with Gherkin scenarios
-    - mcp-manifest.json with service contract
-    - Coverage reports with gap analysis
+    Version 2.0.0 - Parses behavior markdown files and generates .feature files
+    using pluggable generation strategies.
     
     Usage:
-        fishnet = Fishnet(workspace_path)
-        features = await fishnet.generate_bdd_features(
-            domain_name="santiago-pm-safe-xp",
-            behaviors=["create_backlog", "prioritize_stories"],
-            entities=[...]
+        fishnet = FishnetV2(
+            behaviors_file="pm-behaviors-extracted.md",
+            ontology_file="pm-domain-ontology.ttl",
+            output_dir="bdd-tests/"
         )
+        results = fishnet.generate_all_bdd_files(strategy_names=["bottom_up"])
+    """
+    
+    def __init__(
+        self,
+        behaviors_file: Path,
+        ontology_file: Path,
+        output_dir: Path
+    ):
+        self.behaviors_file = Path(behaviors_file)
+        self.ontology_file = Path(ontology_file)
+        self.output_dir = Path(output_dir)
+        
+        # Initialize strategies
+        self.strategies: Dict[str, BDDGenerationStrategy] = {
+            "bottom_up": BottomUpStrategy(),
+        }
+    
+    def generate_all_bdd_files(
+        self,
+        strategy_names: List[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Generate BDD .feature files for all behaviors using specified strategies.
+        
+        Args:
+            strategy_names: List of strategies to use (default: ["bottom_up"])
+            
+        Returns:
+            Dict with generation results and statistics
+        """
+        if strategy_names is None:
+            strategy_names = ["bottom_up"]
+        
+        print(f"\n🕸️  Fishnet v2.0.0: Multi-Strategy BDD Generation")
+        print(f"   Behaviors File: {self.behaviors_file.name}")
+        print(f"   Output Dir: {self.output_dir}")
+        print(f"   Strategies: {', '.join(strategy_names)}")
+        print()
+        
+        # Load behaviors from markdown
+        behaviors = self._load_behaviors()
+        print(f"   ✅ Loaded {len(behaviors)} behaviors")
+        
+        # Generate feature files
+        results = {
+            "total_behaviors": len(behaviors),
+            "files_generated": 0,
+            "scenarios_generated": 0,
+            "strategies_used": strategy_names,
+            "generation_time": datetime.now().isoformat(),
+            "output_dir": str(self.output_dir)
+        }
+        
+        # Create output directory
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        
+        for behavior in behaviors:
+            try:
+                feature_file = self._generate_feature_file(behavior, strategy_names)
+                output_path = self.output_dir / f"{behavior.name}.feature"
+                self._write_feature_file(feature_file, output_path)
+                results["files_generated"] += 1
+                results["scenarios_generated"] += len(feature_file.scenarios)
+                print(f"   ✅ Generated {behavior.name}.feature ({len(feature_file.scenarios)} scenarios)")
+            except Exception as e:
+                print(f"   ❌ Failed to generate {behavior.name}: {e}")
+        
+        print(f"\n   🎉 Complete: {results['files_generated']} files, {results['scenarios_generated']} scenarios")
+        return results
+    
+    def _load_behaviors(self) -> List[BehaviorSpec]:
+        """Load behaviors from markdown file(s)"""
+        behaviors = []
+        
+        # Parse the behaviors file
+        with open(self.behaviors_file, 'r') as f:
+            content = f.read()
+        
+        behaviors.extend(self._parse_behaviors_markdown(content, str(self.behaviors_file)))
+        
+        # Also try to load passage-behaviors if in same directory
+        passage_file = self.behaviors_file.parent / "passage-behaviors-extracted.md"
+        if passage_file.exists():
+            with open(passage_file, 'r') as f:
+                passage_content = f.read()
+            behaviors.extend(self._parse_behaviors_markdown(passage_content, str(passage_file)))
+        
+        return behaviors
+    
+    def _parse_behaviors_markdown(self, content: str, source_file: str) -> List[BehaviorSpec]:
+        """Parse behaviors from markdown content"""
+        behaviors = []
+        
+        # Split by behavior sections (### Behavior X.Y:)
+        behavior_pattern = r'### Behavior \d+\.\d+: (.+?)(?=### Behavior|\Z)'
+        behavior_sections = re.findall(behavior_pattern, content, re.DOTALL)
+        
+        for section in behavior_sections:
+            try:
+                behavior = self._parse_behavior_section(section, source_file)
+                if behavior:
+                    behaviors.append(behavior)
+            except Exception as e:
+                print(f"   ⚠️  Failed to parse behavior section: {e}")
+        
+        return behaviors
+    
+    def _parse_behavior_section(self, section: str, source_file: str) -> Optional[BehaviorSpec]:
+        """Parse a single behavior section"""
+        # Extract name
+        name_match = re.search(r'\*\*Name\*\*: `(.+?)`', section)
+        if not name_match:
+            return None
+        name = name_match.group(1)
+        
+        # Extract description
+        desc_match = re.search(r'\*\*Description\*\*: (.+?)(?=\*\*|\n\n)', section, re.DOTALL)
+        description = desc_match.group(1).strip() if desc_match else ""
+        
+        # Extract capability level
+        cap_match = re.search(r'\*\*Capability Level\*\*: (\w+)', section)
+        capability_level = cap_match.group(1) if cap_match else "Journeyman"
+        
+        # Extract knowledge scope
+        scope_match = re.search(r'\*\*Knowledge Scope\*\*: (\w+)', section)
+        knowledge_scope = scope_match.group(1) if scope_match else "Lake"
+        
+        # Extract mutates KG
+        mutates_match = re.search(r'\*\*Mutates KG\*\*: (Yes|No)', section)
+        mutates_kg = mutates_match.group(1) == "Yes" if mutates_match else False
+        
+        # Extract concurrency safe
+        concur_match = re.search(r'\*\*Concurrency Safe\*\*: (Yes|No)', section)
+        concurrency_safe = concur_match.group(1) == "Yes" if concur_match else True
+        
+        # Extract input schema (JSON)
+        input_schema = self._extract_json_schema(section, "Input Schema")
+        
+        # Extract output schema (JSON)
+        output_schema = self._extract_json_schema(section, "Output Schema")
+        
+        # Extract ontology mapping
+        onto_match = re.search(r'\*\*Maps to Ontology\*\*: `(.+?)`', section)
+        ontology_mapping = onto_match.group(1) if onto_match else f"nusy:PMBehavior-{name}"
+        
+        # Extract CLI example
+        cli_match = re.search(r'\*\*CLI Example\*\*: `(.+?)`', section)
+        cli_example = cli_match.group(1) if cli_match else f"nusy {name}"
+        
+        # Extract SPARQL query if present
+        sparql_match = re.search(r'\*\*SPARQL Query\*\*:\s*```sparql\s*(.+?)\s*```', section, re.DOTALL)
+        sparql_query = sparql_match.group(1).strip() if sparql_match else ""
+        
+        return BehaviorSpec(
+            name=name,
+            description=description,
+            capability_level=capability_level,
+            knowledge_scope=knowledge_scope,
+            input_schema=input_schema,
+            output_schema=output_schema,
+            mutates_kg=mutates_kg,
+            concurrency_safe=concurrency_safe,
+            ontology_mapping=ontology_mapping,
+            cli_example=cli_example,
+            sparql_query=sparql_query,
+            source_file=source_file
+        )
+    
+    def _extract_json_schema(self, section: str, schema_name: str) -> Dict[str, Any]:
+        """Extract JSON schema from markdown section"""
+        pattern = rf'\*\*{schema_name}\*\*:\s*```json\s*(.+?)\s*```'
+        match = re.search(pattern, section, re.DOTALL)
+        
+        if match:
+            json_str = match.group(1)
+            # Clean up the JSON (remove comments in parentheses)
+            json_str = re.sub(r'\s*\(.*?\)', '', json_str)
+            try:
+                schema = json.loads(json_str)
+                # Infer required fields if not specified
+                if "required" not in schema and "properties" in schema:
+                    # Fields without "optional" in their type are required
+                    required = []
+                    for field, props in schema.items():
+                        if isinstance(props, str) and "optional" not in props.lower():
+                            required.append(field)
+                    schema["required"] = required
+                return schema
+            except json.JSONDecodeError as e:
+                print(f"   ⚠️  Failed to parse {schema_name} JSON: {e}")
+                return {"properties": {}}
+        
+        return {"properties": {}}
+    
+    def _generate_feature_file(
+        self,
+        behavior: BehaviorSpec,
+        strategy_names: List[str]
+    ) -> BDDFeatureFile:
+        """Generate complete .feature file for a behavior"""
+        all_scenarios = []
+        
+        # Run each selected strategy
+        for strategy_name in strategy_names:
+            if strategy_name in self.strategies:
+                strategy = self.strategies[strategy_name]
+                scenarios = strategy.generate_scenarios(behavior)
+                all_scenarios.extend(scenarios)
+        
+        # Get background from first strategy
+        background_steps = []
+        if strategy_names and strategy_names[0] in self.strategies:
+            strategy = self.strategies[strategy_names[0]]
+            background_steps = strategy._generate_background(behavior)
+        
+        return BDDFeatureFile(
+            feature_name=behavior.name,
+            feature_description=behavior.description,
+            background_steps=background_steps,
+            scenarios=all_scenarios,
+            tags=[
+                f"@{behavior.capability_level.lower()}",
+                f"@{behavior.knowledge_scope.lower()}"
+            ],
+            behavior_spec=behavior
+        )
+    
+    def _write_feature_file(self, feature_file: BDDFeatureFile, output_path: Path):
+        """Write .feature file to disk with Gherkin formatting"""
+        lines = []
+        
+        # Provenance header
+        lines.append(f"# Generated by Fishnet v2.0.0")
+        lines.append(f"# Strategy: {', '.join(s.strategy_used for s in feature_file.scenarios)}")
+        lines.append(f"# Source: {feature_file.behavior_spec.source_file if feature_file.behavior_spec else 'unknown'}")
+        lines.append(f"# Generated: {datetime.now().isoformat()}")
+        lines.append("")
+        
+        # Feature header with tags
+        if feature_file.tags:
+            lines.append(" ".join(feature_file.tags))
+        lines.append(f"Feature: {feature_file.feature_name}")
+        lines.append(f"  {feature_file.feature_description}")
+        lines.append("")
+        
+        # Background
+        if feature_file.background_steps:
+            lines.append("  Background:")
+            for step in feature_file.background_steps:
+                # Clean up "Given" prefix if already present
+                step_clean = step.replace("Given ", "").replace("And ", "")
+                lines.append(f"    {step_clean}")
+            lines.append("")
+        
+        # Scenarios
+        for scenario in feature_file.scenarios:
+            lines.append(f"  @{scenario.scenario_type}")
+            lines.append(f"  Scenario: {scenario.scenario_name}")
+            
+            for step in scenario.given_steps:
+                lines.append(f"    Given {step}")
+            for step in scenario.when_steps:
+                lines.append(f"    When {step}")
+            for step in scenario.then_steps:
+                lines.append(f"    Then {step}")
+            lines.append("")
+        
+        # Write to file
+        output_path.write_text("\n".join(lines))
+
+
+# Legacy Fishnet class for backward compatibility
+class Fishnet:
+    """
+    Legacy Fishnet class - kept for backward compatibility.
+    New code should use FishnetV2.
     """
     
     def __init__(self, workspace_path: Path):
@@ -494,3 +779,69 @@ class Fishnet:
         
         with open(manifest_file, 'w') as f:
             json.dump(manifest_data, f, indent=2)
+
+
+# CLI Interface for standalone execution
+def main():
+    """CLI entry point for Fishnet v2.0.0"""
+    parser = argparse.ArgumentParser(
+        description='Fishnet v2.0.0 - Multi-strategy BDD test generation',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog='''
+Examples:
+  # Generate BDD tests using BottomUp strategy
+  python fishnet.py \
+    --behaviors knowledge/catches/santiago-pm-behaviors/pm-behaviors-extracted.md \
+    --ontology knowledge/ontologies/pm-domain-ontology.ttl \
+    --output bdd-tests/ \
+    --strategies bottom_up
+        '''
+    )
+    
+    parser.add_argument(
+        '--behaviors',
+        required=True,
+        help='Path to behaviors extraction file (pm-behaviors-extracted.md)'
+    )
+    parser.add_argument(
+        '--ontology',
+        required=True,
+        help='Path to ontology .ttl file (pm-domain-ontology.ttl)'
+    )
+    parser.add_argument(
+        '--output',
+        required=True,
+        help='Output directory for .feature files'
+    )
+    parser.add_argument(
+        '--strategies',
+        nargs='+',
+        default=['bottom_up'],
+        choices=['bottom_up', 'top_down', 'external', 'logic', 'experiment'],
+        help='BDD generation strategies to use (default: bottom_up)'
+    )
+    
+    args = parser.parse_args()
+    
+    # Create Fishnet instance
+    fishnet = FishnetV2(
+        behaviors_file=Path(args.behaviors),
+        ontology_file=Path(args.ontology),
+        output_dir=Path(args.output)
+    )
+    
+    # Generate BDD files
+    results = fishnet.generate_all_bdd_files(strategy_names=args.strategies)
+    
+    # Print summary
+    print(f"\n📊 Generation Summary:")
+    print(f"   Total Behaviors: {results['total_behaviors']}")
+    print(f"   Files Generated: {results['files_generated']}")
+    print(f"   Scenarios Generated: {results['scenarios_generated']}")
+    print(f"   Output Directory: {results['output_dir']}")
+    print(f"\n✅ Validate with: behave --dry-run {results['output_dir']}")
+
+
+if __name__ == '__main__':
+    main()
+
