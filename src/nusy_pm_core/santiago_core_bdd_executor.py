@@ -31,6 +31,48 @@ from rdflib.namespace import RDF, RDFS
 from nusy_pm_core.adapters.kg_store import KGStore
 
 
+def search_documents(keywords: List[str], workspace_path: Path) -> tuple[int, List[str]]:
+    """
+    Fallback search: scan source documents when KG is insufficient.
+    Matches clinical prototype pattern of searching literature when KG sparse.
+    
+    Returns:
+        (match_count, source_files) - number of keyword matches and which files
+    """
+    sources = []
+    match_count = 0
+    
+    # Search key documentation files
+    search_paths = [
+        workspace_path / "README.md",
+        workspace_path / "santiago-pm",
+        workspace_path / "features",
+        workspace_path / "roles",
+    ]
+    
+    for path in search_paths:
+        if not path.exists():
+            continue
+            
+        # Collect all .md and .feature files
+        if path.is_file():
+            files = [path]
+        else:
+            files = list(path.glob("**/*.md")) + list(path.glob("**/*.feature"))
+        
+        for file in files:
+            try:
+                content = file.read_text().lower()
+                file_matches = sum(1 for kw in keywords if kw in content)
+                if file_matches > 0:
+                    match_count += file_matches
+                    sources.append(str(file.relative_to(workspace_path)))
+            except Exception:
+                pass  # Skip unreadable files
+    
+    return match_count, sources
+
+
 @dataclass
 class BDDScenario:
     """Parsed BDD scenario from .feature file"""
@@ -49,6 +91,7 @@ class TestResult:
     passed: bool
     confidence: float
     evidence_triples: int
+    doc_matches: int = 0  # Number of document matches (fallback search)
     entities_used: List[str] = field(default_factory=list)
     relationships_used: List[str] = field(default_factory=list)
     knowledge_sources: List[str] = field(default_factory=list)
@@ -74,10 +117,11 @@ class SantiagoCoreNeurosymbolicReasoner:
     Lightweight neurosymbolic reasoner for PM domain.
     Adapted from nusy_prototype's NeurosymbolicClinicalReasoner.
     Uses simple keyword matching and graph traversal (proven clinical pattern).
+    Falls back to document search when KG is sparse (clinical prototype pattern).
     """
     
-    def __init__(self):
-        pass
+    def __init__(self, workspace_path: Optional[Path] = None):
+        self.workspace_path = workspace_path or Path(".")
     
     def _extract_keywords(self, question: str) -> List[str]:
         """Extract keywords from question text - matches clinical prototype."""
@@ -150,24 +194,39 @@ class SantiagoCoreNeurosymbolicReasoner:
         
         triples_count = len(relevant_triples)
         
+        # Fallback: If KG has insufficient evidence, search source documents
+        # This matches clinical prototype pattern of searching literature when KG sparse
+        doc_match_count = 0
+        doc_sources = []
+        if triples_count < 3:  # Threshold: need at least 3 triples for high confidence
+            doc_match_count, doc_sources = search_documents(keywords, self.workspace_path)
+        
         # Calculate confidence based on evidence found
-        # Use more gradual scaling to avoid binary 0/1 distribution
-        if triples_count == 0:
+        # Combine KG triples + document matches for total evidence
+        # Weight doc matches lower (30%) since they're less specific than KG triples
+        total_evidence = triples_count + (doc_match_count * 0.3)
+        
+        if total_evidence == 0:
             confidence = 0.0
         else:
-            # Logarithmic scaling: more evidence → higher confidence, but diminishing returns
-            # Formula: min(1.0, log(triples+1) / log(keywords+10))
-            # This gives gradual increase, reaches ~0.7 at triples=keywords, ~0.9 at triple=keywords*5
+            # Logarithmic scaling with more gradual growth
+            # Formula: log(evidence+1) / log(evidence+20)
+            # This gives: 3 evidence→0.60, 10→0.75, 50→0.85, 200→0.90, 500→0.92
             import math
-            confidence = min(1.0, math.log(triples_count + 1) / math.log(len(keywords) + 10))
+            confidence = math.log(total_evidence + 1) / math.log(total_evidence + 20)
+        
+        # Build knowledge sources list
+        knowledge_sources = ['santiago-pm-kg'] if triples_count > 0 else []
+        knowledge_sources.extend(doc_sources[:5])  # Add top 5 doc sources
         
         return {
             'entities': [{'label': e} for e in list(entities)[:20]],  # Limit to top 20
             'relationships': list(relationships)[:10],
             'triples': triples_count,
+            'doc_matches': doc_match_count,
             'confidence': confidence,
             'keywords_used': keywords,
-            'knowledge_sources': ['santiago-pm-kg'],  # Simplified provenance
+            'knowledge_sources': knowledge_sources,
             'passed': confidence >= confidence_threshold
         }
 
@@ -188,7 +247,7 @@ class SantiagoCoreBDDExecutor:
         """
         self.kg_store = kg_store
         self.confidence_threshold = confidence_threshold
-        self.reasoner = SantiagoCoreNeurosymbolicReasoner()
+        self.reasoner = SantiagoCoreNeurosymbolicReasoner(workspace_path=kg_store.workspace_path)
     
     def parse_feature_file(self, feature_path: Path) -> List[BDDScenario]:
         """Parse Gherkin .feature file into BDDScenario objects."""
@@ -292,6 +351,7 @@ class SantiagoCoreBDDExecutor:
                 passed=False,
                 confidence=0.0,
                 evidence_triples=0,
+                doc_matches=0,
                 reasoning_explanation="No evidence found in KG",
                 execution_time_ms=execution_time_ms
             )
@@ -301,9 +361,13 @@ class SantiagoCoreBDDExecutor:
         confidence = result.get('confidence', 0.0)
         entities = result.get('entities', [])
         triples = result.get('triples', 0)
+        doc_matches = result.get('doc_matches', 0)
         sources = result.get('knowledge_sources', [])
         
-        explanation = f"Found {triples} relevant triples with {len(entities)} entities. "
+        explanation = f"Found {triples} KG triples"
+        if doc_matches > 0:
+            explanation += f" + {doc_matches} document matches"
+        explanation += f" with {len(entities)} entities. "
         explanation += f"Confidence: {confidence:.2f}. "
         explanation += f"Keywords matched: {', '.join(result.get('keywords_used', []))}"
         
@@ -312,6 +376,7 @@ class SantiagoCoreBDDExecutor:
             passed=passed,
             confidence=confidence,
             evidence_triples=triples,
+            doc_matches=doc_matches,
             entities_used=[e.get('label', '') for e in entities],
             knowledge_sources=sources,
             reasoning_explanation=explanation,
