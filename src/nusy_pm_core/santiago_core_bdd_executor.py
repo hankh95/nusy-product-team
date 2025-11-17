@@ -150,13 +150,16 @@ class SantiagoCoreNeurosymbolicReasoner:
         
         triples_count = len(relevant_triples)
         
-        # Calculate confidence based on evidence found - clinical pattern
+        # Calculate confidence based on evidence found
+        # Use more gradual scaling to avoid binary 0/1 distribution
         if triples_count == 0:
             confidence = 0.0
-        elif triples_count >= len(keywords) * 2:  # At least 2 triples per keyword
-            confidence = 1.0
         else:
-            confidence = triples_count / (len(keywords) * 2)
+            # Logarithmic scaling: more evidence → higher confidence, but diminishing returns
+            # Formula: min(1.0, log(triples+1) / log(keywords+10))
+            # This gives gradual increase, reaches ~0.7 at triples=keywords, ~0.9 at triple=keywords*5
+            import math
+            confidence = min(1.0, math.log(triples_count + 1) / math.log(len(keywords) + 10))
         
         return {
             'entities': [{'label': e} for e in list(entities)[:20]],  # Limit to top 20
