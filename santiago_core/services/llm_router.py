@@ -47,14 +47,14 @@ class LLMRouter:
         (LLMProvider.XAI, TaskComplexity.COMPLEX): "grok-4-fast",
         (LLMProvider.XAI, TaskComplexity.CRITICAL): "grok-4-fast",
         
-        # OpenAI models (latest available as of Nov 2025)
-        # o4-mini: Fast reasoning, $1.10/$4.40 per 1M tokens, 200K context
-        (LLMProvider.OPENAI, TaskComplexity.SIMPLE): "o4-mini",
-        # gpt-4.1: Latest non-reasoning model, smartest for general tasks
-        (LLMProvider.OPENAI, TaskComplexity.MODERATE): "gpt-4.1",
-        # gpt-4.1: Excellent for architecture and design work
-        (LLMProvider.OPENAI, TaskComplexity.COMPLEX): "gpt-4.1",
-        # o3: Deep reasoning for critical tasks, $2/$8 per 1M tokens, 200K context
+        # OpenAI models (GPT-5 series + reasoning models, Nov 2025)
+        # gpt-5-nano: Ultra-fast, most cost-efficient ($0.05/?, 400K context)
+        (LLMProvider.OPENAI, TaskComplexity.SIMPLE): "gpt-5-nano",
+        # gpt-5.1: Flagship for coding/agentic tasks ($1.25/$10, 400K context)
+        (LLMProvider.OPENAI, TaskComplexity.MODERATE): "gpt-5.1",
+        # gpt-5.1: Best for architecture with configurable reasoning
+        (LLMProvider.OPENAI, TaskComplexity.COMPLEX): "gpt-5.1",
+        # o3: Deep reasoning for critical tasks ($2/$8 per 1M tokens, 200K context)
         (LLMProvider.OPENAI, TaskComplexity.CRITICAL): "o3",
     }
     
