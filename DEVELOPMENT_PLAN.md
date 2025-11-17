@@ -136,13 +136,17 @@ Build a self-bootstrapping factory that creates domain-specific Santiagos by ing
 - Key insights: 30-60m Catchfish bottleneck, progressive replacement strategy, DGX Spark specs
 - Completeness: 0.85 (85% vision domain coverage)
 
-#### ⏳ Task 18: Ingest Jeff Patton & Jeff Gothelf websites
-**Status**: Not Started (can run in parallel)  
-**Dependencies**: None (parallel task)
-**Approach**: Use fetch_webpage for external PM thought leaders
-- jpattonassociates.com (user story mapping, discovery)
-- jeffgothelf.com (Lean UX, continuous discovery)
-- Enriches PM knowledge base with industry best practices
+#### ✅ Task 18: Extract External PM Thought Leader Knowledge
+**Status**: Completed 2025-01-16  
+**Output**: `knowledge/catches/external-pm-knowledge-extracted.md` (1300+ lines)
+**Approach**: Fetched 5 websites (Jeff Patton, Jeff Gothelf, Nielsen Norman, SAFe PO/PM)
+- Extracted 30 PM behaviors related to UX research competency and expedition-based learning
+- 4 categories: Discovery & Hypothesis, Expedition Execution, Measurement & ROI, Infrastructure & Enablement, Strategic Alignment
+- Layer 9 ontology design: Discovery & Research (6 classes, 13 properties)
+- Santiago-UX role specification (draft)
+- Lean UX → Santiago-PM methodology crossover documented
+- Key insight: "How to run expeditions to learn when we don't know something" = core PM competency
+- Completeness: 0.90 (90%) - 5 of 5 sources processed
 
 #### 🆕 Task 19: Implement multi-strategy BDD generation in Fishnet
 **Status**: Not Started (feature specification created)  
