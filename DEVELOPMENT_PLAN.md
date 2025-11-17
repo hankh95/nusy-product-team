@@ -108,14 +108,19 @@ Build a self-bootstrapping factory that creates domain-specific Santiagos by ing
 - Quality gates defined (≥95% BDD pass, ≥95% coverage)
 - Budget hints for each tool
 
-#### ⏳ Task 15: Implement EARS-inspired scaffold system
+#### ⏳ Task 15: Implement PM domain scaffold system
 **Status**: Not Started  
 **Dependencies**: Tasks 13-14 ✅, Task 16 (demo)
 **Approach**: 
-- Scaffold recognition feature (each santiago-pm/ folder = template)
+- Scaffold recognition feature (each santiago-pm/ folder = learned template)
 - Santiago reads folder-structure.md, README.md, development-plan.md
-- Suggests similar structures (e.g., tackle/status/ → tackle/experiments/)
-- Meta-learning: Santiago learns domain organization by studying itself
+- Folder structure synthesizes PM expertise from multiple sources:
+  - EARS methodology (initial inspiration for project scaffolding)
+  - External PM thought leaders (Jeff Patton, Jeff Gothelf, Nielsen Norman, SAFe)
+  - Internal domain knowledge (vision docs, architecture patterns)
+  - Human PM experience (real-world practices)
+- Suggests contextual structures based on learned PM patterns
+- Meta-learning: Santiago learns domain organization by studying itself and sources
 
 #### ⏳ Task 16: Create santiago-pm-self-aware demo
 **Status**: Not Started  
@@ -192,10 +197,8 @@ Build a self-bootstrapping factory that creates domain-specific Santiagos by ing
 - Navigator orchestration (after Fishnet)
 
 ### Not Started ⏳
-- EARS scaffold system (Task 15)
+- PM domain scaffold system (Task 15)
 - Santiago-PM-self-aware demo (Task 16)
-- Docs/vision ingestion (Task 17)
-- External website ingestion (Task 18)
 
 ## Quality Gates
 
