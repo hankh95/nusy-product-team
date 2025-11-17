@@ -1,0 +1,1106 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schemas/2024-11-05/manifest.schema.json",
+  "manifest_version": "1.0.0",
+  "santiago_id": "santiago-pm-self-aware",
+  "domain": "product-management",
+  "created_at": "2025-01-16T00:00:00Z",
+  "ontology_uri": "https://nusy.ai/pm#",
+  "ontology_version": "1.0.0",
+  "capability_level": "master",
+  "knowledge_scope": "sea",
+  "description": "Santiago Product Manager - Self-aware PM domain specialist with 20 behaviors covering status management, feature development, issue tracking, experiment execution, knowledge capture, strategic planning, and quality assurance",
+  
+  "metadata": {
+    "total_tools": 20,
+    "tool_categories": [
+      "status_management",
+      "feature_management",
+      "issue_tracking",
+      "experiment_management",
+      "knowledge_capture",
+      "strategic_planning",
+      "quality_assurance"
+    ],
+    "extraction_source": "santiago-pm/ (59 markdown files)",
+    "extraction_date": "2025-01-16",
+    "extraction_method": "DocumentFirst + SchemaDriven",
+    "ontology_coverage": 1.0,
+    "domain_completeness": 0.85,
+    "behaviors_validated": true
+  },
+
+  "concurrency_policy": {
+    "high_risk_tools": [
+      "status_transition",
+      "create_feature",
+      "prioritize_backlog",
+      "define_vision",
+      "create_roadmap"
+    ],
+    "locking_strategy": "optimistic_with_retry",
+    "max_concurrent_mutations": 5,
+    "read_only_unlimited": true
+  },
+
+  "budget": {
+    "daily_limit_usd": 50.0,
+    "per_tool_limits": {
+      "micro": 0.01,
+      "small": 0.10,
+      "medium": 0.50,
+      "large": 2.00,
+      "strategic": 10.00
+    },
+    "estimated_daily_usage": 18.00
+  },
+
+  "tools": [
+    {
+      "name": "status_query",
+      "description": "Query artifacts by status, assignee, update date, or artifact type. Read-only operation for finding features, issues, experiments, plans, or notes based on their current status.",
+      "category": "status_management",
+      "capability_level": "apprentice",
+      "knowledge_scope": "pond",
+      "mutates_kg": false,
+      "concurrency_safe": true,
+      "budget_tier": "micro",
+      "rate_limit": "100/minute",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["open", "in_progress", "blocked", "closed"],
+            "description": "Artifact status to filter by"
+          },
+          "assignee": {
+            "type": "string",
+            "description": "Filter by assigned agent or human"
+          },
+          "artifact_type": {
+            "type": "string",
+            "enum": ["feature", "issue", "experiment", "plan", "note", "all"],
+            "default": "all",
+            "description": "Type of artifact to query"
+          },
+          "since": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Filter artifacts updated since this timestamp"
+          },
+          "state_reason": {
+            "type": "string",
+            "enum": ["completed", "cancelled", "duplicate", "not_planned", "transferred"],
+            "description": "For closed items, filter by closure reason"
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {"type": "string"},
+                "type": {"type": "string"},
+                "status": {"type": "string"},
+                "state_reason": {"type": "string"},
+                "created_at": {"type": "string", "format": "date-time"},
+                "updated_at": {"type": "string", "format": "date-time"},
+                "assignees": {"type": "array", "items": {"type": "string"}},
+                "labels": {"type": "array", "items": {"type": "string"}}
+              }
+            }
+          },
+          "count": {"type": "integer"}
+        }
+      }
+    },
+    {
+      "name": "status_transition",
+      "description": "Change artifact status with provenance tracking. Enforces valid state machine transitions (open → in_progress → blocked | closed) and creates StatusTransition entity in knowledge graph.",
+      "category": "status_management",
+      "capability_level": "journeyman",
+      "knowledge_scope": "lake",
+      "mutates_kg": true,
+      "concurrency_safe": false,
+      "budget_tier": "small",
+      "rate_limit": "10/minute",
+      "requires_validation": true,
+      "inputSchema": {
+        "type": "object",
+        "required": ["artifact_id", "to_status"],
+        "properties": {
+          "artifact_id": {
+            "type": "string",
+            "description": "ID of artifact to transition"
+          },
+          "from_status": {
+            "type": "string",
+            "description": "Current status (optional, will be verified)"
+          },
+          "to_status": {
+            "type": "string",
+            "enum": ["open", "in_progress", "blocked", "closed"],
+            "description": "Target status"
+          },
+          "state_reason": {
+            "type": "string",
+            "enum": ["completed", "cancelled", "duplicate", "not_planned", "transferred"],
+            "description": "Required if to_status=closed"
+          },
+          "reason_comment": {
+            "type": "string",
+            "description": "Human-readable explanation of transition"
+          },
+          "agent_id": {
+            "type": "string",
+            "description": "Agent performing transition"
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "transition_id": {"type": "string"},
+          "artifact_id": {"type": "string"},
+          "from_status": {"type": "string"},
+          "to_status": {"type": "string"},
+          "state_reason": {"type": "string"},
+          "timestamp": {"type": "string", "format": "date-time"},
+          "valid": {"type": "boolean"}
+        }
+      }
+    },
+    {
+      "name": "status_dashboard",
+      "description": "Visualize project status with burndown charts, agent productivity, and feature completion metrics. Aggregates status data across product for monitoring.",
+      "category": "status_management",
+      "capability_level": "apprentice",
+      "knowledge_scope": "sea",
+      "mutates_kg": false,
+      "concurrency_safe": true,
+      "budget_tier": "small",
+      "rate_limit": "20/minute",
+      "caching_ttl": 300,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "view": {
+            "type": "string",
+            "enum": ["status", "features", "agents", "burndown"],
+            "default": "status"
+          },
+          "date_range": {
+            "type": "string",
+            "description": "Time range for dashboard (e.g., 'last-7-days')"
+          },
+          "filters": {
+            "type": "object",
+            "properties": {
+              "epic": {"type": "string"},
+              "assignee": {"type": "string"}
+            }
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "dashboard_type": {"type": "string"},
+          "metrics": {
+            "type": "object",
+            "properties": {
+              "total_items": {"type": "integer"},
+              "open": {"type": "integer"},
+              "in_progress": {"type": "integer"},
+              "blocked": {"type": "integer"},
+              "closed": {"type": "integer"},
+              "completion_rate": {"type": "number"},
+              "velocity": {"type": "number"}
+            }
+          },
+          "charts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {"type": "string"},
+                "data": {"type": "object"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "create_feature",
+      "description": "Generate BDD feature specification from vision statement. Creates cargo-manifest with hypothesis, acceptance criteria, epic linkage. Writes to santiago-pm/cargo-manifests/ and creates nusy:Feature entity in KG.",
+      "category": "feature_management",
+      "capability_level": "journeyman",
+      "knowledge_scope": "lake",
+      "mutates_kg": true,
+      "concurrency_safe": false,
+      "budget_tier": "medium",
+      "rate_limit": "5/minute",
+      "requires_validation": true,
+      "file_operations": ["write santiago-pm/cargo-manifests/"],
+      "inputSchema": {
+        "type": "object",
+        "required": ["title", "hypothesis"],
+        "properties": {
+          "title": {"type": "string"},
+          "vision_statement": {"type": "string"},
+          "hypothesis": {"type": "string"},
+          "signals": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Measurable indicators of success"
+          },
+          "epic": {"type": "string"},
+          "assignees": {"type": "array", "items": {"type": "string"}},
+          "labels": {"type": "array", "items": {"type": "string"}}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "feature_id": {"type": "string"},
+          "cargo_manifest_path": {"type": "string"},
+          "status": {"type": "string", "const": "open"},
+          "created_at": {"type": "string", "format": "date-time"},
+          "kg_uri": {"type": "string", "format": "uri"}
+        }
+      }
+    },
+    {
+      "name": "prioritize_backlog",
+      "description": "Rank features by value, risk, dependencies using hypothesis-driven approach. Strategic decision-making tool that updates priority metadata in KG. Requires human review for final approval.",
+      "category": "feature_management",
+      "capability_level": "master",
+      "knowledge_scope": "sea",
+      "mutates_kg": true,
+      "concurrency_safe": false,
+      "budget_tier": "medium",
+      "rate_limit": "3/hour",
+      "requires_human_review": true,
+      "inputSchema": {
+        "type": "object",
+        "required": ["features"],
+        "properties": {
+          "features": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Feature IDs to prioritize"
+          },
+          "criteria": {
+            "type": "object",
+            "properties": {
+              "user_value": {"type": "number", "minimum": 0, "maximum": 1},
+              "technical_risk": {"type": "number", "minimum": 0, "maximum": 1},
+              "strategic_alignment": {"type": "number", "minimum": 0, "maximum": 1},
+              "effort_estimate": {"type": "integer"}
+            }
+          },
+          "constraints": {
+            "type": "object",
+            "properties": {
+              "dependencies": {"type": "array", "items": {"type": "array"}},
+              "deadlines": {"type": "array"}
+            }
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "prioritized_backlog": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "feature_id": {"type": "string"},
+                "rank": {"type": "integer"},
+                "priority_score": {"type": "number"},
+                "rationale": {"type": "string"}
+              }
+            }
+          },
+          "conflicts": {"type": "array", "items": {"type": "string"}},
+          "recommendations": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    {
+      "name": "define_acceptance_criteria",
+      "description": "Write testable, BDD-format acceptance criteria for features. Generates Given-When-Then scenarios and creates .feature files for BDD testing.",
+      "category": "feature_management",
+      "capability_level": "journeyman",
+      "knowledge_scope": "lake",
+      "mutates_kg": true,
+      "concurrency_safe": false,
+      "budget_tier": "medium",
+      "rate_limit": "10/minute",
+      "file_operations": ["update cargo-manifests/", "create features/"],
+      "inputSchema": {
+        "type": "object",
+        "required": ["feature_id", "scenarios"],
+        "properties": {
+          "feature_id": {"type": "string"},
+          "scenarios": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "given", "when", "then"],
+              "properties": {
+                "name": {"type": "string"},
+                "given": {"type": "string"},
+                "when": {"type": "string"},
+                "then": {"type": "string"}
+              }
+            }
+          },
+          "non_functional": {
+            "type": "object",
+            "properties": {
+              "performance": {"type": "string"},
+              "security": {"type": "string"},
+              "accessibility": {"type": "string"}
+            }
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "feature_id": {"type": "string"},
+          "acceptance_criteria": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "scenario_id": {"type": "string"},
+                "gherkin": {"type": "string"},
+                "testable": {"type": "boolean"}
+              }
+            }
+          },
+          "bdd_file_path": {"type": "string"}
+        }
+      }
+    },
+    {
+      "name": "track_velocity",
+      "description": "Measure team throughput (features completed per time period) with trend analysis. Calculates velocity, story points, cycle time, and burndown metrics.",
+      "category": "feature_management",
+      "capability_level": "journeyman",
+      "knowledge_scope": "sea",
+      "mutates_kg": true,
+      "concurrency_safe": true,
+      "budget_tier": "small",
+      "rate_limit": "30/hour",
+      "caching_ttl": 3600,
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "time_period": {
+            "type": "string",
+            "enum": ["week", "sprint", "month"],
+            "default": "sprint"
+          },
+          "team_id": {"type": "string"},
+          "epic": {"type": "string"}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "period": {"type": "string"},
+          "completed_features": {"type": "integer"},
+          "velocity": {"type": "number"},
+          "velocity_trend": {
+            "type": "string",
+            "enum": ["increasing", "stable", "decreasing"]
+          },
+          "story_points_completed": {"type": "integer"},
+          "burndown_data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": {"type": "string", "format": "date"},
+                "remaining": {"type": "integer"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "update_backlog",
+      "description": "Modify feature metadata (priority, assignees, labels, epic) post-creation. Requires reason field for audit trail. Records previous values with change agent.",
+      "category": "feature_management",
+      "capability_level": "journeyman",
+      "knowledge_scope": "lake",
+      "mutates_kg": true,
+      "concurrency_safe": false,
+      "budget_tier": "small",
+      "rate_limit": "20/minute",
+      "requires_reason": true,
+      "inputSchema": {
+        "type": "object",
+        "required": ["feature_id", "updates", "reason"],
+        "properties": {
+          "feature_id": {"type": "string"},
+          "updates": {
+            "type": "object",
+            "properties": {
+              "priority": {"type": "string"},
+              "assignees": {"type": "array", "items": {"type": "string"}},
+              "labels": {"type": "array", "items": {"type": "string"}},
+              "epic": {"type": "string"},
+              "hypothesis": {"type": "string"}
+            }
+          },
+          "reason": {"type": "string"}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "feature_id": {"type": "string"},
+          "updated_fields": {"type": "array", "items": {"type": "string"}},
+          "previous_values": {"type": "object"},
+          "new_values": {"type": "object"},
+          "updated_at": {"type": "string", "format": "date-time"},
+          "updated_by": {"type": "string"}
+        }
+      }
+    },
+    {
+      "name": "log_issue",
+      "description": "Create ship's log entry for bugs, blockers, technical debt. Writes to santiago-pm/ships-logs/ with severity classification and optional reproduction steps.",
+      "category": "issue_tracking",
+      "capability_level": "apprentice",
+      "knowledge_scope": "pond",
+      "mutates_kg": true,
+      "concurrency_safe": false,
+      "budget_tier": "small",
+      "rate_limit": "10/minute",
+      "file_operations": ["write santiago-pm/ships-logs/"],
+      "inputSchema": {
+        "type": "object",
+        "required": ["title", "description", "severity"],
+        "properties": {
+          "title": {"type": "string"},
+          "description": {"type": "string"},
+          "severity": {
+            "type": "string",
+            "enum": ["Critical", "High", "Medium", "Low"]
+          },
+          "artifact_type": {
+            "type": "string",
+            "enum": ["bug", "blocker", "tech-debt", "question"],
+            "default": "bug"
+          },
+          "related_feature": {"type": "string"},
+          "assignee": {"type": "string"},
+          "reproducible": {"type": "boolean"},
+          "reproduction_steps": {"type": "array", "items": {"type": "string"}}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "issue_id": {"type": "string"},
+          "ships_log_path": {"type": "string"},
+          "status": {"type": "string", "const": "open"},
+          "created_at": {"type": "string", "format": "date-time"},
+          "kg_uri": {"type": "string", "format": "uri"}
+        }
+      }
+    },
+    {
+      "name": "link_issue_to_feature",
+      "description": "Create bidirectional relationship between issue and feature. Relationship types: blocks, caused-by, discovered-in. Commutative operation safe for concurrent execution.",
+      "category": "issue_tracking",
+      "capability_level": "journeyman",
+      "knowledge_scope": "lake",
+      "mutates_kg": true,
+      "concurrency_safe": true,
+      "budget_tier": "micro",
+      "rate_limit": "50/minute",
+      "inputSchema": {
+        "type": "object",
+        "required": ["issue_id", "feature_id"],
+        "properties": {
+          "issue_id": {"type": "string"},
+          "feature_id": {"type": "string"},
+          "relationship_type": {
+            "type": "string",
+            "enum": ["blocks", "caused-by", "discovered-in"],
+            "default": "discovered-in"
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "relationship_id": {"type": "string"},
+          "issue_id": {"type": "string"},
+          "feature_id": {"type": "string"},
+          "relationship_type": {"type": "string"},
+          "created_at": {"type": "string", "format": "date-time"}
+        }
+      }
+    },
+    {
+      "name": "design_experiment",
+      "description": "Create hypothesis-driven voyage trial with phases, success criteria, risk mitigation. Writes to santiago-pm/voyage-trials/. Requires human review for strategic experiments.",
+      "category": "experiment_management",
+      "capability_level": "master",
+      "knowledge_scope": "sea",
+      "mutates_kg": true,
+      "concurrency_safe": false,
+      "budget_tier": "large",
+      "rate_limit": "2/hour",
+      "requires_human_review": true,
+      "file_operations": ["write santiago-pm/voyage-trials/"],
+      "inputSchema": {
+        "type": "object",
+        "required": ["title", "hypothesis", "phases", "success_criteria"],
+        "properties": {
+          "title": {"type": "string"},
+          "hypothesis": {"type": "string"},
+          "phases": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "duration", "behaviors", "success_metrics"],
+              "properties": {
+                "name": {"type": "string"},
+                "duration": {"type": "string"},
+                "behaviors": {"type": "array", "items": {"type": "string"}},
+                "success_metrics": {"type": "array", "items": {"type": "string"}},
+                "expected_results": {"type": "string"}
+              }
+            }
+          },
+          "success_criteria": {"type": "array", "items": {"type": "string"}},
+          "decision_triggers": {"type": "array", "items": {"type": "string"}},
+          "risk_mitigation": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "risk": {"type": "string"},
+                "mitigation": {"type": "string"}
+              }
+            }
+          },
+          "tests_feature": {"type": "string"}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "experiment_id": {"type": "string"},
+          "voyage_trial_path": {"type": "string"},
+          "phase": {"type": "string", "const": "design"},
+          "status": {"type": "string", "const": "open"},
+          "created_at": {"type": "string", "format": "date-time"},
+          "kg_uri": {"type": "string", "format": "uri"}
+        }
+      }
+    },
+    {
+      "name": "record_experiment_results",
+      "description": "Document experiment outcomes, metrics, learnings with phase progression (design → execution → analysis → complete). Updates experiment document and KG.",
+      "category": "experiment_management",
+      "capability_level": "journeyman",
+      "knowledge_scope": "sea",
+      "mutates_kg": true,
+      "concurrency_safe": false,
+      "budget_tier": "medium",
+      "rate_limit": "10/hour",
+      "inputSchema": {
+        "type": "object",
+        "required": ["experiment_id", "phase", "metrics"],
+        "properties": {
+          "experiment_id": {"type": "string"},
+          "phase": {
+            "type": "string",
+            "enum": ["execution", "analysis", "complete"]
+          },
+          "metrics": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["metric_name", "value"],
+              "properties": {
+                "metric_name": {"type": "string"},
+                "value": {"type": "number"},
+                "unit": {"type": "string"}
+              }
+            }
+          },
+          "observations": {"type": "array", "items": {"type": "string"}},
+          "success": {"type": "boolean"},
+          "learnings": {"type": "array", "items": {"type": "string"}},
+          "next_steps": {"type": "string"}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "experiment_id": {"type": "string"},
+          "phase": {"type": "string"},
+          "results_recorded": {"type": "boolean"},
+          "success_rate": {"type": "number"},
+          "updated_at": {"type": "string", "format": "date-time"},
+          "kg_updates": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    {
+      "name": "analyze_experiment_outcomes",
+      "description": "Statistical analysis of experiment data, hypothesis validation, recommendation generation. Supports comparative, longitudinal, and cohort analysis.",
+      "category": "experiment_management",
+      "capability_level": "master",
+      "knowledge_scope": "sea",
+      "mutates_kg": true,
+      "concurrency_safe": true,
+      "budget_tier": "large",
+      "rate_limit": "5/hour",
+      "inputSchema": {
+        "type": "object",
+        "required": ["experiment_ids"],
+        "properties": {
+          "experiment_ids": {"type": "array", "items": {"type": "string"}},
+          "analysis_type": {
+            "type": "string",
+            "enum": ["comparative", "longitudinal", "cohort"],
+            "default": "comparative"
+          },
+          "metrics_focus": {"type": "array", "items": {"type": "string"}}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "analysis_id": {"type": "string"},
+          "experiments_analyzed": {"type": "integer"},
+          "key_findings": {"type": "array", "items": {"type": "string"}},
+          "hypothesis_validation": {
+            "type": "object",
+            "properties": {
+              "experiment_id": {"type": "string"},
+              "hypothesis": {"type": "string"},
+              "validated": {"type": "boolean"},
+              "confidence": {"type": "number"}
+            }
+          },
+          "recommendations": {"type": "array", "items": {"type": "string"}},
+          "analysis_document_path": {"type": "string"}
+        }
+      }
+    },
+    {
+      "name": "create_note",
+      "description": "Capture insight, learning, or decision in captain's journal with metadata. Writes to santiago-pm/captains-journals/. Creates nusy:Note entity with contributor tracking.",
+      "category": "knowledge_capture",
+      "capability_level": "journeyman",
+      "knowledge_scope": "lake",
+      "mutates_kg": true,
+      "concurrency_safe": false,
+      "budget_tier": "small",
+      "rate_limit": "20/minute",
+      "file_operations": ["write santiago-pm/captains-journals/"],
+      "inputSchema": {
+        "type": "object",
+        "required": ["title", "summary", "content"],
+        "properties": {
+          "title": {"type": "string"},
+          "summary": {"type": "string"},
+          "content": {"type": "string"},
+          "contributor": {"type": "string"},
+          "tags": {"type": "array", "items": {"type": "string"}},
+          "source_links": {"type": "array", "items": {"type": "string"}},
+          "artifact_type": {
+            "type": "string",
+            "enum": ["insight", "decision", "learning", "question"],
+            "default": "insight"
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "note_id": {"type": "string", "format": "uuid"},
+          "captains_journal_path": {"type": "string"},
+          "status": {"type": "string", "const": "open"},
+          "created_at": {"type": "string", "format": "date-time"},
+          "kg_uri": {"type": "string", "format": "uri"}
+        }
+      }
+    },
+    {
+      "name": "link_related_notes",
+      "description": "Create semantic relationships between notes (6 types: relatedTo, follows, references, elaborates, contradicts, supports). Optional strength weighting (0.0-1.0) for graph queries. Commutative operation.",
+      "category": "knowledge_capture",
+      "capability_level": "journeyman",
+      "knowledge_scope": "lake",
+      "mutates_kg": true,
+      "concurrency_safe": true,
+      "budget_tier": "micro",
+      "rate_limit": "50/minute",
+      "inputSchema": {
+        "type": "object",
+        "required": ["from_note_id", "to_note_id", "relationship_type"],
+        "properties": {
+          "from_note_id": {"type": "string"},
+          "to_note_id": {"type": "string"},
+          "relationship_type": {
+            "type": "string",
+            "enum": [
+              "relatedTo",
+              "follows",
+              "references",
+              "elaborates",
+              "contradicts",
+              "supports"
+            ]
+          },
+          "strength": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Relationship weight for graph queries"
+          },
+          "context": {"type": "string"}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "relationship_id": {"type": "string"},
+          "from_note": {"type": "string"},
+          "to_note": {"type": "string"},
+          "type": {"type": "string"},
+          "strength": {"type": "number"},
+          "bidirectional": {"type": "boolean"},
+          "created_at": {"type": "string", "format": "date-time"}
+        }
+      }
+    },
+    {
+      "name": "query_note_network",
+      "description": "Traverse note relationship graph with transitive queries (follows+), depth limits (1-5), strength filtering. Returns related notes with aggregate strength and relationship paths.",
+      "category": "knowledge_capture",
+      "capability_level": "journeyman",
+      "knowledge_scope": "lake",
+      "mutates_kg": false,
+      "concurrency_safe": true,
+      "budget_tier": "small",
+      "rate_limit": "30/minute",
+      "caching_ttl": 300,
+      "inputSchema": {
+        "type": "object",
+        "required": ["start_note_id"],
+        "properties": {
+          "start_note_id": {"type": "string"},
+          "relationship_types": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Types to traverse (empty = all types)"
+          },
+          "max_depth": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "default": 3
+          },
+          "min_strength": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0
+          },
+          "order_by": {
+            "type": "string",
+            "enum": ["strength", "date", "title"],
+            "default": "strength"
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "start_note": {"type": "string"},
+          "related_notes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "note_id": {"type": "string"},
+                "title": {"type": "string"},
+                "relationship_path": {"type": "array", "items": {"type": "string"}},
+                "depth": {"type": "integer"},
+                "aggregate_strength": {"type": "number"}
+              }
+            }
+          },
+          "graph_visualization": {"type": "string"}
+        }
+      }
+    },
+    {
+      "name": "define_vision",
+      "description": "Create high-level strategic vision with goals, principles, success metrics. Writes to santiago-pm/strategic-charts/. REQUIRES human review for Expert capability level. Single vision per product.",
+      "category": "strategic_planning",
+      "capability_level": "expert",
+      "knowledge_scope": "ocean",
+      "mutates_kg": true,
+      "concurrency_safe": false,
+      "budget_tier": "strategic",
+      "rate_limit": "1/day",
+      "requires_human_review": true,
+      "file_operations": ["write santiago-pm/strategic-charts/"],
+      "inputSchema": {
+        "type": "object",
+        "required": ["title", "mission_statement", "core_principles", "strategic_goals"],
+        "properties": {
+          "title": {"type": "string"},
+          "mission_statement": {"type": "string"},
+          "core_principles": {"type": "array", "items": {"type": "string"}},
+          "strategic_goals": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["goal", "timeline", "success_metrics"],
+              "properties": {
+                "goal": {"type": "string"},
+                "timeline": {"type": "string"},
+                "success_metrics": {"type": "array", "items": {"type": "string"}}
+              }
+            }
+          },
+          "stakeholders": {"type": "array", "items": {"type": "string"}}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "vision_id": {"type": "string"},
+          "strategic_chart_path": {"type": "string"},
+          "status": {"type": "string", "const": "draft"},
+          "created_at": {"type": "string", "format": "date-time"},
+          "kg_uri": {"type": "string", "format": "uri"}
+        }
+      }
+    },
+    {
+      "name": "create_roadmap",
+      "description": "Generate navigation chart with milestones, epics, dependencies, timeline. Writes to santiago-pm/navigation-charts/. Requires human review for strategic alignment. Single roadmap per product.",
+      "category": "strategic_planning",
+      "capability_level": "master",
+      "knowledge_scope": "sea",
+      "mutates_kg": true,
+      "concurrency_safe": false,
+      "budget_tier": "large",
+      "rate_limit": "1/week",
+      "requires_human_review": true,
+      "file_operations": ["write santiago-pm/navigation-charts/"],
+      "inputSchema": {
+        "type": "object",
+        "required": ["title", "timeline", "milestones", "epics"],
+        "properties": {
+          "title": {"type": "string"},
+          "timeline": {"type": "string"},
+          "milestones": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "date", "deliverables"],
+              "properties": {
+                "name": {"type": "string"},
+                "date": {"type": "string", "format": "date"},
+                "deliverables": {"type": "array", "items": {"type": "string"}}
+              }
+            }
+          },
+          "epics": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["epic_id", "features"],
+              "properties": {
+                "epic_id": {"type": "string"},
+                "features": {"type": "array", "items": {"type": "string"}},
+                "dependencies": {"type": "array", "items": {"type": "string"}}
+              }
+            }
+          },
+          "themes": {"type": "array", "items": {"type": "string"}}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "plan_id": {"type": "string"},
+          "navigation_chart_path": {"type": "string"},
+          "total_milestones": {"type": "integer"},
+          "total_epics": {"type": "integer"},
+          "total_features": {"type": "integer"},
+          "status": {"type": "string", "const": "active"},
+          "kg_uri": {"type": "string", "format": "uri"}
+        }
+      }
+    },
+    {
+      "name": "run_quality_gate",
+      "description": "Execute quality checks (test coverage, BDD pass rate, code quality) with pass/fail decision. Default threshold 95%. Can block deployment if fail. Creates nusy:QualityAssessment entity.",
+      "category": "quality_assurance",
+      "capability_level": "journeyman",
+      "knowledge_scope": "lake",
+      "mutates_kg": true,
+      "concurrency_safe": true,
+      "budget_tier": "medium",
+      "rate_limit": "10/hour",
+      "blocking_decision": true,
+      "inputSchema": {
+        "type": "object",
+        "required": ["artifact_id", "artifact_type"],
+        "properties": {
+          "artifact_id": {"type": "string"},
+          "artifact_type": {
+            "type": "string",
+            "enum": ["feature", "system", "experiment"]
+          },
+          "checks": {
+            "type": "object",
+            "properties": {
+              "functional_quality": {"type": "boolean"},
+              "test_coverage": {"type": "number", "minimum": 0, "maximum": 1},
+              "code_complexity": {"type": "boolean"},
+              "security_review": {"type": "boolean"},
+              "bdd_pass_rate": {"type": "number", "minimum": 0, "maximum": 1}
+            }
+          },
+          "threshold": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.95
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "assessment_id": {"type": "string"},
+          "artifact_id": {"type": "string"},
+          "passed": {"type": "boolean"},
+          "pass_rate": {"type": "number"},
+          "coverage_percent": {"type": "number"},
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "check": {"type": "string"},
+                "severity": {"type": "string"},
+                "message": {"type": "string"}
+              }
+            }
+          },
+          "assessment_path": {"type": "string"},
+          "assessed_at": {"type": "string", "format": "date-time"}
+        }
+      }
+    },
+    {
+      "name": "generate_quality_report",
+      "description": "Aggregate quality metrics across artifacts with trend analysis, recommendations. Supports feature, epic, product, system scopes. Includes executive summary and prioritized action items.",
+      "category": "quality_assurance",
+      "capability_level": "journeyman",
+      "knowledge_scope": "sea",
+      "mutates_kg": true,
+      "concurrency_safe": true,
+      "budget_tier": "medium",
+      "rate_limit": "5/hour",
+      "caching_ttl": 3600,
+      "inputSchema": {
+        "type": "object",
+        "required": ["scope"],
+        "properties": {
+          "scope": {
+            "type": "string",
+            "enum": ["feature", "epic", "product", "system"]
+          },
+          "artifact_ids": {"type": "array", "items": {"type": "string"}},
+          "time_range": {
+            "type": "string",
+            "enum": ["last-sprint", "last-month", "all-time"],
+            "default": "last-sprint"
+          },
+          "metrics": {"type": "array", "items": {"type": "string"}}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "report_id": {"type": "string"},
+          "scope": {"type": "string"},
+          "artifacts_assessed": {"type": "integer"},
+          "aggregate_metrics": {
+            "type": "object",
+            "properties": {
+              "avg_pass_rate": {"type": "number"},
+              "avg_coverage": {"type": "number"},
+              "total_issues": {"type": "integer"},
+              "critical_issues": {"type": "integer"}
+            }
+          },
+          "trends": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "metric": {"type": "string"},
+                "direction": {
+                  "type": "string",
+                  "enum": ["improving", "stable", "declining"]
+                },
+                "change": {"type": "number"}
+              }
+            }
+          },
+          "recommendations": {"type": "array", "items": {"type": "string"}},
+          "report_path": {"type": "string"}
+        }
+      }
+    }
+  ],
+
+  "quality_gates": {
+    "bdd_pass_rate_minimum": 0.95,
+    "test_coverage_minimum": 0.95,
+    "kg_completeness_minimum": 0.90,
+    "validation_cycles_required": 3,
+    "validation_cycles_maximum": 5
+  },
+
+  "provenance": {
+    "extraction_agent": "catchfish-v1",
+    "extraction_layers": 4,
+    "source_files_processed": 11,
+    "entities_extracted": 20,
+    "ontology_alignment": 1.0,
+    "domain_completeness": 0.85,
+    "extraction_time_minutes": 45,
+    "validation_method": "SchemaDriven"
+  }
+}
