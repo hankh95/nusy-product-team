@@ -108,19 +108,34 @@ Build a self-bootstrapping factory that creates domain-specific Santiagos by ing
 - Quality gates defined (≥95% BDD pass, ≥95% coverage)
 - Budget hints for each tool
 
-#### ⏳ Task 15: Implement PM domain scaffold system
-**Status**: Not Started  
-**Dependencies**: Tasks 13-14 ✅, Task 16 (demo)
-**Approach**: 
-- Scaffold recognition feature (each santiago-pm/ folder = learned template)
-- Santiago reads folder-structure.md, README.md, development-plan.md
-- Folder structure synthesizes PM expertise from multiple sources:
+#### ✅ Task 15: Implement PM domain scaffold system
+**Status**: Completed 2025-11-17  
+**Output**: `src/nusy_pm_core/adapters/scaffold_recognizer.py` (450+ lines)
+**Approach**: Meta-learning system that learns organizational patterns by studying santiago-pm/
+- Learned 14 organizational patterns (9 PM artifacts + 5 tackle implementations)
+- Pattern recognition across multiple expertise sources:
   - EARS methodology (initial inspiration for project scaffolding)
   - External PM thought leaders (Jeff Patton, Jeff Gothelf, Nielsen Norman, SAFe)
   - Internal domain knowledge (vision docs, architecture patterns)
-  - Human PM experience (real-world practices)
-- Suggests contextual structures based on learned PM patterns
-- Meta-learning: Santiago learns domain organization by studying itself and sources
+  - Human PM experience (real-world practices encoded in folder structure)
+- Suggests missing folders based on related pattern presence
+- Suggests tackle implementations for new domains (90% confidence from status template)
+- Exports learned patterns to YAML for KG integration
+
+**Key Capabilities**:
+- `learn_patterns()`: Scans santiago-pm/ to extract organizational patterns
+- `suggest_missing_folders()`: Identifies gaps in current structure
+- `suggest_tackle_implementation()`: Proposes implementation structure for new domains
+- `export_learned_patterns()`: Generates YAML for knowledge graph integration
+
+**Demo Results**:
+- Learned 9 PM artifact patterns (cargo-manifests, ships-logs, voyage-trials, etc.)
+- Learned 5 tackle implementation patterns (status is most complete with 4 files)
+- All expected folders present in santiago-pm/ (no suggestions needed)
+- Successfully suggested "feedback" tackle implementation with 7 files
+- Patterns exported to `knowledge/catches/scaffold-patterns-learned.yaml`
+
+**Meta-Learning Achievement**: Santiago learned how to organize domains by studying its own structure ✨
 
 #### ⏳ Task 16: Create santiago-pm-self-aware demo
 **Status**: Not Started  

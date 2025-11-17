@@ -1,0 +1,161 @@
+metadata:
+  learned_from: /Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm
+  pattern_count: 14
+  sources:
+  - santiago-pm PM artifact structure
+  - santiago-pm/tackle implementations
+  - EARS methodology (initial inspiration)
+  - External PM thought leaders (Patton, Gothelf, Nielsen Norman, SAFe)
+  - Internal vision docs and architecture patterns
+  - Human PM experience
+patterns:
+  cargo-manifests:
+    name: cargo-manifests
+    purpose: Feature specifications (BDD/Gherkin)
+    typical_files:
+    - README.md
+    - pm-artifacts-templates-artifacts.feature
+    required_files:
+    - README.md
+    template_file: pm-artifacts-templates-artifacts.feature
+    related_patterns: []
+    learned_from: santiago-pm PM artifact structure
+  ships-logs:
+    name: ships-logs
+    purpose: Issue tracking and incident logs
+    typical_files:
+    - README.md
+    - 2025-11-15-implement-nautical-naming-templates.md
+    required_files:
+    - README.md
+    template_file: 2025-11-15-implement-nautical-naming-templates.md
+    related_patterns:
+    - tackle_status
+    learned_from: santiago-pm PM artifact structure
+  voyage-trials:
+    name: voyage-trials
+    purpose: Experiment design and execution
+    typical_files:
+    - README.md
+    - voyage-trial-template.md
+    required_files:
+    - README.md
+    template_file: voyage-trial-template.md
+    related_patterns: []
+    learned_from: santiago-pm PM artifact structure
+  navigation-charts:
+    name: navigation-charts
+    purpose: Development plans and roadmaps
+    typical_files:
+    - README.md
+    required_files:
+    - README.md
+    template_file: null
+    related_patterns: []
+    learned_from: santiago-pm PM artifact structure
+  captains-journals:
+    name: captains-journals
+    purpose: Knowledge capture and insights
+    typical_files:
+    - README.md
+    required_files:
+    - README.md
+    template_file: null
+    related_patterns: []
+    learned_from: santiago-pm PM artifact structure
+  research-logs:
+    name: research-logs
+    purpose: Research findings and analysis
+    typical_files:
+    - README.md
+    required_files:
+    - README.md
+    template_file: null
+    related_patterns: []
+    learned_from: santiago-pm PM artifact structure
+  crew-manifests:
+    name: crew-manifests
+    purpose: Agent roles and responsibilities
+    typical_files:
+    - README.md
+    required_files:
+    - README.md
+    template_file: null
+    related_patterns: []
+    learned_from: santiago-pm PM artifact structure
+  quality-assessments:
+    name: quality-assessments
+    purpose: Testing and quality metrics
+    typical_files:
+    - README.md
+    required_files:
+    - README.md
+    template_file: null
+    related_patterns: []
+    learned_from: santiago-pm PM artifact structure
+  strategic-charts:
+    name: strategic-charts
+    purpose: Vision and strategic planning
+    typical_files:
+    - README.md
+    required_files:
+    - README.md
+    template_file: null
+    related_patterns:
+    - tackle_notes
+    learned_from: santiago-pm PM artifact structure
+  tackle_experiments:
+    name: tackle/experiments
+    purpose: Implementation module for experiments domain
+    typical_files: []
+    required_files:
+    - README.md
+    - development-plan.md
+    template_file: null
+    related_patterns: []
+    learned_from: santiago-pm/tackle/experiments implementation
+  tackle_status:
+    name: tackle/status
+    purpose: Implementation module for status domain
+    typical_files:
+    - status_models.py
+    - status_cli.py
+    - status_kg.py
+    - test_status.py
+    required_files:
+    - README.md
+    - development-plan.md
+    template_file: null
+    related_patterns:
+    - tackle_experiments
+    learned_from: santiago-pm/tackle/status implementation
+  tackle__archived:
+    name: tackle/_archived
+    purpose: Implementation module for _archived domain
+    typical_files: []
+    required_files:
+    - README.md
+    - development-plan.md
+    template_file: null
+    related_patterns: []
+    learned_from: santiago-pm/tackle/_archived implementation
+  tackle_notes:
+    name: tackle/notes
+    purpose: Implementation module for notes domain
+    typical_files: []
+    required_files:
+    - README.md
+    - development-plan.md
+    template_file: null
+    related_patterns: []
+    learned_from: santiago-pm/tackle/notes implementation
+  tackle_passages:
+    name: tackle/passages
+    purpose: Implementation module for passages domain
+    typical_files: []
+    required_files:
+    - README.md
+    - development-plan.md
+    template_file: null
+    related_patterns: []
+    learned_from: santiago-pm/tackle/passages implementation
