@@ -17,13 +17,11 @@ from santiago_core.agents._proxy.base_proxy import (
 )
 from santiago_core.agents._proxy.pm_proxy import PMProxyAgent
 from santiago_core.agents._proxy.ethicist_proxy import EthicistProxyAgent
-from santiago_core.agents._proxy.consolidated_proxies import (
-    ArchitectProxyAgent,
-    DeveloperProxyAgent,
-    QAProxyAgent,
-    UXProxyAgent,
-    PlatformProxyAgent,
-)
+from santiago_core.agents._proxy.architect_proxy import ArchitectProxyAgent
+from santiago_core.agents._proxy.developer_proxy import DeveloperProxyAgent
+from santiago_core.agents._proxy.qa_proxy import QAProxyAgent
+from santiago_core.agents._proxy.ux_proxy import UXProxyAgent
+from santiago_core.agents._proxy.platform_proxy import PlatformProxyAgent
 
 __all__ = [
     # Base classes
