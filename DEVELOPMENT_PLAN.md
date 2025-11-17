@@ -1,0 +1,309 @@
+# Santiago PM Builder - Development Plan
+
+**Status**: In Progress (Tasks 11, 13, 14 complete)  
+**Current Phase**: Knowledge Graph Ingestion (Tasks 9-18)  
+**Started**: 2025-01-16  
+**Last Updated**: 2025-01-16
+
+## Vision
+
+Build a self-bootstrapping factory that creates domain-specific Santiagos by ingesting domain knowledge and generating MCP services. Start with Santiago-PM ingesting its own domain structure to prove the bootstrap capability.
+
+## Success Criteria
+
+1. ✅ Santiago-PM can read its own domain structure (ontology created)
+2. ✅ Extract 15-20 PM behaviors from santiago-pm docs (20 extracted)
+3. ✅ Generate MCP manifest with proper tool schemas (20 tools, 6 categories)
+4. 🚧 Implement Fishnet (BDD test generation from behaviors)
+5. 🚧 Implement Navigator (10-step fishing process orchestration)
+6. ⏳ Santiago-PM can manage itself using its own tools (demo)
+
+## Architecture Context
+
+### The 10-Step Fishing Process (from "Old Man and the Sea")
+
+1. **Vision** - Define MCP services/behaviors for target domain
+2. **Raw Materials** - Collect sources (docs, APIs, experts)
+3. **Catchfish Extraction** - Process into structured knowledge (4 layers)
+4. **Indexing** - Make knowledge highly referenceable
+5. **Ontology Loading** - Apply schemas/naming conventions
+6. **KG Building** - Store in knowledge graph with provenance
+7. **Fishnet BDD Generation** - Generate behavior tests
+8. **Navigator Validation Loop** - Iterate 3-5 cycles until ≥95% pass rate
+9. **Deployment** - Generate MCP manifest, deploy service
+10. **Learning** - Improve from logs/metrics
+
+### Key Components
+
+- **Catchfish**: 4-layer extraction (Raw Text → Entities → Structured Docs → KG Triples)
+  - Location: `nusy_orchestrator/santiago_builder/catchfish.py`
+  - Status: Implemented (demo version)
+  
+- **Fishnet**: BDD test generation from behaviors
+  - Location: `nusy_orchestrator/santiago_builder/fishnet.py`
+  - Status: Stub exists, needs implementation
+  
+- **Navigator**: Orchestrates 10-step process with validation cycles
+  - Location: `nusy_orchestrator/santiago_builder/navigator.py`
+  - Status: Skeleton exists, needs full implementation
+
+## Task Breakdown (18 Tasks Total)
+
+### Phase 1: Bootstrap Foundation (Tasks 1-8) ✅ COMPLETE
+- Task 1-8: Prior work (vision docs, architecture patterns, fake team setup)
+
+### Phase 2: Santiago-PM Ingestion (Tasks 9-18) 🚧 IN PROGRESS
+
+#### ✅ Task 9: Map santiago-pm structure for ingestion
+**Status**: Completed 2025-01-16  
+**Output**: `knowledge/ingestion-maps/santiago-pm-ingestion-map.md` (636 lines)
+- Classified 14 folders as data vs tools
+- Identified 7 agent roles → 15+ MCP tool behaviors
+- Mapped status system, notes relationships, experiment framework
+
+#### ✅ Task 10: Design PM domain ontology
+**Status**: Completed 2025-01-16  
+**Output**: `knowledge/ontologies/pm-domain-ontology.ttl` (882 lines)
+- Researched W3C standards (PROV-O, ORG, DCMI)
+- Gap analysis: 40% coverage from standards, 60% custom needed
+- 6-layer architecture: Foundation → Base → Domain → Status → Roles → Behaviors
+- 8 artifact classes, 50+ properties, 6 note relationships
+- 14 PM behaviors defined as prov:Activity subclasses
+- CC BY 4.0 license for community adoption
+
+#### ✅ Task 11: Extract PM behaviors from santiago-pm docs
+**Status**: Completed 2025-01-16  
+**Output**: `knowledge/catches/santiago-pm-behaviors/pm-behaviors-extracted.md` (1221 lines)
+- Extraction Strategy: DocumentFirst + SchemaDriven
+- 20 behaviors extracted across 6 categories
+- 100% ontology coverage (14/14 defined behaviors mapped)
+- Completeness: 0.85 (85% of PM domain)
+- Sources: 11 key files analyzed
+
+#### 🚧 Task 12: Run Navigator expedition on santiago-pm
+**Status**: Deferred (implement Fishnet first)  
+**Dependencies**: Task 11 ✅, Fishnet implementation needed
+**Approach**: Full 10-step process (Vision → Learning)
+- Input: 59 santiago-pm .md files
+- Expected: 200-300 KG triples, 60 BDD scenarios, ≥95% pass rate after 3-5 cycles
+- **Decision**: Defer until Fishnet is working (better order)
+
+#### ✅ Task 13: Identify MCP tool candidates from PM domain
+**Status**: Completed 2025-01-16  
+**Output**: `knowledge/catches/santiago-pm-behaviors/mcp-tool-classification.md` (428 lines)
+- Classified all 20 behaviors as data vs tools
+- Data: 7 artifact types (cargo-manifests, ships-logs, etc.)
+- Tools: 20 MCP tools across 6 categories
+- Mapped capability levels (Apprentice → Expert)
+- Mapped knowledge scopes (Pond → Ocean)
+- Identified concurrency risks (4 non-safe tools)
+
+#### ✅ Task 14: Generate santiago-pm MCP manifest
+**Status**: Completed 2025-01-16  
+**Output**: `knowledge/catches/santiago-pm-behaviors/santiago-pm-mcp-manifest.json` (1131 lines)
+- 20 tools with complete JSON schemas
+- 6 categories: Status, Feature, Issue, Experiment, Knowledge, Strategic
+- Input/output schemas for all tools
+- Concurrency annotations (mutates_kg, safe flags)
+- Quality gates defined (≥95% BDD pass, ≥95% coverage)
+- Budget hints for each tool
+
+#### ⏳ Task 15: Implement EARS-inspired scaffold system
+**Status**: Not Started  
+**Dependencies**: Tasks 13-14 ✅, Task 16 (demo)
+**Approach**: 
+- Scaffold recognition feature (each santiago-pm/ folder = template)
+- Santiago reads folder-structure.md, README.md, development-plan.md
+- Suggests similar structures (e.g., tackle/status/ → tackle/experiments/)
+- Meta-learning: Santiago learns domain organization by studying itself
+
+#### ⏳ Task 16: Create santiago-pm-self-aware demo
+**Status**: Not Started  
+**Dependencies**: Tasks 11, 13, 14 ✅, Fishnet, Navigator implementations
+**Approach**: End-to-end demonstration
+- Input: santiago-pm/ folder
+- Process: Navigator orchestrates full pipeline
+- Output: Santiago that understands its own PM domain
+- Validates: Bootstrap capability, self-awareness, meta-learning
+- Demo script: Query KG, execute MCP tools, scaffold suggestions
+
+#### ⏳ Task 17: Scan docs/vision for additional sources
+**Status**: Not Started (can run in parallel)  
+**Dependencies**: None (parallel task)
+**Approach**: Run Catchfish on docs/vision/ (12 .md files)
+- Extract: Architecture patterns, deployment specs, fake team strategy
+- Provides factory-building context alongside PM domain knowledge
+
+#### ⏳ Task 18: Ingest Jeff Patton & Jeff Gothelf websites
+**Status**: Not Started (can run in parallel)  
+**Dependencies**: None (parallel task)
+**Approach**: Use fetch_webpage for external PM thought leaders
+- jpattonassociates.com (user story mapping, discovery)
+- jeffgothelf.com (Lean UX, continuous discovery)
+- Enriches PM knowledge base with industry best practices
+
+#### 🆕 Task 19: Implement multi-strategy BDD generation in Fishnet
+**Status**: Not Started (feature specification created)  
+**Dependencies**: Fishnet basic implementation
+**Feature Spec**: `santiago-pm/cargo-manifests/fishnet-bdd-generation-strategies.feature.md`
+- 4 BDD strategies: top-down, bottom-up, external, logic
+- Strategy 5: Experiment-driven unknown resolution
+- Transforms Fishnet from single-strategy to comprehensive validation
+
+## Current Focus: Implement Fishnet (BDD Generation)
+
+**Why Now**: 
+- We have 20 extracted behaviors (Task 11) ✅
+- We have MCP manifest (Task 14) ✅
+- Need BDD tests before running Navigator (Task 12)
+- Proper build order: Catchfish → Fishnet → Navigator
+
+**Fishnet Requirements**:
+1. Read behavior specifications (from Task 11 extraction)
+2. Generate BDD .feature files (Gherkin format)
+3. Create 3 scenarios per behavior (happy path, edge case, error)
+4. Reference KG nodes in scenario steps
+5. Support multiple generation strategies (Task 19 extension)
+
+**Implementation Plan**:
+1. Enhance `nusy_orchestrator/santiago_builder/fishnet.py`
+2. Read from `knowledge/catches/santiago-pm-behaviors/pm-behaviors-extracted.md`
+3. Generate BDD files in `knowledge/catches/santiago-pm-behaviors/bdd-tests/`
+4. Initial strategy: Bottom-up (from extracted behaviors)
+5. Later: Add top-down, external, logic, experiment strategies (Task 19)
+
+## Implementation Status
+
+### Completed Components ✅
+- PM domain ontology (pm-domain-ontology.ttl)
+- Behavior extraction (20 behaviors documented)
+- MCP tool classification (6 categories)
+- MCP manifest generation (20 tools with schemas)
+- Feature specifications (multi-strategy Catchfish & Fishnet)
+
+### In Progress 🚧
+- Fishnet BDD generation (next implementation target)
+- Navigator orchestration (after Fishnet)
+
+### Not Started ⏳
+- EARS scaffold system (Task 15)
+- Santiago-PM-self-aware demo (Task 16)
+- Docs/vision ingestion (Task 17)
+- External website ingestion (Task 18)
+
+## Quality Gates
+
+### For Deployment (Navigator Step 9)
+- ✅ BDD pass rate ≥95%
+- ✅ Test coverage ≥95%
+- ✅ KG completeness ≥90%
+- ✅ Extraction time <60m per source (baseline), <15m target
+- ✅ 3-5 validation cycles completed
+- ✅ Complete provenance tracking
+
+### For Self-Awareness (Task 16 Demo)
+- ⏳ Santiago can query its own PM knowledge graph
+- ⏳ Santiago can execute MCP tools to manage itself
+- ⏳ Santiago can suggest improvements to its own structure
+- ⏳ Bootstrap loop validated (reads own ontology → improves self)
+
+## Risks & Mitigations
+
+### Risk 1: Context Loss (AI Session Limits)
+**Impact**: Lose progress, have to re-explain architecture  
+**Mitigation**: 
+- ✅ This development plan captures full context
+- ✅ Ships-logs capture daily progress
+- ✅ Each task produces committed artifacts (ontology, extractions, manifests)
+- ✅ Git commits preserve provenance
+
+### Risk 2: Navigator Complexity
+**Impact**: Full 10-step orchestration is complex, may take time  
+**Mitigation**:
+- ✅ Built components incrementally (Catchfish → Fishnet → Navigator)
+- ✅ Defer Task 12 (Navigator expedition) until Fishnet working
+- ⏳ Test each component independently before integration
+
+### Risk 3: Incomplete Domain Coverage
+**Impact**: 85% completeness on Task 11, some PM behaviors missing  
+**Mitigation**:
+- ✅ Ontology designed to be extensible
+- ⏳ Task 17-18 will add more PM knowledge (vision docs, external sources)
+- ⏳ Validation cycles (Task 12) will identify gaps
+- ⏳ Scaffold system (Task 15) enables incremental learning
+
+### Risk 4: BDD Test Quality
+**Impact**: Generated BDD tests may not adequately validate behaviors  
+**Mitigation**:
+- ⏳ Task 19 implements 4 BDD strategies (comprehensive coverage)
+- ⏳ Navigator validation loops enforce ≥95% pass rate
+- ⏳ Human review of BDD scenarios before deployment
+- ⏳ Experiment-driven resolution for unknown edge cases
+
+## Next Steps (Immediate)
+
+1. **Implement Fishnet BDD Generation**
+   - Enhance `nusy_orchestrator/santiago_builder/fishnet.py`
+   - Generate 60 BDD scenarios (20 behaviors × 3 scenarios)
+   - Output to `knowledge/catches/santiago-pm-behaviors/bdd-tests/`
+   - Validate against Task 11 extracted behaviors
+
+2. **Test Fishnet Output**
+   - Manually review generated .feature files
+   - Ensure Gherkin syntax correct
+   - Verify KG node references
+   - Check scenario coverage (happy path, edge case, error)
+
+3. **Implement Navigator Orchestration**
+   - Enhance `nusy_orchestrator/santiago_builder/navigator.py`
+   - Implement validation loop (steps 3-7 repeated 3-5 times)
+   - Add quality gates (≥95% BDD pass rate)
+   - Provenance logging to ships-logs/
+
+4. **Run Task 12 (Navigator Expedition)**
+   - Full 10-step process on all 59 santiago-pm files
+   - Generate complete catch: KG + BDD + MCP manifest
+   - Prove bootstrap capability
+
+5. **Build Task 16 Demo**
+   - Santiago queries its own PM knowledge graph
+   - Santiago executes MCP tools to manage itself
+   - Santiago suggests scaffold improvements
+   - Validate self-awareness
+
+## Dependencies
+
+```
+Task 9 → Task 10 → Task 11 → Task 13 → Task 14
+                      ↓
+                   Task 12 (deferred) → Task 16
+                      ↑
+                   Fishnet impl → Navigator impl
+                      
+Task 17, 18 (parallel, no dependencies)
+
+Task 15 (EARS scaffolds) ← Task 16 (demo shows scaffold usage)
+
+Task 19 (multi-strategy BDD) ← Fishnet basic impl
+```
+
+## Lessons Learned (So Far)
+
+1. **Research First**: Task 10 emphasized researching W3C standards before creating custom ontology - found PROV-O, ORG, DCMI cover 40%, custom 60%
+2. **Bootstrap Validates Design**: Extracting Santiago-PM's own behaviors (Task 11) proved ontology design works
+3. **Build Order Matters**: Realized Navigator needs Fishnet working first - better to build incrementally
+4. **Documentation Prevents Context Loss**: Development plan + ships-logs + committed artifacts = recoverable state
+5. **Multi-Strategy Is Powerful**: Tasks 19 & Catchfish strategies show single approach insufficient - need 4-5 strategies for completeness
+
+## References
+
+- Santiago-PM Vision: `santiago-pm/strategic-charts/Old man and the sea.md`
+- Architecture Pattern: `docs/vision/00-ARCHITECTURE-PATTERN.md`
+- Ingestion Map: `knowledge/ingestion-maps/santiago-pm-ingestion-map.md`
+- PM Ontology: `knowledge/ontologies/pm-domain-ontology.ttl`
+- Extracted Behaviors: `knowledge/catches/santiago-pm-behaviors/pm-behaviors-extracted.md`
+- MCP Manifest: `knowledge/catches/santiago-pm-behaviors/santiago-pm-mcp-manifest.json`
+
+---
+
+**Note**: This development plan is a living document. Update after each task completion or architectural decision.
