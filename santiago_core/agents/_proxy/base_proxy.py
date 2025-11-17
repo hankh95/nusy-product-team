@@ -15,6 +15,7 @@ from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field, field_validator
 
 from santiago_core.core.agent_framework import SantiagoAgent, Message, Task
+from santiago_core.services.llm_router import LLMRouter, TaskComplexity
 
 
 class MCPTool(BaseModel):
@@ -39,17 +40,10 @@ class ProxyConfig(BaseModel):
     role_name: str
     api_endpoint: str
     api_key: str
-    budget_per_day: float = 25.0
     session_ttl_hours: int = 1
     log_dir: str = "ships-logs/proxy/"
     cost_per_call: float = 0.02  # Default cost estimate
-
-    @field_validator("budget_per_day")
-    @classmethod
-    def validate_budget(cls, v):
-        if v <= 0:
-            raise ValueError("Budget must be positive")
-        return v
+    budget_tracking: bool = False  # Disabled by default per user decision
 
 
 class ProxyBudgetExceeded(Exception):
@@ -91,6 +85,9 @@ class BaseProxyAgent(SantiagoAgent):
         
         # Initialize tool cost tracking
         self._tool_costs: Dict[str, float] = {}
+        
+        # Initialize LLM router
+        self.llm_router = LLMRouter()
 
     async def invoke_tool(self, tool_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -107,12 +104,14 @@ class BaseProxyAgent(SantiagoAgent):
         if not self._tool_exists(tool_name):
             raise ValueError(f"Tool '{tool_name}' not found in manifest")
         
-        # Check budget
-        estimated_cost = self.estimate_tool_cost(tool_name)
-        if self.budget_spent + estimated_cost > self.config.budget_per_day:
-            raise ProxyBudgetExceeded(
-                f"Budget exceeded: {self.budget_spent:.2f} + {estimated_cost:.2f} > {self.config.budget_per_day}"
-            )
+        # Check budget (optional, disabled by default)
+        if self.config.budget_tracking:
+            estimated_cost = self.estimate_tool_cost(tool_name)
+            budget_limit = getattr(self.config, "budget_per_day", float('inf'))
+            if self.budget_spent + estimated_cost > budget_limit:
+                raise ProxyBudgetExceeded(
+                    f"Budget exceeded: {self.budget_spent:.2f} + {estimated_cost:.2f} > {budget_limit}"
+                )
         
         # Check session TTL
         if not self._is_session_valid():
@@ -141,11 +140,50 @@ class BaseProxyAgent(SantiagoAgent):
 
     async def _route_to_external_api(self, tool_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Route tool call to external API.
+        Route tool call to external API using LLM router.
         
-        Subclasses override this to implement actual API calls.
+        Determines task complexity and routes to appropriate provider/model.
+        Subclasses can override for custom routing logic.
         """
-        raise NotImplementedError("Subclasses must implement _route_to_external_api")
+        # Determine task complexity
+        complexity = self.llm_router.get_task_complexity(tool_name)
+        
+        # Get LLM configuration
+        llm_config = self.llm_router.get_config(self.config.role_name, complexity)
+        
+        # Make API call based on provider
+        if llm_config.provider == "xai":
+            return await self._call_xai_api(llm_config, tool_name, params)
+        elif llm_config.provider == "openai":
+            return await self._call_openai_api(llm_config, tool_name, params)
+        else:
+            raise ValueError(f"Unknown provider: {llm_config.provider}")
+    
+    async def _call_xai_api(
+        self, 
+        llm_config: Any,  # LLMConfig
+        tool_name: str, 
+        params: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Call xAI (Grok) API.
+        
+        Subclasses must implement actual API logic.
+        """
+        raise NotImplementedError("Subclasses must implement _call_xai_api")
+    
+    async def _call_openai_api(
+        self, 
+        llm_config: Any,  # LLMConfig
+        tool_name: str, 
+        params: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Call OpenAI API.
+        
+        Subclasses must implement actual API logic.
+        """
+        raise NotImplementedError("Subclasses must implement _call_openai_api")
 
     def _tool_exists(self, tool_name: str) -> bool:
         """Check if tool exists in manifest"""
@@ -219,14 +257,21 @@ class BaseProxyAgent(SantiagoAgent):
 
     def get_metrics(self) -> Dict[str, Any]:
         """Get proxy metrics"""
-        return {
+        metrics = {
             "proxy": self.name,
             "session_start": self.session_start.isoformat(),
             "total_calls": self.call_count,
             "calls_by_tool": self.calls_by_tool,
             "budget_spent": self.budget_spent,
-            "budget_remaining": self.config.budget_per_day - self.budget_spent,
         }
+        
+        # Add budget remaining if tracking is enabled
+        if self.config.budget_tracking:
+            budget_limit = getattr(self.config, "budget_per_day", None)
+            if budget_limit is not None:
+                metrics["budget_remaining"] = budget_limit - self.budget_spent
+        
+        return metrics
 
     def get_manifest_dict(self) -> Dict[str, Any]:
         """Get manifest as dictionary"""

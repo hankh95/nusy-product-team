@@ -86,13 +86,14 @@ class PMProxyAgent(BaseProxyAgent):
         )
 
         # Define PM-specific configuration
+        import os
         config = ProxyConfig(
             role_name="pm_proxy",
             api_endpoint="https://api.openai.com/v1/chat/completions",
             api_key="",  # To be loaded from env
-            budget_per_day=25.0,
             session_ttl_hours=1,
             log_dir="ships-logs/pm/",
+            budget_tracking=os.getenv("PROXY_BUDGET_TRACKING", "false").lower() == "true",
         )
 
         super().__init__(

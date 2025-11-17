@@ -114,13 +114,14 @@ class EthicistProxyAgent(BaseProxyAgent):
         )
 
         # Define Ethicist-specific configuration
+        import os
         config = ProxyConfig(
             role_name="ethicist_proxy",
             api_endpoint="https://api.openai.com/v1/chat/completions",
             api_key="",  # To be loaded from env
-            budget_per_day=20.0,  # Lower than other roles (reflection-focused)
             session_ttl_hours=2,  # Longer sessions for deep reflection
             log_dir="ships-logs/ethics/",
+            budget_tracking=os.getenv("PROXY_BUDGET_TRACKING", "false").lower() == "true",
         )
 
         super().__init__(
@@ -132,6 +133,10 @@ class EthicistProxyAgent(BaseProxyAgent):
 
         # Store Baha'i principles for access
         self.bahai_principles = self.BAHAI_PRINCIPLES
+        
+        # Get ethical mode from environment (async by default per user decision)
+        import os
+        self.ethical_mode = os.getenv("PROXY_ETHICAL_MODE", "async")
 
         # Load role instructions
         self._load_role_instructions()
@@ -149,7 +154,21 @@ class EthicistProxyAgent(BaseProxyAgent):
     async def _route_to_external_api(self, tool_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """
         Route tool call to external API with Baha'i principles context.
+        
+        In async mode (default), logs ethical review for later consultation
+        rather than blocking operations. Focus on Service to Humanity and
+        Consultation as core principles per user decision.
         """
+        # In async mode, log review and return immediately
+        if self.ethical_mode == "async":
+            await self._log_async_review(tool_name, params)
+            return {
+                "status": "logged",
+                "mode": "async",
+                "message": "Ethical review logged for consultation"
+            }
+        
+        # In blocking mode, perform synchronous review
         return await self._call_external_api(tool_name, params)
 
     async def _call_external_api(self, tool_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
@@ -353,3 +372,30 @@ class EthicistProxyAgent(BaseProxyAgent):
             "topic": message.content,
             "participants": []
         })
+
+    async def _log_async_review(self, tool_name: str, params: Dict[str, Any]) -> None:
+        """
+        Log ethical review asynchronously for later consultation.
+        
+        This supports the async ethical mode where reviews are logged
+        but don't block operations. Reviews focus on Service to Humanity
+        and Consultation principles per user decision.
+        """
+        import json
+        from datetime import datetime
+        
+        log_entry = {
+            "timestamp": datetime.now().isoformat(),
+            "tool": tool_name,
+            "params": params,
+            "core_principles": ["Service to Humanity", "Consultation"],
+            "mode": "async",
+            "status": "pending_consultation",
+        }
+        
+        # Write to async review log
+        log_file = self.log_dir / f"async_reviews_{datetime.now().strftime('%Y%m%d')}.jsonl"
+        with open(log_file, 'a') as f:
+            f.write(json.dumps(log_entry) + '\n')
+        
+        self.logger.info(f"Async ethical review logged: {tool_name}")
