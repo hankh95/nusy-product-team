@@ -1,17 +1,18 @@
 {
   "$schema": "https://modelcontextprotocol.io/schemas/2024-11-05/manifest.schema.json",
-  "manifest_version": "1.0.0",
+  "manifest_version": "1.1.0",
   "santiago_id": "santiago-pm-self-aware",
   "domain": "product-management",
   "created_at": "2025-01-16T00:00:00Z",
+  "updated_at": "2025-11-16T00:00:00Z",
   "ontology_uri": "https://nusy.ai/pm#",
-  "ontology_version": "1.0.0",
+  "ontology_version": "1.1.0",
   "capability_level": "master",
   "knowledge_scope": "sea",
-  "description": "Santiago Product Manager - Self-aware PM domain specialist with 20 behaviors covering status management, feature development, issue tracking, experiment execution, knowledge capture, strategic planning, and quality assurance",
+  "description": "Santiago Product Manager - Self-aware PM domain specialist with 28 behaviors covering status management, feature development, issue tracking, experiment execution, knowledge capture, strategic planning, quality assurance, and workflow orchestration",
   
   "metadata": {
-    "total_tools": 20,
+    "total_tools": 28,
     "tool_categories": [
       "status_management",
       "feature_management",
@@ -19,14 +20,16 @@
       "experiment_management",
       "knowledge_capture",
       "strategic_planning",
-      "quality_assurance"
+      "quality_assurance",
+      "passage_orchestration"
     ],
     "extraction_source": "santiago-pm/ (59 markdown files)",
     "extraction_date": "2025-01-16",
     "extraction_method": "DocumentFirst + SchemaDriven",
     "ontology_coverage": 1.0,
-    "domain_completeness": 0.85,
-    "behaviors_validated": true
+    "domain_completeness": 0.90,
+    "behaviors_validated": true,
+    "recursive_self_improvement": "2025-11-16 - Santiago used its own MCP tools to extract passage orchestration behaviors"
   },
 
   "concurrency_policy": {
@@ -1082,6 +1085,445 @@
           "report_path": {"type": "string"}
         }
       }
+    },
+    {
+      "name": "define_passage",
+      "description": "Create YAML-based passage (workflow) definition with actors, steps, triggers, transitions, outputs, and quality gates",
+      "category": "passage_orchestration",
+      "version": "1.0.0",
+      "capability_level": "master",
+      "knowledge_scope": "sea",
+      "mutates_kg": true,
+      "concurrency_safe": false,
+      "inputSchema": {
+        "type": "object",
+        "required": ["id", "name", "category", "actors", "steps", "triggers"],
+        "properties": {
+          "id": {"type": "string", "description": "passage-unique-identifier"},
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "category": {"type": "string", "enum": ["team", "agent", "hybrid", "integration"]},
+          "version": {"type": "string", "default": "1.0.0"},
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "created_by": {"type": "string"},
+              "tags": {"type": "array", "items": {"type": "string"}}
+            }
+          },
+          "actors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "name", "type"],
+              "properties": {
+                "id": {"type": "string"},
+                "name": {"type": "string"},
+                "type": {"type": "string", "enum": ["human", "agent", "system"]},
+                "role": {"type": "string"}
+              }
+            }
+          },
+          "triggers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {"type": "string", "enum": ["event", "schedule", "manual"]},
+                "condition": {"type": "string"},
+                "parameters": {"type": "object"}
+              }
+            }
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "name", "actor", "type"],
+              "properties": {
+                "id": {"type": "string"},
+                "name": {"type": "string"},
+                "description": {"type": "string"},
+                "actor": {"type": "string"},
+                "type": {"type": "string", "enum": ["task", "decision", "approval", "automated"]},
+                "inputs": {"type": "array"},
+                "outputs": {"type": "array"},
+                "timeout": {"type": "string"},
+                "quality_gate": {"type": "object"}
+              }
+            }
+          },
+          "transitions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["from", "to"],
+              "properties": {
+                "from": {"type": "string"},
+                "to": {"type": "string"},
+                "condition": {"type": "string"},
+                "actions": {"type": "array"}
+              }
+            }
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "passage_id": {"type": "string"},
+          "passage_path": {"type": "string"},
+          "status": {"type": "string", "enum": ["draft"]},
+          "validation": {
+            "type": "object",
+            "properties": {
+              "completeness": {"type": "boolean"},
+              "consistency": {"type": "boolean"},
+              "reachability": {"type": "boolean"},
+              "termination": {"type": "boolean"}
+            }
+          },
+          "kg_uri": {"type": "string", "format": "uri"},
+          "created_at": {"type": "string", "format": "date-time"}
+        }
+      },
+      "budget_estimate_tokens": 2000
+    },
+    {
+      "name": "validate_passage",
+      "description": "Check passage definition for completeness, consistency, reachability, and termination",
+      "category": "passage_orchestration",
+      "version": "1.0.0",
+      "capability_level": "journeyman",
+      "knowledge_scope": "lake",
+      "mutates_kg": false,
+      "concurrency_safe": true,
+      "inputSchema": {
+        "type": "object",
+        "required": ["passage_id"],
+        "properties": {
+          "passage_id": {"type": "string"},
+          "passage_yaml": {"type": "string"}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "passage_id": {"type": "string"},
+          "valid": {"type": "boolean"},
+          "validation_results": {
+            "type": "object",
+            "properties": {
+              "completeness": {
+                "type": "object",
+                "properties": {
+                  "passed": {"type": "boolean"},
+                  "issues": {"type": "array", "items": {"type": "string"}}
+                }
+              },
+              "consistency": {
+                "type": "object",
+                "properties": {
+                  "passed": {"type": "boolean"},
+                  "issues": {"type": "array", "items": {"type": "string"}}
+                }
+              },
+              "reachability": {
+                "type": "object",
+                "properties": {
+                  "passed": {"type": "boolean"},
+                  "unreachable_steps": {"type": "array", "items": {"type": "string"}}
+                }
+              },
+              "termination": {
+                "type": "object",
+                "properties": {
+                  "passed": {"type": "boolean"},
+                  "issues": {"type": "array", "items": {"type": "string"}}
+                }
+              }
+            }
+          },
+          "validated_at": {"type": "string", "format": "date-time"}
+        }
+      },
+      "budget_estimate_tokens": 500
+    },
+    {
+      "name": "generate_passage_diagram",
+      "description": "Generate Mermaid flowchart from passage YAML showing actors, steps, transitions, and quality gates",
+      "category": "passage_orchestration",
+      "version": "1.0.0",
+      "capability_level": "journeyman",
+      "knowledge_scope": "lake",
+      "mutates_kg": true,
+      "concurrency_safe": true,
+      "inputSchema": {
+        "type": "object",
+        "required": ["passage_id"],
+        "properties": {
+          "passage_id": {"type": "string"},
+          "visualization_type": {
+            "type": "string",
+            "enum": ["execution_flow", "actor_assignment", "decision_points", "quality_gates", "integration_points"],
+            "default": "execution_flow"
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "passage_id": {"type": "string"},
+          "mermaid_diagram": {"type": "string"},
+          "diagram_url": {"type": "string"},
+          "visualization_type": {"type": "string"},
+          "generated_at": {"type": "string", "format": "date-time"}
+        }
+      },
+      "budget_estimate_tokens": 800
+    },
+    {
+      "name": "execute_passage",
+      "description": "Start passage execution with trigger conditions, orchestrate steps, manage state transitions, track artifacts",
+      "category": "passage_orchestration",
+      "version": "1.0.0",
+      "capability_level": "master",
+      "knowledge_scope": "sea",
+      "mutates_kg": true,
+      "concurrency_safe": false,
+      "inputSchema": {
+        "type": "object",
+        "required": ["passage_id", "trigger_type"],
+        "properties": {
+          "passage_id": {"type": "string"},
+          "trigger_type": {"type": "string", "enum": ["event", "schedule", "manual"]},
+          "parameters": {"type": "object"},
+          "execution_mode": {"type": "string", "enum": ["synchronous", "asynchronous"], "default": "asynchronous"},
+          "timeout": {"type": "string"}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "execution_id": {"type": "string"},
+          "passage_id": {"type": "string"},
+          "state": {"type": "string", "enum": ["pending", "running", "waiting", "completed", "failed", "cancelled"]},
+          "step_history": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "step_id": {"type": "string"},
+                "actor": {"type": "string"},
+                "started_at": {"type": "string", "format": "date-time"},
+                "completed_at": {"type": "string", "format": "date-time"},
+                "status": {"type": "string", "enum": ["success", "failed", "skipped"]},
+                "outputs": {"type": "object"}
+              }
+            }
+          },
+          "artifacts": {"type": "array", "items": {"type": "string", "format": "uri"}},
+          "timeline": {
+            "type": "object",
+            "properties": {
+              "started_at": {"type": "string", "format": "date-time"},
+              "completed_at": {"type": "string", "format": "date-time"},
+              "duration": {"type": "string"}
+            }
+          },
+          "current_step": {"type": "string"},
+          "completion_percentage": {"type": "number"},
+          "kg_uri": {"type": "string", "format": "uri"}
+        }
+      },
+      "budget_estimate_tokens": 3000
+    },
+    {
+      "name": "monitor_passage_execution",
+      "description": "Query execution status, view step history, track completion percentage, receive notifications",
+      "category": "passage_orchestration",
+      "version": "1.0.0",
+      "capability_level": "journeyman",
+      "knowledge_scope": "lake",
+      "mutates_kg": false,
+      "concurrency_safe": true,
+      "inputSchema": {
+        "type": "object",
+        "required": ["execution_id"],
+        "properties": {
+          "execution_id": {"type": "string"},
+          "include_history": {"type": "boolean", "default": true},
+          "include_artifacts": {"type": "boolean", "default": true}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "execution_id": {"type": "string"},
+          "passage_id": {"type": "string"},
+          "state": {"type": "string"},
+          "current_step": {"type": "string"},
+          "completion_percentage": {"type": "number"},
+          "timeline": {
+            "type": "object",
+            "properties": {
+              "started_at": {"type": "string", "format": "date-time"},
+              "elapsed": {"type": "string"},
+              "estimated_remaining": {"type": "string"}
+            }
+          },
+          "step_history": {"type": "array"},
+          "artifacts": {"type": "array"},
+          "notifications": {"type": "array"}
+        }
+      },
+      "budget_estimate_tokens": 400
+    },
+    {
+      "name": "coordinate_mcp_invocation",
+      "description": "Invoke MCP endpoints from passage steps, capture tool results as step outputs, handle success/failure",
+      "category": "passage_orchestration",
+      "version": "1.0.0",
+      "capability_level": "master",
+      "knowledge_scope": "sea",
+      "mutates_kg": true,
+      "concurrency_safe": false,
+      "inputSchema": {
+        "type": "object",
+        "required": ["execution_id", "step_id", "mcp_tool", "tool_params"],
+        "properties": {
+          "execution_id": {"type": "string"},
+          "step_id": {"type": "string"},
+          "mcp_tool": {"type": "string"},
+          "tool_params": {"type": "object"},
+          "retry_policy": {
+            "type": "object",
+            "properties": {
+              "max_retries": {"type": "integer", "default": 3},
+              "retry_delay": {"type": "string", "default": "5s"}
+            }
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "execution_id": {"type": "string"},
+          "step_id": {"type": "string"},
+          "mcp_tool": {"type": "string"},
+          "invocation_status": {"type": "string", "enum": ["success", "failure"]},
+          "tool_result": {"type": "object"},
+          "invocation_time": {"type": "string", "format": "date-time"},
+          "duration": {"type": "string"},
+          "retry_count": {"type": "integer"},
+          "error": {"type": "string"}
+        }
+      },
+      "budget_estimate_tokens": 1500
+    },
+    {
+      "name": "analyze_passage_performance",
+      "description": "Aggregate passage execution metrics (duration, success rate, bottlenecks), identify performance patterns",
+      "category": "passage_orchestration",
+      "version": "1.0.0",
+      "capability_level": "master",
+      "knowledge_scope": "sea",
+      "mutates_kg": true,
+      "concurrency_safe": true,
+      "inputSchema": {
+        "type": "object",
+        "required": ["passage_id"],
+        "properties": {
+          "passage_id": {"type": "string"},
+          "time_range": {
+            "type": "object",
+            "properties": {
+              "start": {"type": "string", "format": "date-time"},
+              "end": {"type": "string", "format": "date-time"}
+            }
+          },
+          "metrics": {
+            "type": "array",
+            "items": {"type": "string", "enum": ["duration", "success_rate", "step_performance", "actor_utilization"]},
+            "default": ["duration", "success_rate"]
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "passage_id": {"type": "string"},
+          "analysis_period": {
+            "type": "object",
+            "properties": {
+              "start": {"type": "string", "format": "date-time"},
+              "end": {"type": "string", "format": "date-time"}
+            }
+          },
+          "total_executions": {"type": "integer"},
+          "success_rate": {"type": "number"},
+          "average_duration": {"type": "string"},
+          "bottlenecks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "step_id": {"type": "string"},
+                "average_duration": {"type": "string"},
+                "failure_rate": {"type": "number"}
+              }
+            }
+          },
+          "actor_utilization": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "actor_id": {"type": "string"},
+                "total_steps": {"type": "integer"},
+                "average_step_duration": {"type": "string"}
+              }
+            }
+          },
+          "recommendations": {"type": "array", "items": {"type": "string"}},
+          "analyzed_at": {"type": "string", "format": "date-time"}
+        }
+      },
+      "budget_estimate_tokens": 1200
+    },
+    {
+      "name": "manage_passage_lifecycle",
+      "description": "Transition passage through lifecycle states (draft → active → deprecated → archived), enforce governance rules",
+      "category": "passage_orchestration",
+      "version": "1.0.0",
+      "capability_level": "master",
+      "knowledge_scope": "sea",
+      "mutates_kg": true,
+      "concurrency_safe": false,
+      "inputSchema": {
+        "type": "object",
+        "required": ["passage_id", "action"],
+        "properties": {
+          "passage_id": {"type": "string"},
+          "action": {"type": "string", "enum": ["submit_for_review", "approve", "deprecate", "archive", "rollback"]},
+          "reason": {"type": "string"},
+          "approver": {"type": "string"}
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "passage_id": {"type": "string"},
+          "previous_state": {"type": "string", "enum": ["draft", "active", "deprecated", "archived"]},
+          "new_state": {"type": "string", "enum": ["draft", "active", "deprecated", "archived"]},
+          "transition": {"type": "string"},
+          "transitioned_by": {"type": "string"},
+          "transitioned_at": {"type": "string", "format": "date-time"},
+          "reason": {"type": "string"},
+          "kg_uri": {"type": "string", "format": "uri"}
+        }
+      },
+      "budget_estimate_tokens": 600
     }
   ],
 
@@ -1097,10 +1539,11 @@
     "extraction_agent": "catchfish-v1",
     "extraction_layers": 4,
     "source_files_processed": 11,
-    "entities_extracted": 20,
+    "entities_extracted": 28,
     "ontology_alignment": 1.0,
-    "domain_completeness": 0.85,
+    "domain_completeness": 0.90,
     "extraction_time_minutes": 45,
-    "validation_method": "SchemaDriven"
+    "validation_method": "SchemaDriven",
+    "recursive_self_improvement": "Santiago used its own DocumentFirst + SchemaDriven extraction to add passage orchestration (2025-11-16)"
   }
 }
