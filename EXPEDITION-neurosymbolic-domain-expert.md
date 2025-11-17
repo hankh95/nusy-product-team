@@ -6,11 +6,13 @@
 
 ## Mission Statement
 
-Build a **unified neurosymbolic domain expert** that serves two primary use cases:
-1. **BDD Test Coverage**: Answer test scenarios as questions, track provenance
-2. **Human Q&A**: Answer human questions using validated knowledge with provenance
+Build a **unified neurosymbolic domain expert** that serves three integrated capabilities:
 
-**Key Insight**: These are the *same capability* - knowledge-based question answering with provenance tracking. The domain expert validates its knowledge through BDD coverage, then uses that same validated knowledge to answer human questions.
+1. **BDD Test Validator**: Answer test scenarios as questions, track provenance, identify knowledge gaps
+2. **Human Q&A Interface**: Answer human questions using validated knowledge with provenance
+3. **MCP Tool Executor**: Tools backed by validated KG, return results with provenance
+
+**Key Insight**: These are the *same underlying capability* - knowledge-based question answering with provenance tracking. The domain expert validates its knowledge through BDD coverage, uses that validated knowledge to answer human questions, and exposes that knowledge through MCP tools.
 
 ## Architecture Vision
 
@@ -21,13 +23,16 @@ CatchFish Extraction (4-layer L0-L3)
     ↓
 Knowledge Graph (RDF triples)
     ↓
-Neurosymbolic Reasoner (keyword + graph traversal)
+Santiago-Core Neurosymbolic Reasoner
     ↓
-    ├─→ BDD Test Executor (validates coverage)
-    └─→ Human Q&A Interface (answers questions)
+    ├─→ 1. BDD Test Validator (validates coverage)
+    ├─→ 2. Human Q&A Interface (answers questions)
+    └─→ 3. MCP Tool Executor (exposes capabilities)
 ```
 
-**Quality Loop**: BDD coverage → identifies knowledge gaps → guides new ingestion → increases coverage → better Q&A
+**Quality Loop**: BDD coverage → identifies knowledge gaps → guides new ingestion → increases coverage → better Q&A → more reliable tools
+
+**Integration**: MCP tools query validated KG for domain knowledge, ensuring tool behavior is backed by tested knowledge with full provenance.
 
 ## Current State (Baseline)
 
@@ -96,6 +101,20 @@ Neurosymbolic Reasoner (keyword + graph traversal)
 - `santiago_expert_cli.py`: Interactive Q&A
 - Example questions with answers
 - Provenance UI showing knowledge sources
+
+### Phase 3.5: MCP Tool Integration
+**Goal**: Tools backed by validated knowledge
+
+**Success Criteria**:
+- [ ] MCP tools query KG for domain knowledge
+- [ ] Tool responses include provenance
+- [ ] Confidence scores for tool reliability
+- [ ] Failed BDD tests → disabled tools (quality gate)
+
+**Deliverables**:
+- MCP tool wrapper using santiago-core reasoner
+- Tool provenance tracking
+- Quality-based tool availability
 
 ### Phase 4: Integration & Coverage Loop
 **Goal**: Close loop, integrate with Navigator
