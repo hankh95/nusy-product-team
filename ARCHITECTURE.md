@@ -14,7 +14,7 @@ Santiago is not a fixed team of AI agents but a self-bootstrapping factory that 
 
 ## Current Architecture
 
-`santiago_core/` contains active development with agent frameworks, ethical gating, and message passing, but lacks the MCP-facing factory machinery and the `knowledge/` directory for storing generated catches. `santiago-pm/` encodes development patterns (expeditions, tackle, voyage-trials) that teach hypothesis-driven development, but these aren't yet wired into automated fishing. `nusy_prototype/` proves the workflow: converting clinical guidelines to 4-layer models in 30-60 minutes with 3 validation cycles—this IS the factory pattern that needs industrialization. Legacy code in `src/nusy_pm_core/` and `santiago-code/` is archived. No MCP proxy layer exists, no Navigator/Catchfish/Fishnet implementation, and DGX Spark deployment (128GB RAM, 4TB+8TB NVMe, vLLM/TensorRT per `dgx_spark_nusy_report.md`) remains theoretical.
+`santiago_core/` contains active development with agent frameworks, ethical gating, and message passing, but lacks the MCP-facing factory machinery and the `knowledge/` directory for storing generated catches. `santiago-pm/` encodes development patterns (expeditions, tackle, voyage-trials) that teach hypothesis-driven development, but these aren't yet wired into automated fishing. The clinical prototype in `_archive/legacy/nusy_prototype/` proves the workflow: converting clinical guidelines to 4-layer models in 30-60 minutes with 3 validation cycles—this IS the factory pattern that needs industrialization. Legacy code in `src/nusy_pm_core/` and `santiago-code/` is archived. No MCP proxy layer exists, no Navigator/Catchfish/Fishnet implementation, and DGX Spark deployment (128GB RAM, 4TB+8TB NVMe, vLLM/TensorRT per `docs/vision/building-on-DGX/dgx_spark_nusy_report.md`) remains theoretical.
 
 ---
 
@@ -34,7 +34,7 @@ Run full fishing expedition targeting santiago-pm-safe-xp. Navigator enforces 3-
 
 ### Phase 3: Progressive Replacement
 
-Repeat Phase 2 for Architect-NuSy, Architect-Systems, Developer, QA, UX, Platform roles. Each replacement runs as hypothesis-driven expedition with BDD coverage and A/B testing. Hybrid routing allows 80/20 traffic splits during transition periods with metrics dashboards tracking parity, latency, cost per role. Some proxies may remain if sources lack depth—hybrid teams are acceptable. DGX Spark hosts shared Mistral-7B-Instruct via vLLM batching so 10+ Santiagos run concurrently sharing one loaded model. Concurrency and session-isolation tests follow `nusy_manolin_multi_agent_test_plans.md`.
+Repeat Phase 2 for Architect-NuSy, Architect-Systems, Developer, QA, UX, Platform roles. Each replacement runs as hypothesis-driven expedition with BDD coverage and A/B testing. Hybrid routing allows 80/20 traffic splits during transition periods with metrics dashboards tracking parity, latency, cost per role. Some proxies may remain if sources lack depth—hybrid teams are acceptable. DGX Spark hosts shared Mistral-7B-Instruct via vLLM batching so 10+ Santiagos run concurrently sharing one loaded model. Concurrency and session-isolation tests follow `docs/vision/building-on-DGX/nusy_manolin_multi_agent_test_plans.md`.
 
 ### Phase 4: Self-Sustaining
 
@@ -72,7 +72,7 @@ Create `knowledge/` with:
 - `templates/` — Base structures for generating Santiagos
 - `proxy-instructions/` — Role definitions for fake team
 
-Storage on DGX Spark's 4TB internal NVMe (hot tier), with overflow to 8-16TB external NVMe RAID (warm tier) per `dgx_spark_nusy_report.md`, and historical archives to NAS (cold tier).
+Storage on DGX Spark's 4TB internal NVMe (hot tier), with overflow to 8-16TB external NVMe RAID (warm tier) per `docs/vision/building-on-DGX/dgx_spark_nusy_report.md`, and historical archives to NAS (cold tier).
 
 ---
 
@@ -143,7 +143,7 @@ Embed Ethics & Concurrency gating inside NuSy Orchestrator:
 
 - **Queue-first tool execution**: All KG writes pass through a queue with schema validation, provenance stamping, and trust checks before commit
 - **Santiago-Ethicist proxy/service**: Pre-execution review for risky actions and post-execution audits. Escalate to human-in-the-loop for flagged items
-- **Concurrency guardrails** follow `nusy_manolin_multi_agent_test_plans.md`: session isolation, tool locking, load SLOs (P95 latency <6s under 10-agent load), per-entity locks in KG write pipeline
+- **Concurrency guardrails** follow `docs/vision/building-on-DGX/nusy_manolin_multi_agent_test_plans.md`: session isolation, tool locking, load SLOs (P95 latency <6s under 10-agent load), per-entity locks in KG write pipeline
 - **Budget gates and rate limiting** at orchestrator; A/B gates require ≥90% parity before replacement; rehearsal gates require ≥95% BDD pass before deploy
 - **Ethics gating** verifies fishing expeditions respect source licensing and usage constraints
 
@@ -189,8 +189,8 @@ catches:
     capability_level: Journeyman
     knowledge_scope: Lake
     sources:
-      - ocean-research/dgx_spark_nusy_report.md
-      - ocean-research/nusy_manolin_architecture.md
+      - docs/vision/building-on-DGX/dgx_spark_nusy_report.md
+      - docs/vision/building-on-DGX/nusy_manolin_architecture.md
     bdd_pass_rate: 0.96
     replacement:
       proxy: santiago-pm-proxy@1.0
@@ -220,15 +220,13 @@ catches:
 
 ## References Cited
 
-- `ocean-research/00-ARCHITECTURE-PATTERN.md`
+- `docs/vision/00-ARCHITECTURE-PATTERN.md`
 - `santiago-pm/strategic-charts/Old man and the sea.md`
-- `ocean-research/building-on-DGX/dgx_spark_nusy_report.md`
-- `ocean-research/dgx_spark_nusy_report.md`
-- `ocean-research/nusy_manolin_architecture.md`
-- `ocean-research/nusy_manolin_provisioning_automation.md`
-- `ocean-research/nusy_manolin_multi_agent_test_plans.md`
-- `ocean-research/fake_team_feature_plan.md`
-- `ocean-research/fake_team_steps_for_hank_and_copilot.md`
-- `ocean-research/fake_team_pack/`
-- `nusy_prototype/neurosymbolic-clinical-reasoner-technical-summary.md` (30-60m conversion, 3 validation cycles)
+- `docs/vision/building-on-DGX/dgx_spark_nusy_report.md`
+- `docs/vision/building-on-DGX/nusy_manolin_architecture.md`
+- `docs/vision/building-on-DGX/nusy_manolin_provisioning_automation.md`
+- `docs/vision/building-on-DGX/nusy_manolin_multi_agent_test_plans.md`
+- `docs/vision/fake_team_pack/fake_team_feature_plan.md`
+- `docs/vision/fake_team_pack/fake_team_steps_for_hank_and_copilot.md`
+- `_archive/legacy/nusy_prototype/neurosymbolic-clinical-reasoner-technical-summary.md` (30-60m conversion, 3 validation cycles)
 - `santiago-pm/expeditions/`, `santiago-pm/tackle/`, `santiago-pm/voyage-trials/` (development patterns)

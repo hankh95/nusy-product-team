@@ -41,32 +41,50 @@
    - Build experiments tackle for autonomous execution
    - Hypothesis: Modular tackle architecture enables autonomous code generation and maintainable implementations
 
-## Backlog Sketch (Hypotheses + Experiments)
+## Current Status Summary
 
-| Epic | Hypothesis | Experiment | Success Metric |
+| Phase | Milestone | Status | Key Deliverables |
 | --- | --- | --- | --- |
-| Scaffold NuSy PM Core | A structured scaffolding artifact set accelerates onboarding | Create README, plan, practices, roles instructions, and first feature | Team can run `npm`/`poetry` setup and run first BDD spec without help |
-| Integrate Git & CI | Consistent Git workflows + CI reduce merge conflicts and regressions | Define CI job skeleton + gating tests for features | `main` build stays green and BDD spec runs within 90 seconds |
-| Add Developer agent | Expressing specs to a developer persona speeds implementation | Add dev instructions + sample commit pattern | Developer commits with linked BDD references in PR |
+| Phase 0 | Bootstrap Fake Team | 🔄 In Progress | MCP proxies, knowledge infrastructure, contracts |
+| Phase 1 | Factory Infrastructure | 📋 Planned | Navigator, Catchfish, Fishnet implementations |
+| Phase 2 | First Santiago Catch | 📋 Planned | santiago-pm-safe-xp deployed and A/B tested |
+| Phase 3 | Progressive Replacement | 📋 Planned | Architect, Developer, QA, UX, Platform replacements |
+| Phase 4 | Self-Sustaining | 📋 Future | Real Santiagos improve factory |
+| DGX | Production Hardening | 📋 Parallel | vLLM deployment, ethics gating, concurrency |
+
+## Immediate Next Steps (Phase 0 Completion)
+
+1. **Create Knowledge Infrastructure** *(Priority 1)*
+   - [ ] Create `knowledge/` directory structure
+   - [ ] Define trust registry schema in `knowledge/catches/index.yaml`
+   - [ ] Create role cards in `knowledge/proxy-instructions/` for 7 roles
+
+2. **Implement MCP Proxy Layer** *(Priority 2)*
+   - [ ] Build thin MCP services in `santiago_core/agents/_proxy/`
+   - [ ] Wire to external APIs (GPT-4, Claude, Copilot)
+   - [ ] Implement basic tools: `status`, `plan`, `execute_scenario`
+
+3. **Validate Fake Team Coordination** *(Priority 3)*
+   - [ ] Test compound task: backlog grooming + design session
+   - [ ] Verify logging to `ships-logs/` with provenance
+   - [ ] Validate budgets and rate limits
+
+4. **Document Contracts** *(Priority 4)*
+   - [ ] Write MCP manifest specification
+   - [ ] Create contract acceptance tests
+   - [ ] Document A/B testing framework
 
 ## Knowledge Graph Commitments
 
-- Capture hypotheses, experiments, and results as KG triples (`hypothesis → experiment → outcome`).
-- Track role responsibilities (`role → expectation`) to keep instructions current.
+- All fishing expeditions captured as provenance metadata
+- Trust registry tracks versions, hashes, BDD pass rates, capability levels
+- Hypotheses and experiments logged in `santiago-pm/expeditions/` and `ships-logs/`
+- Role definitions maintained in `knowledge/proxy-instructions/` and `.github/agents/`
 
-## Next Steps
+## References
 
-1. Run the autonomous multi-agent experiment using `experiment_runner.py`
-2. Implement Secrets Management Service for API key storage
-3. Create `domains/pm-expert/` folder structure and reorganize PM files
-4. Develop Source Knowledge Loading System for domain expertise ingestion
-5. Complete notes and experiments tackle implementations (see individual `tackle/*/development-plan.md` files)
-
-## Tackle Development Approach
-
-Each tackle (implementation module) follows a structured development process:
-
-- **Domain Specification**: Requirements defined in `nusy_pm/` directory
-- **Implementation**: Code generated in `nusy_pm/tackle/` subdirectories
-- **Individual Plans**: Each tackle has its own `development-plan.md`
-- **Santiago Integration**: Autonomous code generation reads specs and writes implementations
+- **Architecture**: See `ARCHITECTURE.md` for detailed component specifications
+- **Roadmap**: See `zarchive/migration-artifacts/MIGRATION_ROADMAP.md` for milestone tasks
+- **Vision**: See `docs/vision/README-START-HERE.md` for conceptual overview
+- **Fake Team**: See `docs/vision/fake_team_pack/` for Phase 0 guidance
+- **PM Patterns**: See `santiago-pm/` for development practices and tactical patterns

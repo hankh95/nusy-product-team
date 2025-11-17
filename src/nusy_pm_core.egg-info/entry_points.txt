@@ -1,2 +1,0 @@
-[console_scripts]
-nusy = nusy_pm_core.cli:main

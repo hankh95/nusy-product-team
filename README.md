@@ -19,7 +19,10 @@ cat docs/vision/README-START-HERE.md
 cat ARCHITECTURE.md
 
 # 4. Check the roadmap
-cat MIGRATION_ROADMAP.md
+cat zarchive/migration-artifacts/MIGRATION_ROADMAP.md
+
+# 5. Review development plan
+cat _archive/docs/DEVELOPMENT_PLAN.md
 ```
 
 ---
@@ -135,17 +138,23 @@ knowledge/
 
 ### Current Status
 
-**Milestone 0** (Bootstrap Fake Team) — In Progress
+**Phase 0** (Bootstrap Fake Team) — In Progress
 
-See `MIGRATION_ROADMAP.md` for detailed plan.
+- ✅ Repository scaffolding and strategic artifacts
+- ✅ Autonomous multi-agent experiment framework
+- 🔄 MCP proxy layer implementation
+- 🔄 Knowledge infrastructure creation
+
+See `zarchive/migration-artifacts/MIGRATION_ROADMAP.md` for detailed milestones and `_archive/docs/DEVELOPMENT_PLAN.md` for phased approach.
 
 ### Key Documents
 
 1. **Start Here**: `docs/vision/README-START-HERE.md`
-2. **Architecture**: `ARCHITECTURE.md` (hybrid v3 plan, scored 8.7937)
-3. **Roadmap**: `MIGRATION_ROADMAP.md` (M0-M4 milestones)
-4. **Domain Knowledge**: `santiago-pm/` (your PM patterns)
-5. **Contributing**: `CONTRIBUTING.md`
+2. **Architecture**: `ARCHITECTURE.md` (v3.0, hybrid synthesis, 2025-11-16)
+3. **Roadmap**: `zarchive/migration-artifacts/MIGRATION_ROADMAP.md` (Milestones 0-6)
+4. **Development Plan**: `_archive/docs/DEVELOPMENT_PLAN.md` (Phase-aligned approach)
+5. **Domain Knowledge**: `santiago-pm/` (PM patterns and practices)
+6. **Contributing**: `CONTRIBUTING.md`
 
 ### Running Tests
 
