@@ -127,12 +127,14 @@ Build a self-bootstrapping factory that creates domain-specific Santiagos by ing
 - Validates: Bootstrap capability, self-awareness, meta-learning
 - Demo script: Query KG, execute MCP tools, scaffold suggestions
 
-#### ⏳ Task 17: Scan docs/vision for additional sources
-**Status**: Not Started (can run in parallel)  
-**Dependencies**: None (parallel task)
-**Approach**: Run Catchfish on docs/vision/ (12 .md files)
-- Extract: Architecture patterns, deployment specs, fake team strategy
-- Provides factory-building context alongside PM domain knowledge
+#### ✅ Task 17: Scan docs/vision for additional sources
+**Status**: Completed 2025-11-17  
+**Output**: `knowledge/catches/vision-knowledge-extracted.md` (900+ lines)
+- 4 categories: Factory Architecture, Fake Team Strategy, DGX Deployment, Development Patterns
+- 11 new architectural behaviors identified (factory orchestration, deployment)
+- Ontology Layer 8 design: Factory & Deployment (11 classes, 15 properties)
+- Key insights: 30-60m Catchfish bottleneck, progressive replacement strategy, DGX Spark specs
+- Completeness: 0.85 (85% vision domain coverage)
 
 #### ⏳ Task 18: Ingest Jeff Patton & Jeff Gothelf websites
 **Status**: Not Started (can run in parallel)  
