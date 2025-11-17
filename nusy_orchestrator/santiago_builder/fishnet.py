@@ -494,3 +494,255 @@ class Fishnet:
         
         with open(manifest_file, 'w') as f:
             json.dump(manifest_data, f, indent=2)
+
+
+class FishnetCLI:
+    """CLI-focused orchestrator for multi-strategy BDD generation
+    
+    Loads behaviors from markdown files and generates .feature files
+    using pluggable generation strategies.
+    
+    Usage:
+        fishnet = FishnetCLI(
+            behaviors_file="pm-behaviors-extracted.md",
+            ontology_file="pm-domain-ontology.ttl",
+            output_dir="bdd-tests/"
+        )
+        results = fishnet.generate_all_bdd_files(strategies=["bottom_up"])
+    """
+    
+    def __init__(
+        self,
+        behaviors_file: Path,
+        ontology_file: Path,
+        output_dir: Path
+    ):
+        self.behaviors_file = Path(behaviors_file)
+        self.ontology_file = Path(ontology_file)
+        self.output_dir = Path(output_dir)
+        self.strategies = {}
+        
+        # Ensure output directory exists
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+    
+    def register_strategy(self, name: str, strategy: Any) -> None:
+        """Register a BDD generation strategy
+        
+        Args:
+            name: Strategy name (e.g., "bottom_up")
+            strategy: Strategy instance implementing BDDGenerationStrategy
+        """
+        self.strategies[name] = strategy
+    
+    def generate_all_bdd_files(
+        self,
+        strategy_names: List[str] = None
+    ) -> Dict[str, Any]:
+        """Generate BDD .feature files for all behaviors
+        
+        Args:
+            strategy_names: List of strategies to use (default: all registered)
+            
+        Returns:
+            Dict with generation results and statistics
+        """
+        if strategy_names is None:
+            strategy_names = list(self.strategies.keys())
+        
+        # Validate strategies
+        for name in strategy_names:
+            if name not in self.strategies:
+                raise ValueError(f"Unknown strategy: {name}")
+        
+        # Load behaviors from markdown files
+        behaviors = self._load_behaviors()
+        
+        print(f"\n🕸️  Fishnet v2.0.0: Multi-Strategy BDD Generation")
+        print(f"   Behaviors: {len(behaviors)}")
+        print(f"   Strategies: {', '.join(strategy_names)}")
+        print(f"   Output: {self.output_dir}")
+        print()
+        
+        results = {
+            "total_behaviors": len(behaviors),
+            "files_generated": 0,
+            "strategies_used": strategy_names,
+            "files": []
+        }
+        
+        # Generate feature files for each behavior
+        for behavior in behaviors:
+            for strategy_name in strategy_names:
+                strategy = self.strategies[strategy_name]
+                
+                # Generate feature file
+                feature_file = strategy.generate_feature_file(behavior)
+                
+                # Write to disk
+                filename = f"{behavior.name}_{strategy_name}.feature"
+                output_path = self.output_dir / filename
+                
+                with open(output_path, 'w') as f:
+                    f.write(feature_file.to_gherkin())
+                
+                results["files_generated"] += 1
+                results["files"].append(str(output_path))
+                
+                print(f"   ✅ {filename} ({len(feature_file.scenarios)} scenarios)")
+        
+        print(f"\n   📊 Generated {results['files_generated']} .feature files")
+        print(f"   📁 Output directory: {self.output_dir}")
+        
+        return results
+    
+    def _load_behaviors(self) -> List[Any]:
+        """Load behaviors from markdown files
+        
+        Parses pm-behaviors-extracted.md and passage-behaviors-extracted.md
+        to extract BehaviorSpec objects.
+        
+        Returns:
+            List of BehaviorSpec objects
+        """
+        from .fishnet_strategies.base_strategy import BehaviorSpec
+        
+        behaviors = []
+        
+        # Parse the main behaviors file
+        if self.behaviors_file.exists():
+            behaviors.extend(self._parse_behavior_file(self.behaviors_file))
+        
+        # Check for passage behaviors file in same directory
+        passage_file = self.behaviors_file.parent / "passage-behaviors-extracted.md"
+        if passage_file.exists():
+            behaviors.extend(self._parse_behavior_file(passage_file))
+        
+        return behaviors
+    
+    def _parse_behavior_file(self, filepath: Path) -> List[Any]:
+        """Parse a behavior markdown file
+        
+        Args:
+            filepath: Path to markdown file
+            
+        Returns:
+            List of BehaviorSpec objects
+        """
+        from .fishnet_strategies.base_strategy import BehaviorSpec
+        
+        behaviors = []
+        
+        with open(filepath, 'r') as f:
+            content = f.read()
+        
+        # Split by behavior sections (### Behavior X.Y:)
+        behavior_sections = re.split(r'\n### Behavior \d+\.\d+:', content)
+        
+        for section in behavior_sections[1:]:  # Skip preamble
+            behavior = self._parse_behavior_section(section, filepath.name)
+            if behavior:
+                behaviors.append(behavior)
+        
+        return behaviors
+    
+    def _parse_behavior_section(self, section: str, source_file: str) -> Any:
+        """Parse a single behavior section
+        
+        Args:
+            section: Markdown section text
+            source_file: Source filename for provenance
+            
+        Returns:
+            BehaviorSpec or None if parsing fails
+        """
+        from .fishnet_strategies.base_strategy import BehaviorSpec
+        
+        lines = section.strip().split('\n')
+        
+        # Extract basic info
+        name = ""
+        description = ""
+        capability_level = "Journeyman"
+        knowledge_scope = "Lake"
+        mutates_kg = False
+        concurrency_safe = True
+        ontology_mapping = ""
+        cli_example = ""
+        sparql_query = ""
+        
+        # Parse markdown sections
+        i = 0
+        while i < len(lines):
+            line = lines[i].strip()
+            
+            # Title line (behavior name)
+            if i == 0 and line:
+                name = line.split(':')[0].strip() if ':' in line else line
+                name = name.lower().replace(' ', '_').replace('-', '_')
+            
+            # Named fields
+            if line.startswith("**Name**:"):
+                name = line.split(":", 1)[1].strip().strip('`')
+            elif line.startswith("**Description**:"):
+                description = line.split(":", 1)[1].strip()
+            elif line.startswith("**Capability Level**:"):
+                capability_level = line.split(":", 1)[1].strip().split()[0]
+            elif line.startswith("**Knowledge Scope**:"):
+                knowledge_scope = line.split(":", 1)[1].strip().split()[0]
+            elif line.startswith("**Mutates KG**:"):
+                mutates_kg = "Yes" in line or "True" in line
+            elif line.startswith("**Concurrency Safe**:"):
+                concurrency_safe = "Yes" in line or "True" in line
+            elif line.startswith("**Maps to Ontology**:"):
+                ontology_mapping = line.split(":", 1)[1].strip().split()[0].strip('`')
+            elif line.startswith("**CLI Example**:"):
+                cli_example = line.split(":", 1)[1].strip().strip('`')
+            
+            i += 1
+        
+        # Extract JSON schemas (simplified - look for code blocks)
+        input_schema = {"properties": {}, "required": []}
+        output_schema = {"properties": {}}
+        
+        # Extract input schema
+        input_match = re.search(r'\*\*Input Schema\*\*:\s*```json\s*(\{.*?\})\s*```', 
+                                section, re.DOTALL)
+        if input_match:
+            try:
+                input_schema = json.loads(input_match.group(1))
+            except json.JSONDecodeError:
+                pass
+        
+        # Extract output schema
+        output_match = re.search(r'\*\*Output Schema\*\*:\s*```json\s*(\{.*?\})\s*```', 
+                                 section, re.DOTALL)
+        if output_match:
+            try:
+                output_schema = json.loads(output_match.group(1))
+            except json.JSONDecodeError:
+                pass
+        
+        # Extract SPARQL query
+        sparql_match = re.search(r'\*\*SPARQL Query\*\*:\s*```sparql\s*(.*?)```', 
+                                 section, re.DOTALL)
+        if sparql_match:
+            sparql_query = sparql_match.group(1).strip()
+        
+        if not name:
+            return None
+        
+        return BehaviorSpec(
+            name=name,
+            description=description or f"Behavior for {name}",
+            capability_level=capability_level,
+            knowledge_scope=knowledge_scope,
+            input_schema=input_schema,
+            output_schema=output_schema,
+            mutates_kg=mutates_kg,
+            concurrency_safe=concurrency_safe,
+            ontology_mapping=ontology_mapping,
+            cli_example=cli_example,
+            sparql_query=sparql_query,
+            source_file=source_file,
+            behavior_id=name
+        )
