@@ -209,10 +209,12 @@ If approach fails:
 ## Resources & Timeline
 
 ### Current Session (6-8 hours)
-- [x] Hour 1-3: Baseline implementation (DONE)
-- [ ] Hour 4-5: Phase 1 optimization
-- [ ] Hour 6-7: Phase 2 multi-hop reasoning
-- [ ] Hour 8: Integration planning
+- [x] Hour 1-3: Baseline implementation (DONE - 46.5% pass rate)
+- [x] Hour 4-5: Phase 1 optimization (DONE - 100% pass rate!) ✅
+- [ ] Hour 6-7: Phase 2 multi-hop reasoning (DEFERRED - not needed)
+- [ ] Hour 8: Integration planning (NEXT - proceed to Phase 3)
+
+**Status**: Phase 1 EXCEEDED target (100% vs 75% goal) in 5 hours!
 
 ### Future Sessions
 - Session 2: Phase 3 Human Q&A interface
@@ -235,10 +237,17 @@ If approach fails:
 **Rationale**: Knowledge validation through BDD enables trusted Q&A  
 **Impact**: Reframe as "domain expert" not just "test executor"
 
-### Decision 3: [Next Decision]
-**Date**: TBD  
-**Context**: TBD  
-**Decision**: TBD
+### Decision 3: Document Fallback over KG Enrichment ✅
+**Date**: 2025-11-17  
+**Context**: KG only had README headings (1.4% keyword overlap with tests)  
+**Decision**: Add document fallback search instead of rebuilding KG  
+**Rationale**:
+  - Clinical prototype used literature search when KG sparse (proven pattern)
+  - Document search ships immediately (hours vs days for KG rebuild)
+  - Pragmatic: solve problem now, optimize later
+  - Validates approach before investing in richer KG extraction
+**Result**: 46.5% → 100% pass rate, validates neurosymbolic approach  
+**Trade-off**: Less structured than pure KG, but sufficient for current needs
 
 ## Phase 1 Results - Document Fallback Success
 
