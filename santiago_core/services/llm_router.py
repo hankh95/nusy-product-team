@@ -47,11 +47,15 @@ class LLMRouter:
         (LLMProvider.XAI, TaskComplexity.COMPLEX): "grok-4-fast",
         (LLMProvider.XAI, TaskComplexity.CRITICAL): "grok-4-fast",
         
-        # OpenAI models
-        (LLMProvider.OPENAI, TaskComplexity.SIMPLE): "gpt-4o-mini",
-        (LLMProvider.OPENAI, TaskComplexity.MODERATE): "gpt-4o",
-        (LLMProvider.OPENAI, TaskComplexity.COMPLEX): "gpt-4o",
-        (LLMProvider.OPENAI, TaskComplexity.CRITICAL): "o1-preview",
+        # OpenAI models (latest available as of Nov 2025)
+        # o4-mini: Fast reasoning, $1.10/$4.40 per 1M tokens, 200K context
+        (LLMProvider.OPENAI, TaskComplexity.SIMPLE): "o4-mini",
+        # gpt-4.1: Latest non-reasoning model, smartest for general tasks
+        (LLMProvider.OPENAI, TaskComplexity.MODERATE): "gpt-4.1",
+        # gpt-4.1: Excellent for architecture and design work
+        (LLMProvider.OPENAI, TaskComplexity.COMPLEX): "gpt-4.1",
+        # o3: Deep reasoning for critical tasks, $2/$8 per 1M tokens, 200K context
+        (LLMProvider.OPENAI, TaskComplexity.CRITICAL): "o3",
     }
     
     # Role to provider mapping (prefer xAI for architecture, OpenAI for dev)
