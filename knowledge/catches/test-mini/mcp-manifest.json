@@ -1,14 +1,43 @@
 {
-  "service": {
-    "name": "test-mini",
-    "version": "1.0.0"
-  },
+  "service_name": "test-mini",
+  "version": "1.0.0",
+  "description": "Domain-specific Santiago for test-mini",
+  "capability_level": "journeyman",
+  "knowledge_scope": "lake",
   "tools": [
     {
-      "name": "test_behavior_1"
+      "name": "test_behavior_1",
+      "description": "Tool for test behavior 1",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
     },
     {
-      "name": "test_behavior_2"
+      "name": "test_behavior_2",
+      "description": "Tool for test behavior 2",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
     }
-  ]
+  ],
+  "metadata": {
+    "generated_at": "2025-11-17T01:43:07.049534",
+    "expedition_id": "0fbc7526-d27d-4ab2-8b43-48d57b851c18",
+    "cycles_completed": 5,
+    "final_bdd_pass_rate": 0.95,
+    "entities_extracted": 50,
+    "relationships_extracted": 0
+  }
 }

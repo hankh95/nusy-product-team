@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "9a932a53-b0d6-4f68-bfb5-bfe3067ee0ed",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm/ships-logs/2025-11-15-santiago-note-introduction.md",
+    "file_hash": "da7eff94bbb2b52283c1259e5b12f35b984b281f8ab23d29540e0b8aec0fc1f9",
+    "file_size_bytes": 777,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:35:14.956862",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:14.956892",
+      "completed_at": "2025-11-17T01:35:15.058406",
+      "extraction_time_seconds": 0.10149598121643066,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:15.058524",
+      "completed_at": "2025-11-17T01:35:15.211277",
+      "extraction_time_seconds": 0.15271711349487305,
+      "entity_count": 10,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.8,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:15.211384",
+      "completed_at": "2025-11-17T01:35:15.315544",
+      "extraction_time_seconds": 0.10413384437561035,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:15.315767",
+      "completed_at": "2025-11-17T01:35:15.417245",
+      "extraction_time_seconds": 0.10145211219787598,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 10,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.45979905128479004,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

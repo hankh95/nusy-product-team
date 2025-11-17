@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "6d8c80e3-87a4-48b2-843b-f6c22cfd8ad7",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm/strategic-charts/ChatGPT51-Modification-to-early-team.md",
+    "file_hash": "cdb3c3238d1eccd07bfa796833a25ffa52d399f262e8205e8c62a3b0f80bfc90",
+    "file_size_bytes": 12679,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:35:48.852593",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:48.852610",
+      "completed_at": "2025-11-17T01:35:48.954980",
+      "extraction_time_seconds": 0.1023397445678711,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:48.955111",
+      "completed_at": "2025-11-17T01:35:49.110628",
+      "extraction_time_seconds": 0.15549516677856445,
+      "entity_count": 10,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.8,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:49.110699",
+      "completed_at": "2025-11-17T01:35:49.213600",
+      "extraction_time_seconds": 0.1028900146484375,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:49.213676",
+      "completed_at": "2025-11-17T01:35:49.316048",
+      "extraction_time_seconds": 0.10234904289245605,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 10,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.4630739688873291,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

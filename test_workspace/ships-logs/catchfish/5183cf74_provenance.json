@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "5183cf74-89df-465f-ae68-5f4b7d304415",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm/ships-logs/2025-11-15-define-santiago-expert-naming-standard.md",
+    "file_hash": "305c77d3350aadfb08ee9fa6a129ba92015f3c77fd8faf86cae126ea4008588a",
+    "file_size_bytes": 678,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:35:12.172396",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:12.172407",
+      "completed_at": "2025-11-17T01:35:12.274654",
+      "extraction_time_seconds": 0.10222673416137695,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:12.274750",
+      "completed_at": "2025-11-17T01:35:12.427574",
+      "extraction_time_seconds": 0.15277791023254395,
+      "entity_count": 10,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.8,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:12.427693",
+      "completed_at": "2025-11-17T01:35:12.531333",
+      "extraction_time_seconds": 0.10361981391906738,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:12.531427",
+      "completed_at": "2025-11-17T01:35:12.633739",
+      "extraction_time_seconds": 0.1022939682006836,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 10,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.4609184265136719,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

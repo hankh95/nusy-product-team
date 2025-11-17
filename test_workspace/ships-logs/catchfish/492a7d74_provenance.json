@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "492a7d74-bd4b-40b1-8e2f-250021cb26ef",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm/ships-logs/2025-11-17-phase2-completion-bdd-location-decision.md",
+    "file_hash": "b9ffb2eb0df76962d830ad07888dd3927fb20227e4ce0e8aa51da67b0049465b",
+    "file_size_bytes": 7089,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:35:36.033426",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:36.033437",
+      "completed_at": "2025-11-17T01:35:36.135775",
+      "extraction_time_seconds": 0.10230588912963867,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:36.135932",
+      "completed_at": "2025-11-17T01:35:36.290233",
+      "extraction_time_seconds": 0.1542801856994629,
+      "entity_count": 10,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.8,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:36.290292",
+      "completed_at": "2025-11-17T01:35:36.393366",
+      "extraction_time_seconds": 0.10303783416748047,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:36.393534",
+      "completed_at": "2025-11-17T01:35:36.495957",
+      "extraction_time_seconds": 0.10238909721374512,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 10,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.46201300621032715,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

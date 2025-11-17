@@ -1,0 +1,277 @@
+{
+  "service_name": "santiago-pm",
+  "version": "1.0.0",
+  "description": "Domain-specific Santiago for santiago-pm",
+  "capability_level": "journeyman",
+  "knowledge_scope": "lake",
+  "tools": [
+    {
+      "name": "status_query",
+      "description": "Tool for status query",
+      "tool_type": "input",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    },
+    {
+      "name": "status_transition",
+      "description": "Tool for status transition",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    },
+    {
+      "name": "status_dashboard",
+      "description": "Tool for status dashboard",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    },
+    {
+      "name": "create_feature",
+      "description": "Tool for create feature",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": true,
+      "mutates_kg": true
+    },
+    {
+      "name": "prioritize_backlog",
+      "description": "Tool for prioritize backlog",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    },
+    {
+      "name": "define_acceptance_criteria",
+      "description": "Tool for define acceptance criteria",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    },
+    {
+      "name": "track_velocity",
+      "description": "Tool for track velocity",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    },
+    {
+      "name": "update_backlog",
+      "description": "Tool for update backlog",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": true,
+      "mutates_kg": true
+    },
+    {
+      "name": "log_issue",
+      "description": "Tool for log issue",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    },
+    {
+      "name": "link_issue_to_feature",
+      "description": "Tool for link issue to feature",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    },
+    {
+      "name": "design_experiment",
+      "description": "Tool for design experiment",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    },
+    {
+      "name": "record_experiment_results",
+      "description": "Tool for record experiment results",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    },
+    {
+      "name": "analyze_experiment_outcomes",
+      "description": "Tool for analyze experiment outcomes",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    },
+    {
+      "name": "create_note",
+      "description": "Tool for create note",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": true,
+      "mutates_kg": true
+    },
+    {
+      "name": "link_related_notes",
+      "description": "Tool for link related notes",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    },
+    {
+      "name": "query_note_network",
+      "description": "Tool for query note network",
+      "tool_type": "input",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    },
+    {
+      "name": "define_vision",
+      "description": "Tool for define vision",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    },
+    {
+      "name": "create_roadmap",
+      "description": "Tool for create roadmap",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": true,
+      "mutates_kg": true
+    },
+    {
+      "name": "run_quality_gate",
+      "description": "Tool for run quality gate",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    },
+    {
+      "name": "generate_quality_report",
+      "description": "Tool for generate quality report",
+      "tool_type": "output",
+      "parameters": {
+        "input": "object"
+      },
+      "returns": {
+        "result": "object"
+      },
+      "concurrency_risk": false,
+      "mutates_kg": false
+    }
+  ],
+  "metadata": {
+    "generated_at": "2025-11-17T01:35:57.493984",
+    "expedition_id": "f6a3fb80-93e1-42f2-ad81-c35f21d8e3bd",
+    "cycles_completed": 5,
+    "final_bdd_pass_rate": 0.95,
+    "entities_extracted": 1000,
+    "relationships_extracted": 35
+  }
+}

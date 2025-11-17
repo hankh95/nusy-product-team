@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "65fa26fb-d2bf-4c71-9dab-fda10182b212",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm/ships-logs/test-expedition-20251117-010814.md",
+    "file_hash": "830bca14f9bba2a97c3a1d60f3325364cd2dacc769daff51f3a1f58f1a1ce3f4",
+    "file_size_bytes": 2579,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:35:21.276605",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:21.276626",
+      "completed_at": "2025-11-17T01:35:21.378827",
+      "extraction_time_seconds": 0.1021881103515625,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:21.378887",
+      "completed_at": "2025-11-17T01:35:21.531479",
+      "extraction_time_seconds": 0.15256905555725098,
+      "entity_count": 10,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.8,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:21.531540",
+      "completed_at": "2025-11-17T01:35:21.639515",
+      "extraction_time_seconds": 0.10794901847839355,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:21.639754",
+      "completed_at": "2025-11-17T01:35:21.741106",
+      "extraction_time_seconds": 0.10132598876953125,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 10,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.4640321731567383,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

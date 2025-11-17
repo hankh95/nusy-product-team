@@ -36,6 +36,11 @@ from uuid import uuid4
 from nusy_orchestrator.santiago_builder.catchfish import Catchfish, ExtractionLayer
 from nusy_orchestrator.santiago_builder.fishnet import Fishnet
 
+# Import KG Store
+import sys
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
+from nusy_pm_core.adapters.kg_store import KGStore, KGTriple
+
 
 class NavigationStep(Enum):
     """10-step fishing process"""
@@ -133,6 +138,9 @@ class Navigator:
         # Initialize Catchfish and Fishnet
         self.catchfish = Catchfish(workspace_path=self.workspace_path)
         self.fishnet = Fishnet(workspace_path=self.workspace_path)
+        
+        # Initialize KG Store
+        self.kg_store = KGStore(workspace_path=str(self.workspace_path))
         
         # Current expedition tracking
         self.current_expedition: Optional[ExpeditionLog] = None
@@ -384,9 +392,72 @@ class Navigator:
         print(f"\n📍 Step 6: KG Building - Store to Knowledge Graph")
         self.current_expedition.current_step = NavigationStep.KG_BUILDING
         
-        # TODO: Implement KG storage with provenance queue
-        await asyncio.sleep(0.3)
-        print(f"✅ Knowledge graph updated")
+        # Convert extracted entities/relationships to KG triples
+        triples = []
+        
+        # Add entity triples
+        for entity in self.extracted_entities:
+            # Handle Entity objects (dataclass)
+            entity_id = getattr(entity, 'entity_id', getattr(entity, 'name', 'Unknown'))
+            entity_type = getattr(entity, 'entity_type', 'Entity')
+            entity_name = getattr(entity, 'name', entity_id)
+            entity_uri = f"pm:{entity_id.replace(' ', '_')}"
+            
+            # Type triple
+            triples.append(KGTriple(
+                subject=entity_uri,
+                predicate="rdf:type",
+                object=f"pm:{entity_type}",
+                source=getattr(entity, 'source_references', ['unknown'])[0] if hasattr(entity, 'source_references') else 'unknown',
+                confidence=getattr(entity, 'confidence', 0.9)
+            ))
+            
+            # Name triple
+            triples.append(KGTriple(
+                subject=entity_uri,
+                predicate="rdfs:label",
+                object=entity_name,
+                source=getattr(entity, 'source_references', ['unknown'])[0] if hasattr(entity, 'source_references') else 'unknown',
+                confidence=getattr(entity, 'confidence', 0.9)
+            ))
+            
+            # Description triple (if exists)
+            if hasattr(entity, 'description') and entity.description:
+                triples.append(KGTriple(
+                    subject=entity_uri,
+                    predicate="rdfs:comment",
+                    object=entity.description,
+                    source=getattr(entity, 'source_references', ['unknown'])[0] if hasattr(entity, 'source_references') else 'unknown',
+                    confidence=getattr(entity, 'confidence', 0.9)
+                ))
+        
+        # Add relationship triples
+        for rel in self.extracted_relationships:
+            # Handle Relationship objects (dataclass)
+            subject_id = getattr(rel, 'subject_id', 'Unknown')
+            predicate = getattr(rel, 'predicate', 'relatedTo')
+            object_id = getattr(rel, 'object_id', 'Unknown')
+            
+            subject_uri = f"pm:{subject_id.replace(' ', '_')}"
+            predicate_uri = f"pm:{predicate}"
+            object_uri = f"pm:{object_id.replace(' ', '_')}"
+            
+            triples.append(KGTriple(
+                subject=subject_uri,
+                predicate=predicate_uri,
+                object=object_uri,
+                source=getattr(rel, 'source_references', ['unknown'])[0] if hasattr(rel, 'source_references') else 'unknown',
+                confidence=getattr(rel, 'confidence', 0.8)
+            ))
+        
+        # Add triples to KG
+        if triples:
+            count = self.kg_store.add_triples(triples)
+            self.kg_store.save()
+            print(f"✅ Knowledge graph updated: {count} triples added")
+        else:
+            print(f"ℹ️  No new triples to add")
+
     
     async def _step7_fishnet_bdd_generation(self, domain_name: str, target_behaviors: List[str]) -> float:
         """Step 7: Generate BDD tests and validate with behave"""

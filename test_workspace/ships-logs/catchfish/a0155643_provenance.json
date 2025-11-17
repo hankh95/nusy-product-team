@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "a0155643-c48c-42d2-a47a-4ad7be4bb240",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm/navigation-charts/santiago-development-master-plan.md",
+    "file_hash": "320cb89d1c5461aa6b825b27a9c95b284cab8a687fa3ac28e528ebe5c504d227",
+    "file_size_bytes": 6752,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:35:30.883141",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:30.883157",
+      "completed_at": "2025-11-17T01:35:30.985470",
+      "extraction_time_seconds": 0.1022789478302002,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:30.985606",
+      "completed_at": "2025-11-17T01:35:31.141157",
+      "extraction_time_seconds": 0.15549302101135254,
+      "entity_count": 10,
+      "relationship_count": 1,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.790909090909091,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:31.141319",
+      "completed_at": "2025-11-17T01:35:31.244600",
+      "extraction_time_seconds": 0.10326313972473145,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:31.244703",
+      "completed_at": "2025-11-17T01:35:31.345957",
+      "extraction_time_seconds": 0.10123586654663086,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 11,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.46227097511291504,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

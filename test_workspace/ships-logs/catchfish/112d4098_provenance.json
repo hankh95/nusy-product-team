@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "112d4098-8d99-44a4-85e5-bf60e4bd11e0",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm/strategic-charts/Santiago-Trains-Manolin.md",
+    "file_hash": "145b0c7d52a636b237e700f51d275291068bc0012e7f722b066c2e4fe24279e9",
+    "file_size_bytes": 55724,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:35:50.249460",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:50.249477",
+      "completed_at": "2025-11-17T01:35:50.351806",
+      "extraction_time_seconds": 0.10231566429138184,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:50.351861",
+      "completed_at": "2025-11-17T01:35:50.520581",
+      "extraction_time_seconds": 0.16866779327392578,
+      "entity_count": 10,
+      "relationship_count": 1,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.790909090909091,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:50.520822",
+      "completed_at": "2025-11-17T01:35:50.624385",
+      "extraction_time_seconds": 0.10353398323059082,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:50.624545",
+      "completed_at": "2025-11-17T01:35:50.726993",
+      "extraction_time_seconds": 0.10241508483886719,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 11,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.4769325256347656,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

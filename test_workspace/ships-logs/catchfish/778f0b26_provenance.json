@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "778f0b26-35bc-4866-b35a-ebc7d1cfde57",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm/strategic-charts/Ideas+2025-11-14-ChatGPT51 Making sense of soup.md",
+    "file_hash": "cdb3c3238d1eccd07bfa796833a25ffa52d399f262e8205e8c62a3b0f80bfc90",
+    "file_size_bytes": 12679,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:35:28.038678",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:28.038696",
+      "completed_at": "2025-11-17T01:35:28.140933",
+      "extraction_time_seconds": 0.10222291946411133,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:28.140991",
+      "completed_at": "2025-11-17T01:35:28.297621",
+      "extraction_time_seconds": 0.15660810470581055,
+      "entity_count": 10,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.8,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:28.297695",
+      "completed_at": "2025-11-17T01:35:28.409872",
+      "extraction_time_seconds": 0.11214518547058105,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:28.409995",
+      "completed_at": "2025-11-17T01:35:28.512505",
+      "extraction_time_seconds": 0.10248994827270508,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 10,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.473466157913208,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

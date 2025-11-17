@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "fb1c0969-0d5e-48b2-84ca-8b398f655521",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm/notes-domain-model.md",
+    "file_hash": "d562ba7afe3ebd4c5881a3547a8990a95b82e63d0ea94a09a2c5365e98d8481b",
+    "file_size_bytes": 7360,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:35:07.038821",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:07.038870",
+      "completed_at": "2025-11-17T01:35:07.141285",
+      "extraction_time_seconds": 0.10240411758422852,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:07.141332",
+      "completed_at": "2025-11-17T01:35:07.295764",
+      "extraction_time_seconds": 0.15438508987426758,
+      "entity_count": 10,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.8,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:07.295870",
+      "completed_at": "2025-11-17T01:35:07.400238",
+      "extraction_time_seconds": 0.10435605049133301,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:07.400283",
+      "completed_at": "2025-11-17T01:35:07.502474",
+      "extraction_time_seconds": 0.10217714309692383,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 10,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.46332240104675293,
+  "target_time_seconds": 900,
+  "meets_target": true
+}
