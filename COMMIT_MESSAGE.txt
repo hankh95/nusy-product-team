@@ -1,0 +1,68 @@
+# Git Commit Message for Phase 0 Implementation
+
+```
+feat: Complete Phase 0 Bootstrap Fake Team implementation
+
+Implement all 7 MCP proxy agents for Santiago Factory Phase 0 with
+comprehensive testing and Baha'i ethical framework integration.
+
+IMPLEMENTED:
+- Base proxy framework (base_proxy.py) with MCP interface
+- PM proxy (pm_proxy.py) with hypothesis generation and backlog management
+- Ethicist proxy (ethicist_proxy.py) with 12 Baha'i principles
+- Consolidated proxies: Architect, Developer, QA, UX, Platform
+- Complete test suite: 53 tests, 100% passing
+- Role cards for all 7 proxies in knowledge/proxy-instructions/
+- Integration tests validating full feature workflow
+
+FEATURES:
+- MCP tool invocation with budget tracking
+- Session TTL management (1-4 hours per proxy)
+- Provenance logging to ships-logs/ (JSONL format)
+- Ethical oversight integrated at all workflow stages
+- Multi-proxy collaboration patterns
+- Cost estimation and metrics collection
+
+BAHA'I PRINCIPLES (Ethicist):
+1. Unity of God
+2. Unity of Religion
+3. Unity of Humanity
+4. Equality of Men and Women
+5. Elimination of Prejudice
+6. Universal Education
+7. Harmony of Science and Religion
+8. Independent Investigation of Truth
+9. World Peace
+10. Universal Auxiliary Language
+11. World Federation
+12. Equality of Opportunity
+
+TEST COVERAGE:
+- test_proxy_base.py: 17 tests (base framework)
+- test_pm_proxy.py: 10 tests (PM functionality)
+- test_ethicist_proxy.py: 14 tests (ethical review + principles)
+- test_proxy_integration.py: 12 tests (multi-proxy workflows)
+
+FILES CREATED:
+- santiago_core/agents/_proxy/base_proxy.py (216 lines)
+- santiago_core/agents/_proxy/pm_proxy.py (195 lines)
+- santiago_core/agents/_proxy/ethicist_proxy.py (317 lines)
+- santiago_core/agents/_proxy/consolidated_proxies.py (267 lines)
+- tests/test_proxy_*.py (4 test files, 1020 lines total)
+- knowledge/proxy-instructions/*.md (7 role cards)
+- PHASE0_COMPLETION_SUMMARY.md (comprehensive documentation)
+
+BLOCKED (requires user decisions):
+- API integration (OpenAI/Claude/Copilot selection)
+- Orchestrator wiring (message routing pattern)
+- Manifest format standardization
+
+DEPENDENCIES ADDED:
+- pytest-asyncio (for async test support)
+
+Following CONTRIBUTING.md TDD workflow: Red-Green-Refactor
+All commits follow conventional commits format
+Ready for code review and integration decisions
+
+Ref: MIGRATION_ROADMAP.md Phase 0 Milestone
+```
