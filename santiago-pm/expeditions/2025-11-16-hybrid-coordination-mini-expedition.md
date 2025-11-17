@@ -65,27 +65,27 @@ related_artifacts:
 - ✅ Extended manifest (28 tools) - commit a6977bc
 - ✅ Fishnet architecture spec (850+ lines) - commit 2ec200d
 - ✅ Navigator architecture spec (700+ lines) - commit 2ec200d
-- ⏳ 3 GitHub issues (BDD generation, Fishnet impl, Navigator impl) - NEXT
+- ✅ 3 GitHub issues created via gh CLI - #5 (BDD), #6 (Fishnet), #7 (Navigator)
 
-**Actual Time**: 45 minutes (✅ Within budget)
+**Actual Time**: 50 minutes (✅ Within budget, includes automated issue creation)
 
 ---
 
-### Phase 2: Parallel Implementation (GitHub Agents) ⏱️ START: [TBD]
+### Phase 2: Parallel Implementation (GitHub Agents) ⏱️ READY: Awaiting agent start
 
-**Agent 1: BDD Test Generation**
+**Agent 1: BDD Test Generation** (Issue #5)
 - Issue: "Generate 84 BDD .feature files for 28 PM behaviors"
 - Input: pm-behaviors-extracted.md + passage-behaviors-extracted.md
 - Output: 84 .feature files (3 scenarios per behavior)
 - Acceptance: Valid Gherkin syntax, references KG nodes, covers happy/edge/error paths
 
-**Agent 2: Fishnet Implementation**
+**Agent 2: Fishnet Implementation** (Issue #6)
 - Issue: "Implement multi-strategy BDD generation in Fishnet"
 - Input: Fishnet architecture spec + fishnet-bdd-generation-strategies.feature
 - Output: Enhanced fishnet.py with 5 strategies
 - Acceptance: All strategies implemented, unit tests pass, CLI works
 
-**Agent 3: Navigator Implementation**
+**Agent 3: Navigator Implementation** (Issue #7)
 - Issue: "Implement Navigator 10-step orchestration engine"
 - Input: Navigator architecture spec + navigator.py skeleton
 - Output: Complete navigator.py with validation loops
