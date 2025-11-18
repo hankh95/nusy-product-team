@@ -44,7 +44,27 @@ class PRWorkflowManager:
     Manages PR creation and issue workflow automation.
     
     Phase 1: Basic PR creation with issue linking
+    
+    Kanban Status System:
+    - draft: PR created but not ready for review
+    - ready-for-review: PR marked ready, awaiting review
+    - in-review: Review in progress
+    - changes-requested: Changes needed
+    - approved: Approved, ready to merge
+    - merged: PR merged
+    - closed: PR closed without merge
     """
+    
+    # Kanban status definitions
+    KANBAN_STATUSES = [
+        'draft',
+        'ready-for-review',
+        'in-review',
+        'changes-requested',
+        'approved',
+        'merged',
+        'closed'
+    ]
     
     def __init__(self, repo_path: Path):
         """
@@ -67,7 +87,9 @@ class PRWorkflowManager:
         session_log_path: Optional[str] = None,
         commits: Optional[List[str]] = None,
         tests_passing: bool = True,
-        branch: Optional[str] = None
+        branch: Optional[str] = None,
+        draft: bool = True,
+        ready_for_review: bool = False
     ) -> Dict[str, Any]:
         """
         Create a PR for completed work with automatic issue linking.
@@ -262,23 +284,33 @@ class PRWorkflowManager:
         title: str,
         body: str,
         head: str,
-        base: str
+        base: str,
+        draft: bool = True
     ) -> Dict[str, Any]:
         """
         Create PR using GitHub CLI.
         
         For Phase 1, we use gh CLI. In Phase 2, we can add direct API support.
+        
+        Args:
+            draft: Create as draft PR (default True for agent work)
         """
         try:
             # Use gh CLI to create PR
+            cmd = [
+                'gh', 'pr', 'create',
+                '--title', title,
+                '--body', body,
+                '--head', head,
+                '--base', base
+            ]
+            
+            # Add draft flag if needed
+            if draft:
+                cmd.append('--draft')
+            
             result = subprocess.run(
-                [
-                    'gh', 'pr', 'create',
-                    '--title', title,
-                    '--body', body,
-                    '--head', head,
-                    '--base', base
-                ],
+                cmd,
                 cwd=self.repo_path,
                 capture_output=True,
                 text=True,
@@ -985,6 +1017,175 @@ The PR includes:
             # Wait for next check
             print(f"  ⏳ Next check in {interval_seconds}s...")
             time.sleep(interval_seconds)
+    
+    def mark_ready_for_review(self, pr_number: int) -> Dict[str, Any]:
+        """
+        Mark a draft PR as ready for review.
+        
+        Phase 5: Essential for agent workflow - agents create drafts,
+        then mark ready when tests pass and work is complete.
+        
+        Args:
+            pr_number: PR number to mark ready
+            
+        Returns:
+            dict with:
+                - pr_number: int
+                - ready: bool (True if successful)
+                - status: str (new kanban status)
+        """
+        try:
+            # Mark PR as ready for review
+            result = subprocess.run(
+                ['gh', 'pr', 'ready', str(pr_number)],
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            
+            # Update kanban status
+            self.set_kanban_status(pr_number, 'ready-for-review')
+            
+            print(f"✅ PR #{pr_number} marked ready for review")
+            
+            return {
+                'pr_number': pr_number,
+                'ready': True,
+                'status': 'ready-for-review'
+            }
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"Failed to mark PR ready: {e.stderr}")
+    
+    def set_kanban_status(
+        self,
+        pr_number: int,
+        status: str,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Set kanban status for a PR.
+        
+        Phase 5: Kanban-style workflow management.
+        
+        Valid statuses:
+        - draft: PR created but not ready for review
+        - ready-for-review: PR marked ready, awaiting review
+        - in-review: Review in progress
+        - changes-requested: Changes needed
+        - approved: Approved, ready to merge
+        - merged: PR merged
+        - closed: PR closed without merge
+        
+        Args:
+            pr_number: PR number
+            status: Kanban status to set
+            metadata: Optional metadata about status change
+            
+        Returns:
+            dict with status change details
+        """
+        if status not in self.KANBAN_STATUSES:
+            raise ValueError(f"Invalid kanban status: {status}. Valid: {', '.join(self.KANBAN_STATUSES)}")
+        
+        # Get PR details to find linked issue
+        pr_details = self._get_pr_details(pr_number)
+        issue_number = self._extract_issue_number_from_pr(pr_details)
+        
+        # Track status change
+        status_data = {
+            'timestamp': datetime.now(timezone.utc).isoformat(),
+            'pr_number': pr_number,
+            'issue_number': issue_number,
+            'status': status,
+            'previous_status': self.get_kanban_status(pr_number) if hasattr(self, '_last_status') else None,
+            'metadata': metadata or {}
+        }
+        
+        # Log to workflow logs
+        if issue_number:
+            self.track_workflow_state(
+                issue_number=issue_number,
+                state=f'pr_{status}',
+                metadata=status_data
+            )
+        
+        # Add label to PR for visual tracking
+        self._add_pr_label(pr_number, f'status:{status}')
+        
+        return status_data
+    
+    def get_kanban_status(self, pr_number: int) -> str:
+        """
+        Get current kanban status for a PR.
+        
+        Args:
+            pr_number: PR number
+            
+        Returns:
+            Current kanban status string
+        """
+        pr_details = self._get_pr_details(pr_number)
+        
+        # Check PR state
+        if pr_details.get('state') == 'MERGED':
+            return 'merged'
+        elif pr_details.get('state') == 'CLOSED':
+            return 'closed'
+        elif pr_details.get('isDraft'):
+            return 'draft'
+        
+        # Check labels for status
+        labels = pr_details.get('labels', [])
+        for label in labels:
+            if label.get('name', '').startswith('status:'):
+                return label['name'].replace('status:', '')
+        
+        # Check reviews
+        if pr_details.get('reviews'):
+            for review in pr_details['reviews']:
+                if review['state'] == 'CHANGES_REQUESTED':
+                    return 'changes-requested'
+                elif review['state'] == 'APPROVED':
+                    return 'approved'
+            return 'in-review'
+        
+        # Default to ready-for-review if not draft
+        return 'ready-for-review'
+    
+    def _add_pr_label(self, pr_number: int, label: str):
+        """Add a label to a PR."""
+        try:
+            # First, remove any existing status: labels
+            pr_details = self._get_pr_details(pr_number)
+            existing_labels = pr_details.get('labels', [])
+            for existing_label in existing_labels:
+                label_name = existing_label.get('name', '')
+                if label_name.startswith('status:') and label_name != label:
+                    subprocess.run(
+                        ['gh', 'pr', 'edit', str(pr_number), '--remove-label', label_name],
+                        cwd=self.repo_path,
+                        capture_output=True,
+                        text=True
+                    )
+            
+            # Add new label
+            subprocess.run(
+                ['gh', 'pr', 'edit', str(pr_number), '--add-label', label],
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True,
+                check=True
+            )
+        except subprocess.CalledProcessError:
+            # Label operations are non-critical, don't fail the workflow
+            pass
+    
+    def _extract_issue_number_from_pr(self, pr_details: Dict[str, Any]) -> Optional[int]:
+        """Extract linked issue number from PR body."""
+        body = pr_details.get('body', '')
+        match = re.search(r'Closes #(\d+)', body)
+        return int(match.group(1)) if match else None
 
 
 # CLI interface for agents
@@ -1005,6 +1206,8 @@ def main():
     create_parser.add_argument('--session-log', help='Path to F-027 session log')
     create_parser.add_argument('--branch', help='Source branch')
     create_parser.add_argument('--no-tests', action='store_true', help='Tests not passing')
+    create_parser.add_argument('--no-draft', action='store_true', help='Create as ready for review (default: draft)')
+    create_parser.add_argument('--ready', action='store_true', help='Mark ready for review immediately')
     
     # Phase 2: Check and merge PR
     status_parser = subparsers.add_parser('check-status', help='Check PR approval status')
@@ -1034,12 +1237,22 @@ def main():
     report_parser = subparsers.add_parser('workflow-report', help='Generate workflow performance report')
     report_parser.add_argument('--since', help='Start date (ISO format)')
     
-    # Phase 5: Polling
+    # Phase 5: Polling and Status Management
     poll_parser = subparsers.add_parser('poll-pr', help='Poll PR until ready for merge')
     poll_parser.add_argument('pr_number', type=int, help='PR number')
     poll_parser.add_argument('--interval', type=int, default=60, help='Check interval in seconds (default: 60)')
     poll_parser.add_argument('--max-duration', type=int, default=120, help='Max polling duration in minutes (default: 120)')
     poll_parser.add_argument('--auto-merge', action='store_true', help='Automatically merge when ready')
+    
+    ready_parser = subparsers.add_parser('mark-ready', help='Mark draft PR as ready for review')
+    ready_parser.add_argument('pr_number', type=int, help='PR number')
+    
+    status_set_parser = subparsers.add_parser('set-status', help='Set kanban status for PR')
+    status_set_parser.add_argument('pr_number', type=int, help='PR number')
+    status_set_parser.add_argument('status', choices=PRWorkflowManager.KANBAN_STATUSES, help='Kanban status')
+    
+    status_get_parser = subparsers.add_parser('get-status', help='Get current kanban status for PR')
+    status_get_parser.add_argument('pr_number', type=int, help='PR number')
     
     args = parser.parse_args()
     
@@ -1057,11 +1270,18 @@ def main():
                 work_summary=args.summary,
                 session_log_path=args.session_log,
                 branch=args.branch,
-                tests_passing=not args.no_tests
+                tests_passing=not args.no_tests,
+                draft=not args.no_draft,
+                ready_for_review=args.ready
             )
             print(f"✅ PR created successfully!")
             print(f"   PR #{result['pr_number']}: {result['pr_url']}")
             print(f"   Linked to issue #{result['issue_number']}")
+            if result.get('draft', True):
+                if args.ready:
+                    print(f"   Status: Ready for review")
+                else:
+                    print(f"   Status: Draft (use 'mark-ready {result['pr_number']}' when ready)")
             
         elif args.command == 'check-status':
             status = manager.check_pr_status(args.pr_number)
@@ -1157,6 +1377,21 @@ def main():
             print(f"\nPolling Summary:")
             print(f"  Checks performed: {result['checks_count']}")
             print(f"  Time elapsed: {result['elapsed_minutes']:.1f} minutes")
+        
+        elif args.command == 'mark-ready':
+            result = manager.mark_ready_for_review(args.pr_number)
+            print(f"✅ PR #{result['pr_number']} marked ready for review!")
+            print(f"   Status: {result['status']}")
+        
+        elif args.command == 'set-status':
+            result = manager.set_kanban_status(args.pr_number, args.status)
+            print(f"✅ PR #{result['pr_number']} status updated!")
+            print(f"   Status: {result['status']}")
+            print(f"   Timestamp: {result['timestamp']}")
+        
+        elif args.command == 'get-status':
+            status = manager.get_kanban_status(args.pr_number)
+            print(f"PR #{args.pr_number} Status: {status}")
     
     except Exception as e:
         print(f"❌ Failed: {e}")
