@@ -6,11 +6,13 @@ artifact_type: cargo-manifest
 feature_id: F-030
 feature_name: pr-issue-workflow-management
 priority: 0.85 (HIGH)
-status: in-progress
+status: implemented
 created: 2025-11-17
 created_by: Hank
 started: 2025-11-17
+completed: 2025-11-17
 branch: feature/f-030-pr-workflow-management
+implementation_commit: b1ba04e
 source: Discussion about agent work completion and PM/architect review workflow
 related_features:
   - F-027 (Personal Log Feature - tracks agent work sessions)
