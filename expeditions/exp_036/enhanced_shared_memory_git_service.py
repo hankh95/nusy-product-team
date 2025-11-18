@@ -57,6 +57,7 @@ class AtomicOperation:
     status: str = "pending"  # pending, executing, committed, failed
     created_at: datetime = field(default_factory=datetime.now)
     completed_at: Optional[datetime] = None
+    metadata: Dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -204,6 +205,14 @@ class EnhancedSharedMemoryGitService:
 
             operation = self.pending_operations[operation_id]
 
+            # Check for conflicts before executing
+            conflicts = self.detect_conflicts(operation_id)
+            if conflicts:
+                operation.status = "failed"
+                operation.metadata["conflicts"] = conflicts
+                operation.metadata["error"] = f"Conflicts detected with operations: {conflicts}"
+                return False
+
             # Check dependencies
             for dep_id in operation.dependencies:
                 if dep_id not in self.completed_operations:
@@ -331,16 +340,19 @@ class EnhancedSharedMemoryGitService:
         operation = self.pending_operations[operation_id]
         conflicts = []
 
-        # Check for file conflicts with other pending operations
+        # Check for file conflicts with completed operations only
+        # Pending operations can coexist, but execution will be serialized
         operation_files = {op.get("file_path") for op in operation.operations}
 
-        for other_id, other_op in self.pending_operations.items():
-            if other_id == operation_id:
+        for completed_id, completed_op in self.completed_operations.items():
+            # Only check recent operations (last 10) to avoid performance issues
+            completed_keys = list(self.completed_operations.keys())
+            if completed_keys.index(completed_id) < len(completed_keys) - 10:
                 continue
-
-            other_files = {op.get("file_path") for op in other_op.operations}
-            if operation_files & other_files:  # Intersection
-                conflicts.append(other_id)
+                
+            completed_files = {op.get("file_path") for op in completed_op.operations}
+            if operation_files & completed_files:  # Intersection
+                conflicts.append(completed_id)
 
         return conflicts
 
