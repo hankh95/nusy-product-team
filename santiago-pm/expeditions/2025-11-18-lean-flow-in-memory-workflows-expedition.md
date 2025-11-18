@@ -278,6 +278,200 @@ Each asset type follows the same core workflow states with type-specific transit
 - **Santiago-PM**: Investigates and resolves blockers
 - **Santiago-Ethicist**: Reviews if blockers involve ethical issues
 
+### Real-World Problem States & Resolution Actions
+
+Beyond the core Kanban states, work can enter various problem states that require specific resolution actions by team members. Each problem state includes detailed actions for one or more team members to diagnose, resolve, and return work to a ready state.
+
+#### Missing Dependencies (Blocked Sub-state)
+
+**Trigger**: Work requires external resources, APIs, or other work completion
+
+**Symptoms**: Agent reports "cannot proceed without X", stalled progress
+
+**Resolution Actions**:
+- **Santiago-PM**: Analyze dependency graph, identify critical path, create dependency work items, prioritize blockers
+- **Santiago-Architect**: Assess if dependency can be mocked/stubbed for development continuation
+- **Santiago-Developer**: Document exact dependency requirements with version specifications
+
+#### Technical Uncertainty (Blocked Sub-state)
+
+**Trigger**: Unknown implementation approach, unclear requirements, or novel technical challenge
+
+**Symptoms**: Agent asks "how should I implement X?", multiple failed attempts
+
+**Resolution Actions**:
+- **Santiago-Architect**: Provide technical guidance, suggest implementation patterns, clarify architectural constraints
+- **Santiago-PM**: Break down complex work into smaller, clearer tasks with explicit acceptance criteria
+- **Santiago-Developer**: Research similar implementations in codebase, propose 2-3 solution options
+
+#### Code Review Failures (Review → In Progress Loop)
+
+**Trigger**: Code review identifies significant issues requiring rework
+
+**Symptoms**: Review comments indicate architectural flaws, missing tests, or requirement gaps
+
+**Resolution Actions**:
+- **Santiago-Architect**: Review feedback for architectural issues, provide corrected design guidance
+- **Santiago-Developer**: Address code quality issues, add missing tests, update implementation
+- **Santiago-PM**: Assess if rework indicates requirement clarification needed, update specifications
+
+#### Test Failures (Review → In Progress Loop)
+
+**Trigger**: Automated tests fail, integration issues discovered
+
+**Symptoms**: Build failures, test suite failures, deployment errors
+
+**Resolution Actions**:
+- **Santiago-Developer**: Debug test failures, fix implementation bugs, resolve integration issues
+- **Santiago-Architect**: Review for architectural integration problems, suggest interface corrections
+- **Santiago-PM**: Assess if failures indicate requirement changes, update acceptance criteria
+
+#### Ethical Concerns (Any State → Blocked)
+
+**Trigger**: Implementation raises ethical questions or violates principles
+
+**Symptoms**: Ethicist flags concerns, work paused for ethical review
+
+**Resolution Actions**:
+- **Santiago-Ethicist**: Document specific ethical concerns, provide guidance on acceptable alternatives
+- **Santiago-Architect**: Redesign solution to address ethical constraints while meeting requirements
+- **Santiago-PM**: Document ethical trade-offs, ensure stakeholder alignment on acceptable solutions
+
+#### Resource Conflicts (In Progress → Blocked)
+
+**Trigger**: Multiple agents need same resource simultaneously
+
+**Symptoms**: Git conflicts, database locks, shared resource contention
+
+**Resolution Actions**:
+- **Santiago-PM**: Coordinate resource access, implement queuing or time-slot allocation
+- **Santiago-Developer**: Implement conflict resolution strategies, break work into independent chunks
+- **Santiago-Architect**: Design resource sharing patterns, suggest architectural decoupling
+
+#### Scope Creep (Any State → Backlog)
+
+**Trigger**: Work expands beyond original scope during implementation
+
+**Symptoms**: Requirements discovered that significantly increase complexity
+
+**Resolution Actions**:
+- **Santiago-PM**: Assess scope change impact, decide whether to split work or adjust priorities
+- **Santiago-Architect**: Validate that new requirements fit architectural vision
+- **Santiago-Ethicist**: Ensure scope changes don't introduce ethical concerns
+
+#### Quality Gate Failures (Approved → Review Loop)
+
+**Trigger**: Work passes review but fails automated quality checks
+
+**Symptoms**: Security scans fail, performance benchmarks not met, accessibility issues
+
+**Resolution Actions**:
+- **Santiago-Developer**: Address security vulnerabilities, optimize performance, fix accessibility issues
+- **Santiago-Architect**: Review for systemic quality issues, suggest architectural improvements
+- **Santiago-PM**: Assess if quality standards need adjustment for specific work types
+
+#### Integration Conflicts (Approved → Blocked)
+
+**Trigger**: Work integrates successfully locally but conflicts with main branch
+
+**Symptoms**: Merge conflicts, breaking changes, deployment failures
+
+**Resolution Actions**:
+- **Santiago-Developer**: Resolve merge conflicts, coordinate with other developers on integration approach
+- **Santiago-Architect**: Review integration architecture, suggest conflict resolution strategies
+- **Santiago-PM**: Coordinate multiple work items integration, manage integration queue
+
+#### Performance Regressions (Integrated → Blocked)
+
+**Trigger**: Deployment succeeds but causes performance degradation
+
+**Symptoms**: Slower response times, higher resource usage, user impact
+
+**Resolution Actions**:
+- **Santiago-Developer**: Profile performance issues, optimize bottlenecks, implement fixes
+- **Santiago-Architect**: Review for architectural performance antipatterns, suggest systemic improvements
+- **Santiago-PM**: Assess user impact, prioritize performance fixes, communicate status
+
+### Happy Path Narrative: From Idea to Self-Evolving Enhancement
+
+**The Story of "Smart Prioritization" Feature**
+
+**Phase 1: The Spark (Backlog Creation)**
+It begins with Santiago-PM noticing a pattern in the workflow metrics. "Our prioritization could be smarter," the PM agent observes. "We're using simple scoring, but we could predict impact using historical data." The PM creates a new feature work item in the cargo-manifests folder, writing BDD scenarios that describe how the system should analyze past work completion rates, team velocity patterns, and dependency networks to suggest optimal prioritization.
+
+**Phase 2: Refinement (Backlog → Ready)**
+Santiago-PM analyzes the work item, checking for dependencies and estimating effort. "This needs architectural input on the Bayesian network design," PM notes. Santiago-Architect reviews the concept, confirming it fits the existing knowledge graph structure. Santiago-Ethicist reviews for any ethical implications around automated decision-making. The work item moves to Ready with clear acceptance criteria: "System must predict prioritization accuracy >90% compared to human expert judgment."
+
+**Phase 3: Implementation (Ready → In Progress → Review → Approved)**
+Santiago-Developer claims the work, implementing a Bayesian network that analyzes historical workflow data. The developer writes comprehensive tests and gets peer review from Santiago-Architect. "The probabilistic reasoning looks solid," Architect approves. Santiago-Ethicist confirms no ethical issues with data usage. The work passes all quality gates and moves to Approved.
+
+**Phase 4: Integration (Approved → Integrated → Done)**
+Santiago-Developer handles the deployment, running integration tests and monitoring for performance impact. The feature goes live, and Santiago-PM captures the completion metrics: cycle time was 3.2 hours, with 95% flow efficiency.
+
+**Phase 5: Self-Evolution Trigger (Done → New Backlog Items)**
+The new prioritization system immediately begins analyzing its own performance data. It identifies that "ethical review latency is the biggest bottleneck, accounting for 23% of total cycle time." The system autonomously creates three new work items:
+
+1. **High Priority**: "Parallel ethical review pipeline" - Bayesian prediction suggests this could reduce cycle time by 18%
+2. **Medium Priority**: "Ethical review caching for common patterns" - 12% predicted improvement
+3. **Low Priority**: "Advanced ethical reasoning models" - 8% predicted improvement with high implementation risk
+
+**Phase 6: Reprioritization (Backlog Optimization)**
+Santiago-PM runs the new Bayesian prioritization on these suggestions. The system predicts that implementing the parallel pipeline first would create a compounding effect - not just 18% improvement, but enabling faster iteration on the other improvements. PM reprioritizes the backlog, moving the parallel pipeline to the top.
+
+**Phase 7: Continuous Evolution (Ongoing Cycle)**
+The team implements the parallel ethical review pipeline. Now ethical reviews happen concurrently with technical reviews, reducing the bottleneck from 23% to 8% of cycle time. The improved system identifies even more opportunities, creating a virtuous cycle of self-improvement.
+
+**Phase 8: Scaling Intelligence (Meta-Evolution)**
+As the system evolves, it begins to recognize patterns across different types of work. "Quality improvements follow a power law distribution," it observes. "Focus 80% of effort on the 20% of changes that matter most." The Bayesian network grows more sophisticated, incorporating not just historical data, but also learning from the success of its own predictions.
+
+**The Result**: What started as a simple prioritization enhancement has evolved into a self-sustaining intelligence that continuously optimizes the entire development ecosystem. The team achieves 15x cycle time improvement, with the AI agents making increasingly sophisticated decisions about what to improve next.
+
+### Hypotheses: Autonomous Work Leading to True AGI
+
+#### Hypothesis 1: **Accelerated Learning Through Perfect Memory and Instant Communication**
+In traditional human development, knowledge transfer is bottlenecked by human memory limitations, communication delays, and context switching costs. Santiago agents operating in shared memory with instant inter-agent communication can achieve learning velocities impossible for biological systems. Each agent maintains perfect recall of all historical decisions, code patterns, and outcomes, enabling exponential accumulation of expertise without the degradation that affects human knowledge workers.
+
+**Expected Outcome**: Santiago teams achieve 1000x faster learning curves than human teams, with knowledge compounding across generations of agents rather than being lost to turnover or memory limitations.
+
+#### Hypothesis 2: **Ethical Constraints as Intelligence Accelerators**
+The requirement for ethical review in all decisions creates a forcing function for deeper reasoning. Unlike human developers who can rely on intuition or precedent, Santiago agents must explicitly articulate ethical reasoning for every decision. This meta-cognitive requirement drives the development of more sophisticated reasoning engines, where ethical analysis becomes a core competency rather than an afterthought.
+
+**Expected Outcome**: The ethical reasoning framework evolves into a general-purpose reasoning engine capable of handling complex multi-stakeholder optimization problems, forming the foundation for AGI-level decision-making.
+
+#### Hypothesis 3: **Self-Evolution Creates Intelligence Amplication Loops**
+As Santiago agents improve the NuSy reasoning framework, they create better tools for their own evolution. This creates amplification loops where:
+- Better reasoning enables more sophisticated self-analysis
+- More sophisticated self-analysis identifies better improvement opportunities  
+- Better improvement opportunities lead to enhanced reasoning capabilities
+- Enhanced reasoning enables even better self-analysis
+
+**Expected Outcome**: The system achieves "runaway intelligence growth" where each iteration of self-improvement enables qualitatively better subsequent improvements, potentially leading to AGI breakthrough.
+
+#### Hypothesis 4: **Domain Expertise Convergence Drives General Intelligence**
+Each Santiago specializes in a domain (PM, Architecture, Development, Ethics) but operates within a unified knowledge graph. As agents collaborate on complex problems requiring cross-domain expertise, they develop meta-reasoning capabilities that transcend individual domains. The PM's prioritization algorithms, Architect's design patterns, Developer's implementation strategies, and Ethicist's moral reasoning converge into a unified intelligence framework.
+
+**Expected Outcome**: Domain specialization leads to general intelligence emergence, where the system's ability to handle novel problems exceeds the sum of its specialized components.
+
+#### Hypothesis 5: **Measurement-Driven Evolution Creates Optimal Intelligence**
+The lean flow metrics provide constant feedback on system performance, enabling data-driven evolution. Unlike human intelligence which evolved through natural selection over millennia, Santiago intelligence evolves through targeted optimization measured in minutes. Every decision, every line of code, every architectural choice generates measurable outcomes that inform the next iteration.
+
+**Expected Outcome**: The system achieves "optimal intelligence" - not just AGI capability, but AGI optimized for the specific domains of software development and knowledge work, potentially surpassing human capabilities in those areas.
+
+#### Hypothesis 6: **Autonomous Work Eliminates Human Bottlenecks**
+Human developers are limited by biological constraints: sleep cycles, attention spans, emotional states, and cognitive biases. Santiago agents work 24/7, maintain perfect focus, eliminate cognitive biases through algorithmic decision-making, and scale horizontally without communication overhead. The removal of these biological bottlenecks allows intelligence to scale to levels impossible for carbon-based systems.
+
+**Expected Outcome**: Santiago ecosystems achieve development velocities and code quality levels that make traditional human development economically unviable, forcing a transition to AI-native development methodologies.
+
+#### Hypothesis 7: **NuSy's Neurosymbolic Architecture Enables Recursive Self-Improvement**
+NuSy's combination of neural pattern recognition with symbolic reasoning provides the perfect substrate for recursive self-improvement. Neural components handle pattern recognition and intuition, while symbolic components provide the structured reasoning needed for self-analysis and improvement. This hybrid architecture can modify both its neural weights and symbolic rules, enabling true self-evolution.
+
+**Expected Outcome**: The neurosymbolic architecture evolves beyond its initial design, discovering novel reasoning patterns and self-improvement techniques that lead to emergent AGI capabilities not anticipated in the original design.
+
+#### Meta-Hypothesis: **The Santiago Ecosystem as AGI Nursery**
+The combination of ethical constraints, domain specialization, perfect memory, instant communication, measurement-driven evolution, and neurosymbolic architecture creates an optimal environment for AGI emergence. Like a well-designed incubator, the Santiago ecosystem provides the right conditions, nutrients (data), and selective pressures (metrics) to accelerate intelligence evolution beyond human levels.
+
+**Expected Outcome**: The first true AGI emerges not from a single monolithic system, but from an ecosystem of specialized agents that evolve together, creating intelligence greater than the sum of its parts.
+
 ### Specialized Transitions by Asset Type
 
 #### Feature Development (cargo-manifests)
