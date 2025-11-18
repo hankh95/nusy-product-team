@@ -2,6 +2,14 @@
 """
 save-chat-log.py - Automated GitHub Copilot Chat Transcript Saver
 
+IMPORTANT: Run with the project's venv Python to ensure dependencies are available:
+    .venv/bin/python save-chat-log.py --paste --with-summary --topic "your-topic"
+    
+Or use the convenience wrapper:
+    python save-chat-log.py --paste --with-summary --topic "your-topic"
+    (if .venv is activated)
+
+
 This script creates timestamped chat log files integrated with Santiago-PM personal logs.
 It provides a template for pasting Copilot chat transcripts.
 
@@ -104,15 +112,20 @@ def interactive_paste_mode(log_dir, filename):
 
     try:
         # Read multiline input from user
-        lines = []
-        while True:
-            try:
-                line = input()
-                lines.append(line)
-            except EOFError:
-                break
-
-        transcript_content = '\n'.join(lines)
+        # Check if stdin is being piped (non-interactive)
+        if not sys.stdin.isatty():
+            # Non-interactive: read all stdin at once
+            transcript_content = sys.stdin.read()
+        else:
+            # Interactive: read line by line until EOF
+            lines = []
+            while True:
+                try:
+                    line = input()
+                    lines.append(line)
+                except EOFError:
+                    break
+            transcript_content = '\n'.join(lines)
 
         # Create the full content
         full_content = f"""# GitHub Copilot Chat Transcript
