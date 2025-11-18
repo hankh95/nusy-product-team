@@ -600,6 +600,17 @@ class IntegratedServiceRegistry:
         self.registry.register_service(core_service, categories=["reasoning", "core"])
         self.services["santiago_core"] = core_service
 
+        # Question Answering service (optional integration)
+        try:
+            sys.path.insert(0, str(Path(__file__).parent.parent.parent / "santiago-pm" / "tackle" / "question_answering"))
+            from question_answering_mcp import create_question_answering_mcp_service
+            qa_service = create_question_answering_mcp_service(self)
+            self.registry.register_service(qa_service, categories=["question_answering", "reasoning", "team_support"])
+            self.services["question_answering"] = qa_service
+            print("✅ Question Answering Service integrated")
+        except ImportError as e:
+            print(f"ℹ️ Question Answering Service not available: {e}")
+
     def get_service(self, service_name: str) -> Optional[MCPService]:
         """Get an MCP service by name."""
         return self.services.get(service_name)
