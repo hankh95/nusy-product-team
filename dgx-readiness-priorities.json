@@ -1,0 +1,514 @@
+{
+  "generated_at": "2025-11-18 16:51:31.946740",
+  "total_items": 25,
+  "dgx_readiness_plan": [
+    {
+      "rank": 1,
+      "item_id": "card_EXP-DGX_20251118_164711",
+      "title": "DGX Readiness Preparation",
+      "category": "MEDIUM",
+      "priority_score": 0.6100000000000001,
+      "assignee": "platform-team",
+      "estimated_effort": 16,
+      "required_skills": [
+        "infrastructure",
+        "platform",
+        "deployment",
+        "dgx"
+      ],
+      "rationale": "MEDIUM priority (0.61) because:\n  \u2022 Strong customer value (0.95)\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (1.00)",
+      "factors": {
+        "customer_value": 0.95,
+        "unblock_impact": 0.0,
+        "worker_availability": 1.0,
+        "learning_value": 0.3
+      }
+    },
+    {
+      "rank": 2,
+      "item_id": "card_FEAT-PERSISTENCE_20251118_164902",
+      "title": "System Persistence & Safety Mechanisms",
+      "category": "MEDIUM",
+      "priority_score": 0.465,
+      "assignee": "platform-team",
+      "estimated_effort": 10,
+      "required_skills": [
+        "infrastructure",
+        "platform"
+      ],
+      "rationale": "MEDIUM priority (0.47) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (1.00)\n  \u2022 High learning value - reduces uncertainty (0.65)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 1.0,
+        "learning_value": 0.65
+      }
+    },
+    {
+      "rank": 3,
+      "item_id": "card_EXP-040_20251118_165111",
+      "title": "System Architecture Evolution",
+      "category": "MEDIUM",
+      "priority_score": 0.465,
+      "assignee": "platform-team",
+      "estimated_effort": 16,
+      "required_skills": [
+        "infrastructure",
+        "platform"
+      ],
+      "rationale": "MEDIUM priority (0.47) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (1.00)\n  \u2022 High learning value - reduces uncertainty (0.65)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 1.0,
+        "learning_value": 0.65
+      }
+    },
+    {
+      "rank": 4,
+      "item_id": "card_FEAT-BACKLOG-MGMT_20251118_165118",
+      "title": "Backlog Management System",
+      "category": "MEDIUM",
+      "priority_score": 0.465,
+      "assignee": "product-team",
+      "estimated_effort": 10,
+      "required_skills": [],
+      "rationale": "MEDIUM priority (0.47) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (1.00)\n  \u2022 High learning value - reduces uncertainty (0.65)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 1.0,
+        "learning_value": 0.65
+      }
+    },
+    {
+      "rank": 5,
+      "item_id": "card_RESEARCH-MEMORY-ARCH_20251118_165126",
+      "title": "Memory Architecture Analysis",
+      "category": "MEDIUM",
+      "priority_score": 0.46,
+      "assignee": "ai-team",
+      "estimated_effort": 8,
+      "required_skills": [
+        "ml",
+        "ai"
+      ],
+      "rationale": "MEDIUM priority (0.46) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (0.90)\n  \u2022 High learning value - reduces uncertainty (0.80)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 0.9,
+        "learning_value": 0.8
+      }
+    },
+    {
+      "rank": 6,
+      "item_id": "card_RESEARCH-MEMORY-STREAM_20251118_165126",
+      "title": "Memory Architecture Comprehensive Stream",
+      "category": "MEDIUM",
+      "priority_score": 0.46,
+      "assignee": "ai-team",
+      "estimated_effort": 8,
+      "required_skills": [
+        "ml",
+        "ai"
+      ],
+      "rationale": "MEDIUM priority (0.46) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (0.90)\n  \u2022 High learning value - reduces uncertainty (0.80)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 0.9,
+        "learning_value": 0.8
+      }
+    },
+    {
+      "rank": 7,
+      "item_id": "card_FEAT-MISTRAL-INT_20251118_164902",
+      "title": "Mistral LLM Integration & Role-Based AI Access",
+      "category": "MEDIUM",
+      "priority_score": 0.445,
+      "assignee": "ai-team",
+      "estimated_effort": 8,
+      "required_skills": [
+        "ml",
+        "deep-learning",
+        "ai"
+      ],
+      "rationale": "MEDIUM priority (0.45) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (0.90)\n  \u2022 High learning value - reduces uncertainty (0.65)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 0.9,
+        "learning_value": 0.65
+      }
+    },
+    {
+      "rank": 8,
+      "item_id": "card_EXP-041_20251118_165111",
+      "title": "Next Generation AI Systems",
+      "category": "MEDIUM",
+      "priority_score": 0.445,
+      "assignee": "ai-team",
+      "estimated_effort": 16,
+      "required_skills": [
+        "ml",
+        "deep-learning",
+        "ai"
+      ],
+      "rationale": "MEDIUM priority (0.45) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (0.90)\n  \u2022 High learning value - reduces uncertainty (0.65)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 0.9,
+        "learning_value": 0.65
+      }
+    },
+    {
+      "rank": 9,
+      "item_id": "card_FEAT-MULTI-AGENT_20251118_165118",
+      "title": "Multi-Agent Framework",
+      "category": "MEDIUM",
+      "priority_score": 0.445,
+      "assignee": "ai-team",
+      "estimated_effort": 8,
+      "required_skills": [
+        "ml",
+        "ai"
+      ],
+      "rationale": "MEDIUM priority (0.45) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (0.90)\n  \u2022 High learning value - reduces uncertainty (0.65)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 0.9,
+        "learning_value": 0.65
+      }
+    },
+    {
+      "rank": 10,
+      "item_id": "card_FEAT-DGX-PROV_20251118_164711",
+      "title": "DGX Provisioning Automation",
+      "category": "MEDIUM",
+      "priority_score": 0.43000000000000005,
+      "assignee": "platform-team",
+      "estimated_effort": 8,
+      "required_skills": [
+        "infrastructure",
+        "platform",
+        "deployment",
+        "dgx"
+      ],
+      "rationale": "MEDIUM priority (0.43) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (1.00)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 1.0,
+        "learning_value": 0.3
+      }
+    },
+    {
+      "rank": 11,
+      "item_id": "card_FEAT-TEAM-READY_20251118_164711",
+      "title": "Team Readiness Assessment",
+      "category": "MEDIUM",
+      "priority_score": 0.43000000000000005,
+      "assignee": "product-team",
+      "estimated_effort": 8,
+      "required_skills": [],
+      "rationale": "MEDIUM priority (0.43) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (1.00)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 1.0,
+        "learning_value": 0.3
+      }
+    },
+    {
+      "rank": 12,
+      "item_id": "card_EXP-FUTURE-SANTIAGO_20251118_165111",
+      "title": "Santiago Core Self-Management",
+      "category": "MEDIUM",
+      "priority_score": 0.43000000000000005,
+      "assignee": "platform-team",
+      "estimated_effort": 13,
+      "required_skills": [
+        "infrastructure",
+        "platform"
+      ],
+      "rationale": "MEDIUM priority (0.43) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (1.00)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 1.0,
+        "learning_value": 0.3
+      }
+    },
+    {
+      "rank": 13,
+      "item_id": "card_FEAT-DGX-MONITOR_20251118_165118",
+      "title": "DGX Monitoring & Observability",
+      "category": "MEDIUM",
+      "priority_score": 0.43000000000000005,
+      "assignee": "platform-team",
+      "estimated_effort": 8,
+      "required_skills": [
+        "infrastructure",
+        "platform",
+        "deployment",
+        "dgx"
+      ],
+      "rationale": "MEDIUM priority (0.43) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (1.00)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 1.0,
+        "learning_value": 0.3
+      }
+    },
+    {
+      "rank": 14,
+      "item_id": "card_FEAT-DGX-STORAGE_20251118_165118",
+      "title": "DGX Storage Expansion & Procurement",
+      "category": "MEDIUM",
+      "priority_score": 0.43000000000000005,
+      "assignee": "platform-team",
+      "estimated_effort": 8,
+      "required_skills": [
+        "infrastructure",
+        "platform",
+        "deployment",
+        "dgx"
+      ],
+      "rationale": "MEDIUM priority (0.43) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (1.00)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 1.0,
+        "learning_value": 0.3
+      }
+    },
+    {
+      "rank": 15,
+      "item_id": "card_PLAN-DEVELOPMENT_20251118_165126",
+      "title": "Overall Development Plan",
+      "category": "MEDIUM",
+      "priority_score": 0.43000000000000005,
+      "assignee": "product-team",
+      "estimated_effort": 8,
+      "required_skills": [],
+      "rationale": "MEDIUM priority (0.43) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (1.00)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 1.0,
+        "learning_value": 0.3
+      }
+    },
+    {
+      "rank": 16,
+      "item_id": "card_EXP-032_20251118_164711",
+      "title": "Workflow Orchestration Engine",
+      "category": "MEDIUM",
+      "priority_score": 0.41000000000000003,
+      "assignee": "ai-team",
+      "estimated_effort": 13,
+      "required_skills": [
+        "ml",
+        "ai"
+      ],
+      "rationale": "MEDIUM priority (0.41) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (0.90)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 0.9,
+        "learning_value": 0.3
+      }
+    },
+    {
+      "rank": 17,
+      "item_id": "card_FEAT-AUTO-EXEC_20251118_164711",
+      "title": "Autonomous Workflow Execution",
+      "category": "MEDIUM",
+      "priority_score": 0.41000000000000003,
+      "assignee": "ai-team",
+      "estimated_effort": 8,
+      "required_skills": [
+        "ml",
+        "ai"
+      ],
+      "rationale": "MEDIUM priority (0.41) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (0.90)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 0.9,
+        "learning_value": 0.3
+      }
+    },
+    {
+      "rank": 18,
+      "item_id": "card_EXP-036_20251118_165111",
+      "title": "Workflow Orchestration & LLM Services",
+      "category": "MEDIUM",
+      "priority_score": 0.41000000000000003,
+      "assignee": "ai-team",
+      "estimated_effort": 13,
+      "required_skills": [
+        "ml",
+        "ai"
+      ],
+      "rationale": "MEDIUM priority (0.41) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (0.90)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 0.9,
+        "learning_value": 0.3
+      }
+    },
+    {
+      "rank": 19,
+      "item_id": "card_EXP-039_20251118_165111",
+      "title": "Advanced AI Capabilities",
+      "category": "MEDIUM",
+      "priority_score": 0.41000000000000003,
+      "assignee": "ai-team",
+      "estimated_effort": 13,
+      "required_skills": [
+        "ml",
+        "deep-learning",
+        "ai"
+      ],
+      "rationale": "MEDIUM priority (0.41) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (0.90)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 0.9,
+        "learning_value": 0.3
+      }
+    },
+    {
+      "rank": 20,
+      "item_id": "card_FEAT-AUTO-INGEST_20251118_165118",
+      "title": "Autonomous Execution Data Ingestion",
+      "category": "MEDIUM",
+      "priority_score": 0.41000000000000003,
+      "assignee": "ai-team",
+      "estimated_effort": 8,
+      "required_skills": [
+        "ml",
+        "ai"
+      ],
+      "rationale": "MEDIUM priority (0.41) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (0.90)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 0.9,
+        "learning_value": 0.3
+      }
+    },
+    {
+      "rank": 21,
+      "item_id": "card_FEAT-SELF-LEARNING_20251118_165118",
+      "title": "Self-Learning Autonomous Data",
+      "category": "MEDIUM",
+      "priority_score": 0.41000000000000003,
+      "assignee": "ai-team",
+      "estimated_effort": 8,
+      "required_skills": [
+        "ml",
+        "ai"
+      ],
+      "rationale": "MEDIUM priority (0.41) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (0.90)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 0.9,
+        "learning_value": 0.3
+      }
+    },
+    {
+      "rank": 22,
+      "item_id": "card_PLAN-AUTONOMOUS-SESSION_20251118_165126",
+      "title": "Autonomous Work Session Plan",
+      "category": "MEDIUM",
+      "priority_score": 0.41000000000000003,
+      "assignee": "ai-team",
+      "estimated_effort": 8,
+      "required_skills": [
+        "ml",
+        "ai"
+      ],
+      "rationale": "MEDIUM priority (0.41) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (0.90)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 0.9,
+        "learning_value": 0.3
+      }
+    },
+    {
+      "rank": 23,
+      "item_id": "card_EXP-037_20251118_165111",
+      "title": "Integration Testing Framework",
+      "category": "LOW",
+      "priority_score": 0.345,
+      "assignee": "ai-team",
+      "estimated_effort": 13,
+      "required_skills": [
+        "qa",
+        "ml",
+        "testing",
+        "ai"
+      ],
+      "rationale": "LOW priority (0.34) because:\n  \u2022 Strong customer value (0.70)\n  \u2022 Does not unblock other work\n  \u2022 Limited worker availability (0.00)\n  \u2022 High learning value - reduces uncertainty (0.65)",
+      "factors": {
+        "customer_value": 0.7,
+        "unblock_impact": 0.0,
+        "worker_availability": 0.0,
+        "learning_value": 0.65
+      }
+    },
+    {
+      "rank": 24,
+      "item_id": "card_EXP-038_20251118_165111",
+      "title": "Enhanced Platform Services",
+      "category": "LOW",
+      "priority_score": 0.23,
+      "assignee": "platform-team",
+      "estimated_effort": 16,
+      "required_skills": [
+        "infrastructure",
+        "containers",
+        "devops",
+        "platform"
+      ],
+      "rationale": "LOW priority (0.23) because:\n  \u2022 Does not unblock other work\n  \u2022 Limited worker availability (0.00)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 0.0,
+        "learning_value": 0.3
+      }
+    },
+    {
+      "rank": 25,
+      "item_id": "card_FEAT-CONCURRENCY-TEST_20251118_165118",
+      "title": "Multi-Agent Concurrency Testing",
+      "category": "LOW",
+      "priority_score": 0.23,
+      "assignee": "ai-team",
+      "estimated_effort": 8,
+      "required_skills": [
+        "qa",
+        "ml",
+        "testing",
+        "ai"
+      ],
+      "rationale": "LOW priority (0.23) because:\n  \u2022 Does not unblock other work\n  \u2022 Limited worker availability (0.00)",
+      "factors": {
+        "customer_value": 0.5,
+        "unblock_impact": 0.0,
+        "worker_availability": 0.0,
+        "learning_value": 0.3
+      }
+    }
+  ]
+}
