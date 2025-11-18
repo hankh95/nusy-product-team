@@ -13,6 +13,7 @@ Inspired by the Santiago ship metaphor, NuSy PM uses nautical terminology to cre
 | cargo-manifests | Features | BDD feature specifications and requirements |
 | ships-logs | Issues | Issue tracking, bug reports, and incident logs |
 | voyage-trials | Experiments | Experiment planning, execution, and results |
+| expeditions | Expeditions | Structured hypothesis-driven development expeditions |
 | navigation-charts | Plans | Development plans, milestones, and roadmaps |
 | captains-journals | Notes | Knowledge capture, insights, and documentation |
 | research-logs | Research | Research findings, analysis, and discoveries |
@@ -40,6 +41,12 @@ Inspired by the Santiago ship metaphor, NuSy PM uses nautical terminology to cre
 **Template**: `voyage-trial-template.md` (experimental design framework)
 **CLI**: `nusy experiments [command]` (implemented)
 **Contents**: Experiment plans, results, and success metrics
+
+### expeditions/ (Expeditions)
+**Purpose**: Structured hypothesis-driven development expeditions
+**Template**: `voyage-trial-template.md` (for new expeditions)
+**CLI**: `nusy expeditions [command]` (planned)
+**Contents**: Expedition plans, execution tracking, and comprehensive results
 
 ### navigation-charts/ (Plans)
 **Purpose**: Strategic planning and development roadmapping
@@ -98,6 +105,7 @@ The main `nusy_pm/` folders contain **domain specifications** - the "what" and "
 - Feature requirements (cargo-manifests/)
 - Issue definitions (ships-logs/)
 - Experiment designs (voyage-trials/)
+- Expedition frameworks (expeditions/)
 - Strategic plans (navigation-charts/)
 - Knowledge capture (captains-journals/)
 
@@ -137,9 +145,10 @@ Each tackle follows the standard structure:
 2. **Planning**: Develop navigation charts with milestones
 3. **Implementation**: Track progress through ships logs
 4. **Experimentation**: Run voyage trials to validate approaches
-5. **Knowledge Capture**: Document insights in captains journals
-6. **Quality Assurance**: Validate through quality assessments
-7. **Evolution**: Use feedback to improve processes
+5. **Expedition Execution**: Conduct structured expeditions for major capabilities
+6. **Knowledge Capture**: Document insights in captains journals
+7. **Quality Assurance**: Validate through quality assessments
+8. **Evolution**: Use feedback to improve processes
 
 ## Future CLI Commands
 
@@ -147,6 +156,7 @@ As features are implemented, the following CLI commands will be available:
 
 - `nusy status` - ✅ **IMPLEMENTED** (universal status tracking)
 - `nusy features` - Manage feature specifications
+- `nusy expeditions` - Manage hypothesis-driven development expeditions
 - `nusy research` - Handle research documentation
 - `nusy roles` - Define and manage roles
 - `nusy tests` - Run and manage test suites
