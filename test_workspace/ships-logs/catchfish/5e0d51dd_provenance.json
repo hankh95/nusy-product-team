@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "5e0d51dd-1dd8-4739-9df5-aa4cc4e8a152",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm/strategic-charts/README.md",
+    "file_hash": "c5f9db1d839f4c2fa8220fde8e15cfd0c8b726be87c23124dcb188aac7798dd9",
+    "file_size_bytes": 434,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:35:39.576973",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:39.576988",
+      "completed_at": "2025-11-17T01:35:39.742914",
+      "extraction_time_seconds": 0.1657850742340088,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:39.743158",
+      "completed_at": "2025-11-17T01:35:39.895780",
+      "extraction_time_seconds": 0.15260791778564453,
+      "entity_count": 10,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.8,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:39.895827",
+      "completed_at": "2025-11-17T01:35:40.068192",
+      "extraction_time_seconds": 0.17235708236694336,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:40.068224",
+      "completed_at": "2025-11-17T01:35:40.170367",
+      "extraction_time_seconds": 0.10213613510131836,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 10,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.592886209487915,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

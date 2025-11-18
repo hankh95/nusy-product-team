@@ -1,0 +1,109 @@
+{
+  "expedition_id": "0fbc7526-d27d-4ab2-8b43-48d57b851c18",
+  "domain_name": "test-mini",
+  "started_at": "2025-11-17T01:43:01.736070",
+  "completed_at": "2025-11-17T01:43:07.251867",
+  "status": "completed",
+  "current_step": "LEARNING",
+  "hypotheses": [],
+  "decisions": [
+    {
+      "step": "vision",
+      "timestamp": "2025-11-17T01:43:01.736133",
+      "domain": "test-mini",
+      "target_behaviors": [
+        "test_behavior_1",
+        "test_behavior_2"
+      ],
+      "rationale": "Building Santiago for test-mini domain with 2 behaviors"
+    },
+    {
+      "step": "raw_materials",
+      "timestamp": "2025-11-17T01:43:02.237567",
+      "total_sources": 1,
+      "valid_sources": 1,
+      "missing_sources": 0
+    },
+    {
+      "step": "learning",
+      "timestamp": "2025-11-17T01:43:07.049625",
+      "lessons_learned": [
+        "Used maximum 5 cycles - improve initial extraction quality"
+      ],
+      "recommendations": [
+        "Monitor extraction time in production",
+        "Track BDD pass rates over time",
+        "Optimize sources based on extraction patterns"
+      ]
+    }
+  ],
+  "cycles": [
+    {
+      "cycle_number": 1,
+      "started_at": "2025-11-17T01:43:02.538918",
+      "completed_at": "2025-11-17T01:43:03.421914",
+      "status": "failed",
+      "bdd_pass_rate": 0.87,
+      "extraction_time_seconds": 0.4590179920196533,
+      "issues": [
+        "BDD pass rate 87.0% below target 95.0%"
+      ],
+      "metrics": {}
+    },
+    {
+      "cycle_number": 2,
+      "started_at": "2025-11-17T01:43:03.421930",
+      "completed_at": "2025-11-17T01:43:04.304795",
+      "status": "failed",
+      "bdd_pass_rate": 0.89,
+      "extraction_time_seconds": 0.4618067741394043,
+      "issues": [
+        "BDD pass rate 89.0% below target 95.0%"
+      ],
+      "metrics": {}
+    },
+    {
+      "cycle_number": 3,
+      "started_at": "2025-11-17T01:43:04.304803",
+      "completed_at": "2025-11-17T01:43:05.197237",
+      "status": "failed",
+      "bdd_pass_rate": 0.9099999999999999,
+      "extraction_time_seconds": 0.46375131607055664,
+      "issues": [
+        "BDD pass rate 91.0% below target 95.0%"
+      ],
+      "metrics": {}
+    },
+    {
+      "cycle_number": 4,
+      "started_at": "2025-11-17T01:43:05.197244",
+      "completed_at": "2025-11-17T01:43:06.126596",
+      "status": "failed",
+      "bdd_pass_rate": 0.9299999999999999,
+      "extraction_time_seconds": 0.4619560241699219,
+      "issues": [
+        "BDD pass rate 93.0% below target 95.0%"
+      ],
+      "metrics": {}
+    },
+    {
+      "cycle_number": 5,
+      "started_at": "2025-11-17T01:43:06.126603",
+      "completed_at": "2025-11-17T01:43:07.049134",
+      "status": "passed",
+      "bdd_pass_rate": 0.95,
+      "extraction_time_seconds": 0.4626901149749756,
+      "issues": [],
+      "metrics": {}
+    }
+  ],
+  "final_metrics": {
+    "total_time_seconds": 5.515797,
+    "total_cycles": 5,
+    "avg_extraction_time_seconds": 0.46184444427490234,
+    "final_bdd_pass_rate": 0.95,
+    "sources_processed": 1,
+    "behaviors_implemented": 2,
+    "quality_gate_met": true
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "851bccca-1839-4164-9fbe-b7b17a939fb5",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/README.md",
+    "file_hash": "9528fe3aa4da70b8b65f654d9ebe0acfd4905c7f4fe52d27cd93b06ddd61d950",
+    "file_size_bytes": 6612,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:43:02.539316",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:43:02.539334",
+      "completed_at": "2025-11-17T01:43:02.640563",
+      "extraction_time_seconds": 0.10122013092041016,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:43:02.640589",
+      "completed_at": "2025-11-17T01:43:02.793528",
+      "extraction_time_seconds": 0.1528940200805664,
+      "entity_count": 10,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.8,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:43:02.793613",
+      "completed_at": "2025-11-17T01:43:02.896151",
+      "extraction_time_seconds": 0.10251712799072266,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:43:02.896203",
+      "completed_at": "2025-11-17T01:43:02.997453",
+      "extraction_time_seconds": 0.10123896598815918,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 10,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.4578702449798584,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

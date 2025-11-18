@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "12bbcf48-29ec-4b35-8f24-d9e778df8111",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/README.md",
+    "file_hash": "9528fe3aa4da70b8b65f654d9ebe0acfd4905c7f4fe52d27cd93b06ddd61d950",
+    "file_size_bytes": 6612,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:42:28.229236",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:42:28.229265",
+      "completed_at": "2025-11-17T01:42:28.330721",
+      "extraction_time_seconds": 0.10142302513122559,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:42:28.330974",
+      "completed_at": "2025-11-17T01:42:28.484195",
+      "extraction_time_seconds": 0.15316510200500488,
+      "entity_count": 10,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.8,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:42:28.484338",
+      "completed_at": "2025-11-17T01:42:28.587748",
+      "extraction_time_seconds": 0.10339522361755371,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:42:28.587820",
+      "completed_at": "2025-11-17T01:42:28.689084",
+      "extraction_time_seconds": 0.10125374794006348,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 10,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.45923709869384766,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

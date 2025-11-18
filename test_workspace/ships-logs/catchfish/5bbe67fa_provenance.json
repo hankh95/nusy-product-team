@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "5bbe67fa-fbf0-4034-a386-716da272887c",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm/strategic-charts/Old man and the sea.md",
+    "file_hash": "70a90bfdd9da9ebea1df32b78cbf88bf60f79d84d2da47641096d93119f0eb8e",
+    "file_size_bytes": 6694,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:35:20.341862",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:20.341885",
+      "completed_at": "2025-11-17T01:35:20.443684",
+      "extraction_time_seconds": 0.10177993774414062,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:20.443775",
+      "completed_at": "2025-11-17T01:35:20.601156",
+      "extraction_time_seconds": 0.15732812881469727,
+      "entity_count": 10,
+      "relationship_count": 1,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.790909090909091,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:20.601305",
+      "completed_at": "2025-11-17T01:35:20.704958",
+      "extraction_time_seconds": 0.10362601280212402,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:20.705110",
+      "completed_at": "2025-11-17T01:35:20.807666",
+      "extraction_time_seconds": 0.10253477096557617,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 11,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.4652688503265381,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

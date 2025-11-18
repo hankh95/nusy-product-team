@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "ed3b7e74-0ca7-421f-b803-7069450bd86c",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm/ships-logs/2025-11-15-implement-nautical-naming-templates.md",
+    "file_hash": "e17ccc6f95a1c1283dc26d12a08020c7328931e138f42622a30dbe9862142cf4",
+    "file_size_bytes": 669,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:35:55.837675",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:55.837702",
+      "completed_at": "2025-11-17T01:35:55.940089",
+      "extraction_time_seconds": 0.1023552417755127,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:55.940231",
+      "completed_at": "2025-11-17T01:35:56.093025",
+      "extraction_time_seconds": 0.1527402400970459,
+      "entity_count": 10,
+      "relationship_count": 2,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.7833333333333333,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:56.093145",
+      "completed_at": "2025-11-17T01:35:56.197655",
+      "extraction_time_seconds": 0.10448288917541504,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:56.197782",
+      "completed_at": "2025-11-17T01:35:56.300199",
+      "extraction_time_seconds": 0.10239005088806152,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 12,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.46196842193603516,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

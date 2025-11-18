@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "034ac247-dadc-435f-baa1-5c997036fa94",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm/README.md",
+    "file_hash": "b7096f14ad07d7332cba23e5a76425928ddbc31f54c631219d0d455ba651d3b6",
+    "file_size_bytes": 7334,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:35:37.689725",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:37.689754",
+      "completed_at": "2025-11-17T01:35:37.792213",
+      "extraction_time_seconds": 0.10243010520935059,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:37.792341",
+      "completed_at": "2025-11-17T01:35:37.947447",
+      "extraction_time_seconds": 0.15506410598754883,
+      "entity_count": 10,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.8,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:37.947582",
+      "completed_at": "2025-11-17T01:35:38.051282",
+      "extraction_time_seconds": 0.1036679744720459,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:38.051441",
+      "completed_at": "2025-11-17T01:35:38.152817",
+      "extraction_time_seconds": 0.1013479232788086,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 10,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.4625101089477539,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "61065e77-912c-42e8-94c8-cbd937abd6d3",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm/ships-logs/2025-11-15-implement-nusy-improvement-feedback.md",
+    "file_hash": "f23b7a02ef6552c143125e5298468c27abb2e3a661ccbe9cd0d5f6e7782cc031",
+    "file_size_bytes": 678,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:35:44.885797",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:44.885813",
+      "completed_at": "2025-11-17T01:35:44.988139",
+      "extraction_time_seconds": 0.10229992866516113,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:44.988304",
+      "completed_at": "2025-11-17T01:35:45.141214",
+      "extraction_time_seconds": 0.1528642177581787,
+      "entity_count": 10,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.8,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:45.141339",
+      "completed_at": "2025-11-17T01:35:45.245032",
+      "extraction_time_seconds": 0.10367417335510254,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:45.245136",
+      "completed_at": "2025-11-17T01:35:45.347558",
+      "extraction_time_seconds": 0.1024010181427002,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 10,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.4612393379211426,
+  "target_time_seconds": 900,
+  "meets_target": true
+}

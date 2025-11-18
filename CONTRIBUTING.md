@@ -389,14 +389,66 @@ Before creating a PR, ensure:
 - No linting errors or warnings
 - CI/CD pipeline passes (if applicable)
 
-#### 5. Pull Request Process
+#### 5. Save Session Context (F-027 Integration)
+
+**For AI Agents**: After completing a chunk of work, save your session for context restoration:
+
+```bash
+# Quick save (raw transcript only)
+python save-chat-log.py --paste --topic "feature-name"
+
+# Full save with summary (RECOMMENDED)
+python save-chat-log.py --paste --with-summary --topic "feature-name"
+```
+
+**Benefits**:
+- **Context Restoration**: Next agent can restore context in <2 seconds
+- **Full Provenance**: Raw transcript + summary log linked via metadata
+- **Discovery**: F-029 scanner finds features/issues mentioned in logs
+- **Learning**: Track patterns and decisions over time
+
+**When to save**:
+- ✅ After completing a feature or major task
+- ✅ Before switching to different work
+- ✅ When creating a PR (include in PR description)
+- ✅ End of day/session
+
+**Session log contents**:
+- Raw transcript: Full conversation (verbatim)
+- Summary log: Extracted metadata (files, features, decisions, artifacts)
+- Both linked for full provenance chain
+
+#### 6. Pull Request Process
 - **PR Template**: Use the appropriate PR template (`default.md` or `sub-project.md`)
 - **Clear Description**: Explain what was implemented and why
 - **Reference Issues**: Link to related issues using keywords (`Closes #123`, `Fixes #123`)
+- **Session Context**: Include link to personal log if available
 - **Testing Evidence**: Include test results or screenshots demonstrating the feature works
 - **Review Request**: Request review from relevant team members
 
-#### 6. Issue Closure
+**Formal Workflow Integration (F-030)**:
+When using GitHub-based workflow, session saving becomes part of PR readiness:
+
+```bash
+# 1. Complete work and tests
+pytest tests/
+
+# 2. Save session context
+python save-chat-log.py --paste --with-summary --topic "feature-name"
+
+# 3. Create PR (include session log link)
+gh pr create --title "feat: Feature name" --body "Closes #123
+
+Session log: santiago-pm/personal-logs/agents/2025-11-17-copilot-claude-feature-name.md
+..."
+
+# 4. Mark PR as ready for review
+# (session log provides context for reviewer)
+```
+
+**Future**: F-030 Phase 1 will automate this workflow with native MCP tools.
+
+#### 7. Issue Closure
 - **Automatic Closure**: Issues are automatically closed when PRs are merged using keywords in PR descriptions
 - **Manual Verification**: Ensure the implemented solution meets all acceptance criteria
 - **Documentation Updates**: Update any relevant documentation or development plans
@@ -404,7 +456,7 @@ Before creating a PR, ensure:
 ### Development Workflow Summary
 
 ```
-📝 Create Issue → 🔴 Write Tests → 🟢 Implement Code → 🔵 Refactor → ✅ Test → 📤 Create PR → 🔒 Issue Closed
+📝 Create Issue → 🔴 Write Tests → 🟢 Implement Code → 🔵 Refactor → ✅ Test → 💾 Save Session → 📤 Create PR → 🔒 Issue Closed
 ```
 
 #### Visual Workflow
@@ -419,15 +471,22 @@ Before creating a PR, ensure:
 │   Criteria      │    │                 │    │ • Linting       │
 │ • Labels        │    │  🟢 Green:      │    │ • Documentation │
 └─────────────────┘    │    Implement    │    └─────────────────┘
-                       │                 │
-                       │  🔵 Refactor:   │
-                       │    Improve      │
-                       │    Code         │
-                       └─────────────────┘
-                                │
-                                ▼
-                       ┌─────────────────┐    ┌─────────────────┐
-                       │  4. Create PR   │    │  5. Merge &     │
+                       │                 │              │
+                       │  🔵 Refactor:   │              ▼
+                       │    Improve      │    ┌─────────────────┐
+                       │    Code         │    │  4. Save        │
+                       └─────────────────┘    │     Session     │
+                                │              │                 │
+                                ▼              │ • Raw log       │
+                       ┌─────────────────┐    │ • Summary       │
+                       │  5. Create PR   │◄───│ • Metadata      │
+                       │                 │    └─────────────────┘
+                       │ • Use template  │
+                       │ • Reference     │
+                       │   issues        │
+                       │ • Link session  │
+                       │ • Request       │    ┌─────────────────┐
+                       │   review        │    │  6. Merge &     │
                        │                 │    │     Close       │
                        │ • Use template  │    │                 │
                        │ • Reference     │    │ • Auto-close    │

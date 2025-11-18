@@ -1,0 +1,64 @@
+{
+  "source_metadata": {
+    "source_id": "1ff307c4-0b15-4507-a15d-447dedacbfbf",
+    "file_path": "/Users/hankhead/Projects/Personal/nusy-product-team/santiago-pm/ships-logs/2025-11-15-santiago-component-diagrams.md",
+    "file_hash": "39c0416ecaa4820b4ddad700f32ffc230d7189cf8ce6f43f7d8ea0ce2d434d30",
+    "file_size_bytes": 1301,
+    "file_type": ".md",
+    "extracted_at": "2025-11-17T01:35:53.047095",
+    "agent_id": "catchfish-v1"
+  },
+  "extraction_results": [
+    {
+      "layer": "RAW_TEXT",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:53.047131",
+      "completed_at": "2025-11-17T01:35:53.149615",
+      "extraction_time_seconds": 0.10245132446289062,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "ENTITIES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:53.149751",
+      "completed_at": "2025-11-17T01:35:53.302835",
+      "extraction_time_seconds": 0.15303897857666016,
+      "entity_count": 10,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.8,
+      "issues": []
+    },
+    {
+      "layer": "STRUCTURED_DOCS",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:53.302953",
+      "completed_at": "2025-11-17T01:35:53.406530",
+      "extraction_time_seconds": 0.103546142578125,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 0,
+      "confidence_avg": 0.0,
+      "issues": []
+    },
+    {
+      "layer": "KG_TRIPLES",
+      "method": "llm_summarization",
+      "started_at": "2025-11-17T01:35:53.406675",
+      "completed_at": "2025-11-17T01:35:53.508030",
+      "extraction_time_seconds": 0.10132718086242676,
+      "entity_count": 0,
+      "relationship_count": 0,
+      "kg_triple_count": 10,
+      "confidence_avg": 0.0,
+      "issues": []
+    }
+  ],
+  "total_time_seconds": 0.46036362648010254,
+  "target_time_seconds": 900,
+  "meets_target": true
+}
