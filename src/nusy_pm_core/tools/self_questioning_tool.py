@@ -62,10 +62,27 @@ class SelfQuestioningTool:
 
         Args:
             knowledge_graph: Interface to the knowledge graph
-            local_llm: Interface to local in-memory LLM
+            local_llm: Interface to local in-memory LLM service
         """
         self.knowledge_graph = knowledge_graph
-        self.local_llm = local_llm
+        # Try to import and use the in-memory LLM service
+        if local_llm is None:
+            try:
+                import os
+                import sys
+                # Add the current working directory to path
+                cwd = os.getcwd()
+                if cwd not in sys.path:
+                    sys.path.insert(0, cwd)
+
+                from expeditions.exp_036.in_memory_llm_service import InMemoryLLMService
+                self.local_llm = InMemoryLLMService()
+                logger.info("Initialized in-memory LLM service for self-questioning")
+            except ImportError as e:
+                self.local_llm = None
+                logger.warning(f"In-memory LLM service not available ({e}), using external APIs only")
+        else:
+            self.local_llm = local_llm
         self.question_history: List[QuestionAnswer] = []
         self.confidence_threshold = {
             QuestionSource.SELF_REFLECTION: ConfidenceLevel.MEDIUM,
@@ -151,28 +168,54 @@ class SelfQuestioningTool:
 
     def _try_local_llm(self, question: str, context: Dict[str, Any]) -> Optional[QuestionAnswer]:
         """
-        Attempt to answer using local in-memory LLM.
+        Attempt to answer using local in-memory LLM service.
         """
         if not self.local_llm:
             return None
 
         try:
-            # This would call the local LLM service
-            # For now, simulate with a placeholder
-            answer = f"[Local LLM Response] Based on the context, here's my analysis of: {question[:50]}..."
-            confidence = ConfidenceLevel.HIGH
+            # Use the in-memory LLM service
+            import os
+            import sys
+            # Add the current working directory to path
+            cwd = os.getcwd()
+            if cwd not in sys.path:
+                sys.path.insert(0, cwd)
 
-            return QuestionAnswer(
+            from expeditions.exp_036.in_memory_llm_service import LLMQuery
+
+            query = LLMQuery(
                 question=question,
-                answer=answer,
-                source=QuestionSource.LOCAL_LLM,
-                confidence=confidence,
-                timestamp=time.time(),
                 context=context,
-                metadata={"model": "mistral-7b-instruct", "tokens": 150}
+                max_tokens=256,  # Shorter responses for quick answers
+                temperature=0.3  # Lower temperature for more focused answers
             )
+
+            response = self.local_llm.query(query)
+
+            if response:
+                # Map the response to our QuestionAnswer format
+                confidence = ConfidenceLevel.HIGH if response.confidence > 0.8 else ConfidenceLevel.MEDIUM
+
+                return QuestionAnswer(
+                    question=question,
+                    answer=response.answer,
+                    source=QuestionSource.LOCAL_LLM,
+                    confidence=confidence,
+                    timestamp=time.time(),
+                    context=context,
+                    metadata={
+                        "model_used": response.model_used,
+                        "processing_time": response.processing_time,
+                        "tokens_used": response.tokens_used,
+                        "llm_confidence": response.confidence
+                    }
+                )
+
+            return None
+
         except Exception as e:
-            logger.warning(f"Local LLM query failed: {e}")
+            logger.warning(f"Local LLM service query failed: {e}")
             return None
 
     def _try_knowledge_graph(self, question: str, context: Dict[str, Any]) -> Optional[QuestionAnswer]:
