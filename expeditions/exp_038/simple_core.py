@@ -11,6 +11,10 @@ class KnowledgeDomain(Enum):
     PRODUCT_MANAGEMENT = "product_management"
     SOFTWARE_ENGINEERING = "software_engineering" 
     SYSTEM_ARCHITECTURE = "system_architecture"
+    TEAM_DYNAMICS = "team_dynamics"
+    TECHNICAL_DEBT = "technical_debt"
+    RISK_MANAGEMENT = "risk_management"
+    KNOWLEDGE_MANAGEMENT = "knowledge_management"
 
 class SantiagoCore:
     def __init__(self):

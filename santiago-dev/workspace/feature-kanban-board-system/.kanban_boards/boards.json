@@ -1,0 +1,172 @@
+{
+  "master_board": {
+    "board_id": "master_board",
+    "board_type": "master",
+    "name": "Master Boat Board",
+    "description": "Unified workflow tracking for the entire Santiago ecosystem",
+    "columns": {
+      "backlog": {
+        "column_type": "backlog",
+        "title": "Backlog",
+        "cards": [
+          {
+            "card_id": "card_EXP-042_20251118_160031",
+            "item_reference": {
+              "item_id": "EXP-042",
+              "item_type": "expedition",
+              "repository_path": "research-logs/exp_042.md",
+              "title": "Three-Tier Memory Architecture",
+              "description": "Implement working/episodic/semantic memory layers",
+              "priority": "medium",
+              "assignee": null,
+              "tags": [],
+              "created_at": "2025-11-18T16:00:31.773032",
+              "updated_at": "2025-11-18T16:00:31.773033"
+            },
+            "column": "backlog",
+            "position": 0,
+            "notes": [],
+            "blocked_reason": null,
+            "created_at": "2025-11-18T16:00:31.773057",
+            "moved_at": "2025-11-18T16:00:31.773058"
+          },
+          {
+            "card_id": "card_EXP-043_20251118_160031",
+            "item_reference": {
+              "item_id": "EXP-043",
+              "item_type": "expedition",
+              "repository_path": "research-logs/exp_043.md",
+              "title": "Observational Learning Systems",
+              "description": "Enhance human-AI collaborative learning",
+              "priority": "medium",
+              "assignee": null,
+              "tags": [],
+              "created_at": "2025-11-18T16:00:31.773401",
+              "updated_at": "2025-11-18T16:00:31.773402"
+            },
+            "column": "backlog",
+            "position": 1,
+            "notes": [],
+            "blocked_reason": null,
+            "created_at": "2025-11-18T16:00:31.773414",
+            "moved_at": "2025-11-18T16:00:31.773415"
+          },
+          {
+            "card_id": "card_EXP-044_20251118_160031",
+            "item_reference": {
+              "item_id": "EXP-044",
+              "item_type": "expedition",
+              "repository_path": "research-logs/exp_044.md",
+              "title": "Memory Refactoring Engine",
+              "description": "Autonomous memory system evolution",
+              "priority": "medium",
+              "assignee": null,
+              "tags": [],
+              "created_at": "2025-11-18T16:00:31.773797",
+              "updated_at": "2025-11-18T16:00:31.773798"
+            },
+            "column": "backlog",
+            "position": 2,
+            "notes": [],
+            "blocked_reason": null,
+            "created_at": "2025-11-18T16:00:31.773809",
+            "moved_at": "2025-11-18T16:00:31.773810"
+          }
+        ],
+        "wip_limit": null
+      },
+      "ready": {
+        "column_type": "ready",
+        "title": "Ready",
+        "cards": [
+          {
+            "card_id": "card_EXP-045_20251118_160031",
+            "item_reference": {
+              "item_id": "EXP-045",
+              "item_type": "expedition",
+              "repository_path": "research-logs/exp_045.md",
+              "title": "Domain Expert Assembly",
+              "description": "Self-organizing specialist teams",
+              "priority": "medium",
+              "assignee": null,
+              "tags": [],
+              "created_at": "2025-11-18T16:00:31.774274",
+              "updated_at": "2025-11-18T16:00:31.774275"
+            },
+            "column": "ready",
+            "position": 0,
+            "notes": [
+              "2025-11-18T16:00:31.774979: Ready for implementation"
+            ],
+            "blocked_reason": null,
+            "created_at": "2025-11-18T16:00:31.774283",
+            "moved_at": "2025-11-18T16:00:31.774978"
+          }
+        ],
+        "wip_limit": null
+      },
+      "in_progress": {
+        "column_type": "in_progress",
+        "title": "In Progress",
+        "cards": [],
+        "wip_limit": null
+      },
+      "review": {
+        "column_type": "review",
+        "title": "Review",
+        "cards": [],
+        "wip_limit": null
+      },
+      "done": {
+        "column_type": "done",
+        "title": "Done",
+        "cards": [],
+        "wip_limit": null
+      }
+    },
+    "parent_board_id": null,
+    "created_at": "2025-11-18T16:00:31.772292",
+    "updated_at": "2025-11-18T16:00:31.774984"
+  },
+  "santiago_dev_board": {
+    "board_id": "santiago_dev_board",
+    "board_type": "agent",
+    "name": "Santiago-Dev Board",
+    "description": "Development workflow for Santiago-Dev agent",
+    "columns": {
+      "backlog": {
+        "column_type": "backlog",
+        "title": "Backlog",
+        "cards": [],
+        "wip_limit": null
+      },
+      "ready": {
+        "column_type": "ready",
+        "title": "Ready",
+        "cards": [],
+        "wip_limit": null
+      },
+      "in_progress": {
+        "column_type": "in_progress",
+        "title": "In Progress",
+        "cards": [],
+        "wip_limit": null
+      },
+      "review": {
+        "column_type": "review",
+        "title": "Review",
+        "cards": [],
+        "wip_limit": null
+      },
+      "done": {
+        "column_type": "done",
+        "title": "Done",
+        "cards": [],
+        "wip_limit": null
+      }
+    },
+    "parent_board_id": "master_board",
+    "created_at": "2025-11-18T16:00:31.772706",
+    "updated_at": "2025-11-18T16:00:31.772707"
+  }
+}

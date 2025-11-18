@@ -1,0 +1,66 @@
+Feature: Unified Kanban Board System
+  As a project management system
+  We need a unified Kanban board for workflow tracking
+  So that all work items can be managed through a single visual interface
+
+  Background:
+    Given multiple development tracking files create confusion
+    And we need a single source of truth for the overall boat
+    And individual Santiagos should maintain their own sub-boards
+    And work items should be linked, not duplicated
+
+  @critical @kanban @workflow
+  Scenario: Board Creation and Management
+    Given a new Kanban board needs to be created
+    When we initialize the board system
+    Then we should create standard columns (Backlog, Ready, In Progress, Review, Done)
+    And establish board hierarchy (master + agent sub-boards)
+    And set up persistence for board state
+
+  @critical @kanban @workflow
+  Scenario: Card Creation from Repository Items
+    Given work items exist in the knowledge graph/git repository
+    When we create Kanban cards
+    Then cards should reference items by ID/path, not copy data
+    And card metadata should include item type and location
+    And cards should display key information from referenced items
+
+  @high @kanban @workflow
+  Scenario: State Transitions and Workflow
+    Given cards are placed in columns
+    When users move cards between columns
+    Then the underlying item's state should be updated
+    And state transition history should be recorded
+    And workflow rules should be enforced
+
+  @high @kanban @workflow
+  Scenario: Hierarchical Board Management
+    Given master board exists for overall boat
+    When sub-boards are created for individual agents
+    Then cards can be promoted/demoted between board levels
+    And cross-agent dependencies should be visible
+    And board synchronization should be maintained
+
+  @medium @kanban @interface
+  Scenario: Visual Board Interface
+    Given users need to interact with the board
+    When they access the Kanban interface
+    Then they should see drag-and-drop card movement
+    And real-time updates across users
+    And filtering and search capabilities
+
+  @medium @kanban @integration
+  Scenario: Knowledge Graph Integration
+    Given board state needs to be queryable
+    When we integrate with the knowledge graph
+    Then board data should be accessible via KG queries
+    And relationships between cards should be modeled
+    And analytics and reporting should be supported
+
+  @low @kanban @automation
+  Scenario: Automated Card Management
+    Given workflow rules are defined
+    When conditions are met
+    Then cards should automatically transition columns
+    And notifications should be sent to stakeholders
+    And dependent work should be triggered

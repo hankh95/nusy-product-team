@@ -52,18 +52,10 @@ except ImportError as e:
 
 try:
     # Import EXP-038 Santiago Core - use simple core for now
-    from simple_core import SantiagoCore
+    from simple_core import SantiagoCore, KnowledgeDomain
     print("✅ Using simple Santiago Core")
     
     # Define enums for compatibility
-    class KnowledgeDomain:
-        PRODUCT_MANAGEMENT = "product_management"
-        SOFTWARE_ENGINEERING = "software_engineering"
-        SYSTEM_ARCHITECTURE = "system_architecture"
-        TEAM_DYNAMICS = "team_dynamics"
-        TECHNICAL_DEBT = "technical_debt"
-        RISK_MANAGEMENT = "risk_management"
-    
     class ReasoningMode:
         SYMBOLIC = "symbolic"
         NEURAL = "neural"
@@ -83,6 +75,17 @@ except ImportError as e:
         def reason(self, query): return {"reasoning": f"Mock reasoning about: {query}"}
         async def initialize_core(self): return True
         def get_status(self): return {"health": "healthy"}
+
+    # Define KnowledgeDomain as enum for compatibility
+    from enum import Enum
+    class KnowledgeDomain(Enum):
+        PRODUCT_MANAGEMENT = "product_management"
+        SOFTWARE_ENGINEERING = "software_engineering"
+        SYSTEM_ARCHITECTURE = "system_architecture"
+        TEAM_DYNAMICS = "team_dynamics"
+        TECHNICAL_DEBT = "technical_debt"
+        RISK_MANAGEMENT = "risk_management"
+        KNOWLEDGE_MANAGEMENT = "knowledge_management"
 
 try:
     # Import EXP-039 MCP components
@@ -470,7 +473,11 @@ class SantiagoCoreMCPService:
                 domain_map = {
                     "product_management": KnowledgeDomain.PRODUCT_MANAGEMENT,
                     "software_engineering": KnowledgeDomain.SOFTWARE_ENGINEERING,
-                    "system_architecture": KnowledgeDomain.SYSTEM_ARCHITECTURE
+                    "system_architecture": KnowledgeDomain.SYSTEM_ARCHITECTURE,
+                    "team_dynamics": KnowledgeDomain.TEAM_DYNAMICS,
+                    "technical_debt": KnowledgeDomain.TECHNICAL_DEBT,
+                    "risk_management": KnowledgeDomain.RISK_MANAGEMENT,
+                    "knowledge_management": KnowledgeDomain.KNOWLEDGE_MANAGEMENT
                 }
                 domain = domain_map.get(domain_name, KnowledgeDomain.PRODUCT_MANAGEMENT)
                 
@@ -498,7 +505,11 @@ class SantiagoCoreMCPService:
                 domain_map = {
                     "product_management": KnowledgeDomain.PRODUCT_MANAGEMENT,
                     "software_engineering": KnowledgeDomain.SOFTWARE_ENGINEERING,
-                    "system_architecture": KnowledgeDomain.SYSTEM_ARCHITECTURE
+                    "system_architecture": KnowledgeDomain.SYSTEM_ARCHITECTURE,
+                    "team_dynamics": KnowledgeDomain.TEAM_DYNAMICS,
+                    "technical_debt": KnowledgeDomain.TECHNICAL_DEBT,
+                    "risk_management": KnowledgeDomain.RISK_MANAGEMENT,
+                    "knowledge_management": KnowledgeDomain.KNOWLEDGE_MANAGEMENT
                 }
                 
                 domain = domain_map.get(domain_name, KnowledgeDomain.PRODUCT_MANAGEMENT)
@@ -510,7 +521,7 @@ class SantiagoCoreMCPService:
                 
                 return MCPResponse(
                     id=request.id,
-                    result={"success": True, "nodes_loaded": nodes_loaded, "domain": domain_name},
+                    result={"success": True, "result": {"nodes_loaded": nodes_loaded, "domain": domain_name}},
                     timestamp=datetime.now(),
                     execution_time_ms=50.0
                 )
@@ -550,13 +561,16 @@ class IntegratedServiceRegistry:
     Registry that integrates all EXP-036 components as MCP services.
     """
 
-    def __init__(self):
+    def __init__(self, santiago_core: Optional[SantiagoCore] = None, workspace_path: Optional[str] = None):
         self.registry = MCPServiceRegistry()
         self.services = {}
 
         # Initialize EXP-036 components
-        # Initialize Git service with workspace path
-        workspace_path = str(Path(__file__).parent.parent.parent / "workspace")
+        # Use provided workspace path or default
+        if workspace_path is None:
+            workspace_path = str(Path(__file__).parent.parent.parent / "workspace")
+        
+        self.workspace_path = workspace_path
         
         if USE_DULWICH:
             self.git_service = DulwichInMemoryGitService(workspace_path=workspace_path)
@@ -566,8 +580,8 @@ class IntegratedServiceRegistry:
         self.workflow_engine = WorkflowOrchestrationEngine()
         self.llm_service = InMemoryLLMService()
         
-        # Initialize advanced Santiago Core
-        self.santiago_core = SantiagoCore()
+        # Use provided Santiago Core or create new one
+        self.santiago_core = santiago_core or SantiagoCore()
         # Don't call asyncio.run here - let caller handle async initialization
 
         # Wrap as MCP services

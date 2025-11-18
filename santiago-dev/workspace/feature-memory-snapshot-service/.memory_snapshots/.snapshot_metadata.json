@@ -1,0 +1,17 @@
+{
+  "full_demo_agent_20251118_144132": {
+    "snapshot_id": "full_demo_agent_20251118_144132",
+    "timestamp": "2025-11-18T14:41:32.597838",
+    "agent_id": "demo_agent",
+    "snapshot_type": "full",
+    "description": "Demo system state snapshot",
+    "tags": [
+      "demo",
+      "full-system"
+    ],
+    "parent_snapshot": null,
+    "size_bytes": 410,
+    "checksum": "f69a165b95d67317413b08a1ee1e913a207ad18dea9fd30b22254dc534db548c",
+    "compression_ratio": 1.0
+  }
+}
