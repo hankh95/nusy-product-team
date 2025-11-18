@@ -78,6 +78,37 @@ The recent expeditions (EXP-032 through EXP-035) provide empirical validation an
 
 ---
 
+## In-Memory LLM Integration Architecture
+
+### Small Model In-Memory Execution ✅ **NEW CAPABILITY**
+
+**Architectural Assumption:** Small LLMs (Mistral, Phi-2, etc.) will run in-memory alongside Santiago services, enabling instant responses to blocking questions without external API calls.
+
+**Implementation Strategy:**
+- **Memory-Resident Models:** Small LLMs (<7B parameters) loaded directly into Santiago service memory
+- **Local Inference Pipeline:** Questions routed to in-memory models first for immediate answers
+- **Fallback to External APIs:** Only escalate to xAI/OpenAI when local models cannot provide satisfactory responses
+- **Context Preservation:** Maintain conversation context across multiple question-answer cycles
+
+**Performance Benefits:**
+- **Zero Latency Answers:** Instant responses for common development questions
+- **Reduced API Costs:** Minimize expensive external LLM calls
+- **Offline Capability:** Function without internet connectivity for local models
+- **Privacy Preservation:** Sensitive code discussions stay within local environment
+
+**Integration Points:**
+- **Service Mesh Enhancement:** Add LLM routing layer to MCP service contracts
+- **Knowledge Graph Connection:** Link local model responses to verified knowledge base
+- **Quality Gates:** Implement confidence scoring for local vs external model selection
+- **Continuous Learning:** Update local models with validated answers from external sources
+
+**Expedition Impact:**
+- **EXP-032/034 Validation:** In-memory Git patterns extend to in-memory LLM execution
+- **EXP-035 Enhancement:** Workflow state machines can include "blocked:awaiting_answer" states resolved locally
+- **Performance Multiplier:** Combine in-memory Git (100x) + in-memory LLM (instant) for revolutionary development velocity
+
+---
+
 ## Critical Architectural Gaps Identified
 
 ### 1. **Workflow Orchestration Complexity** ⚠️ **MAJOR GAP**
