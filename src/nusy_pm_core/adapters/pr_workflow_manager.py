@@ -31,7 +31,7 @@ Integration Points:
 
 from pathlib import Path
 from datetime import datetime, timezone
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Callable
 import subprocess
 import re
 import os
@@ -861,6 +861,130 @@ The PR includes:
         report['bottlenecks'] = bottlenecks[:3]  # Top 3
         
         return report
+    
+    def poll_pr(
+        self,
+        pr_number: int,
+        interval_seconds: int = 60,
+        max_duration_minutes: int = 120,
+        auto_merge: bool = False,
+        on_ready_callback: Optional[Callable] = None
+    ) -> Dict[str, Any]:
+        """
+        Poll PR status until ready (approved + checks passing + mergeable).
+        
+        Phase 5: Polling and automation
+        
+        Args:
+            pr_number: PR number to monitor
+            interval_seconds: Seconds between status checks (default 60)
+            max_duration_minutes: Maximum time to poll (default 120 minutes)
+            auto_merge: Automatically merge when ready (default False)
+            on_ready_callback: Optional callback when PR becomes ready
+            
+        Returns:
+            dict with:
+                - ready: bool (True if PR ready)
+                - pr_number: int
+                - status: dict (final status)
+                - checks_count: int (number of checks performed)
+                - elapsed_minutes: float (total time spent polling)
+                - auto_merged: bool (True if auto-merged)
+                - timeout: bool (True if max duration exceeded)
+        """
+        start_time = time.time()
+        max_seconds = max_duration_minutes * 60
+        checks_count = 0
+        
+        print(f"🔄 Starting PR #{pr_number} polling...")
+        print(f"   Interval: {interval_seconds}s")
+        print(f"   Max duration: {max_duration_minutes} minutes")
+        print(f"   Auto-merge: {'enabled' if auto_merge else 'disabled'}")
+        
+        while True:
+            elapsed = time.time() - start_time
+            
+            # Check timeout
+            if elapsed > max_seconds:
+                elapsed_minutes = elapsed / 60
+                print(f"\n⏱️ Polling timeout after {elapsed_minutes:.1f} minutes")
+                status = self.check_pr_status(pr_number)
+                return {
+                    'ready': False,
+                    'pr_number': pr_number,
+                    'status': status,
+                    'checks_count': checks_count,
+                    'elapsed_minutes': elapsed_minutes,
+                    'auto_merged': False,
+                    'timeout': True
+                }
+            
+            # Check status
+            checks_count += 1
+            status = self.check_pr_status(pr_number)
+            elapsed_minutes = elapsed / 60
+            
+            print(f"\n[Check #{checks_count} at {elapsed_minutes:.1f}m]")
+            print(f"  State: {status['state']}")
+            print(f"  Approved: {'✅' if status['approved'] else '❌'}")
+            print(f"  Mergeable: {'✅' if status['mergeable'] else '❌'}")
+            print(f"  Checks: {'✅' if status['checks_passing'] else '❌'}")
+            
+            # Check if ready
+            ready = (
+                status['state'] == 'OPEN' and
+                status['approved'] and
+                status['mergeable'] and
+                status['checks_passing']
+            )
+            
+            if ready:
+                print(f"\n✅ PR #{pr_number} is READY!")
+                
+                # Call callback if provided
+                if on_ready_callback:
+                    try:
+                        on_ready_callback(pr_number, status)
+                    except Exception as e:
+                        print(f"⚠️ Callback failed: {e}")
+                
+                # Auto-merge if enabled
+                auto_merged = False
+                if auto_merge:
+                    print(f"🚀 Auto-merging PR #{pr_number}...")
+                    try:
+                        merge_result = self.merge_pr(pr_number)
+                        auto_merged = merge_result['merged']
+                        print(f"✅ Auto-merge successful!")
+                    except Exception as e:
+                        print(f"❌ Auto-merge failed: {e}")
+                
+                return {
+                    'ready': True,
+                    'pr_number': pr_number,
+                    'status': status,
+                    'checks_count': checks_count,
+                    'elapsed_minutes': elapsed_minutes,
+                    'auto_merged': auto_merged,
+                    'timeout': False
+                }
+            
+            # Check if PR was closed/merged by someone else
+            if status['state'] in ['CLOSED', 'MERGED']:
+                print(f"\n🛑 PR #{pr_number} is {status['state']}")
+                return {
+                    'ready': False,
+                    'pr_number': pr_number,
+                    'status': status,
+                    'checks_count': checks_count,
+                    'elapsed_minutes': elapsed_minutes,
+                    'auto_merged': False,
+                    'timeout': False
+                }
+            
+            # Wait for next check
+            print(f"  ⏳ Next check in {interval_seconds}s...")
+            time.sleep(interval_seconds)
 
 
 # CLI interface for agents
@@ -909,6 +1033,13 @@ def main():
     
     report_parser = subparsers.add_parser('workflow-report', help='Generate workflow performance report')
     report_parser.add_argument('--since', help='Start date (ISO format)')
+    
+    # Phase 5: Polling
+    poll_parser = subparsers.add_parser('poll-pr', help='Poll PR until ready for merge')
+    poll_parser.add_argument('pr_number', type=int, help='PR number')
+    poll_parser.add_argument('--interval', type=int, default=60, help='Check interval in seconds (default: 60)')
+    poll_parser.add_argument('--max-duration', type=int, default=120, help='Max polling duration in minutes (default: 120)')
+    poll_parser.add_argument('--auto-merge', action='store_true', help='Automatically merge when ready')
     
     args = parser.parse_args()
     
@@ -1005,6 +1136,27 @@ def main():
                     print("  Top Bottlenecks:")
                     for bottleneck in report['bottlenecks']:
                         print(f"    - {bottleneck['stage']}: {bottleneck['avg_hours']:.2f} hours")
+        
+        elif args.command == 'poll-pr':
+            result = manager.poll_pr(
+                pr_number=args.pr_number,
+                interval_seconds=args.interval,
+                max_duration_minutes=args.max_duration,
+                auto_merge=args.auto_merge
+            )
+            
+            if result['ready']:
+                print(f"\n✅ PR #{result['pr_number']} is ready!")
+                if result['auto_merged']:
+                    print(f"🚀 Auto-merged successfully!")
+            elif result['timeout']:
+                print(f"\n⏱️ Polling timed out after {result['elapsed_minutes']:.1f} minutes")
+            else:
+                print(f"\n🛑 PR #{result['pr_number']} ended in state: {result['status']['state']}")
+            
+            print(f"\nPolling Summary:")
+            print(f"  Checks performed: {result['checks_count']}")
+            print(f"  Time elapsed: {result['elapsed_minutes']:.1f} minutes")
     
     except Exception as e:
         print(f"❌ Failed: {e}")

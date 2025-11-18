@@ -304,5 +304,142 @@ class TestMetricsAndReporting:
         assert 'bottlenecks' in report
 
 
+class TestPollingWorkflow:
+    """Test PR polling functionality (Phase 5)."""
+    
+    @pytest.fixture
+    def manager(self, tmp_path):
+        """Create PR workflow manager with test repo."""
+        return PRWorkflowManager(tmp_path)
+    
+    def test_poll_pr_becomes_ready(self, manager, monkeypatch):
+        """Test polling until PR becomes ready."""
+        import subprocess
+        import time
+        
+        # Mock check_pr_status to return different states
+        check_count = 0
+        
+        def mock_check_pr_status(pr_number):
+            nonlocal check_count
+            check_count += 1
+            
+            # First check: not ready (no approval)
+            if check_count == 1:
+                return {
+                    'state': 'OPEN',
+                    'approved': False,
+                    'mergeable': True,
+                    'checks_passing': True,
+                    'reviews': []
+                }
+            # Second check: ready
+            else:
+                return {
+                    'state': 'OPEN',
+                    'approved': True,
+                    'mergeable': True,
+                    'checks_passing': True,
+                    'reviews': []
+                }
+        
+        monkeypatch.setattr(manager, 'check_pr_status', mock_check_pr_status)
+        
+        # Speed up test by reducing sleep time
+        original_sleep = time.sleep
+        def mock_sleep(seconds):
+            original_sleep(0.1)  # Sleep for 0.1s instead
+        monkeypatch.setattr(time, 'sleep', mock_sleep)
+        
+        result = manager.poll_pr(
+            pr_number=14,
+            interval_seconds=1,  # Fast interval for testing
+            max_duration_minutes=1,
+            auto_merge=False
+        )
+        
+        assert result['ready'] is True
+        assert result['pr_number'] == 14
+        assert result['checks_count'] == 2
+        assert result['timeout'] is False
+        assert result['auto_merged'] is False
+    
+    def test_poll_pr_with_auto_merge(self, manager, monkeypatch):
+        """Test polling with auto-merge enabled."""
+        import time
+        
+        def mock_check_pr_status(pr_number):
+            return {
+                'state': 'OPEN',
+                'approved': True,
+                'mergeable': True,
+                'checks_passing': True,
+                'reviews': []
+            }
+        
+        def mock_merge_pr(pr_number, merge_method='squash', delete_branch=True):
+            return {
+                'merged': True,
+                'pr_number': pr_number,
+                'merge_method': merge_method,
+                'merged_at': '2025-11-17T20:00:00Z'
+            }
+        
+        monkeypatch.setattr(manager, 'check_pr_status', mock_check_pr_status)
+        monkeypatch.setattr(manager, 'merge_pr', mock_merge_pr)
+        
+        original_sleep = time.sleep
+        def mock_sleep(seconds):
+            original_sleep(0.01)
+        monkeypatch.setattr(time, 'sleep', mock_sleep)
+        
+        result = manager.poll_pr(
+            pr_number=14,
+            interval_seconds=1,
+            max_duration_minutes=1,
+            auto_merge=True
+        )
+        
+        assert result['ready'] is True
+        assert result['auto_merged'] is True
+    
+    def test_poll_pr_timeout(self, manager, monkeypatch):
+        """Test polling timeout."""
+        import time
+        
+        def mock_check_pr_status(pr_number):
+            return {
+                'state': 'OPEN',
+                'approved': False,
+                'mergeable': True,
+                'checks_passing': True,
+                'reviews': []
+            }
+        
+        monkeypatch.setattr(manager, 'check_pr_status', mock_check_pr_status)
+        
+        # Mock time to simulate fast timeout
+        start_time = time.time()
+        def mock_time():
+            # Return start_time + 10 seconds on first call, then increment
+            return start_time + 10
+        
+        original_sleep = time.sleep
+        def mock_sleep(seconds):
+            original_sleep(0.01)
+        
+        monkeypatch.setattr(time, 'sleep', mock_sleep)
+        
+        result = manager.poll_pr(
+            pr_number=14,
+            interval_seconds=1,
+            max_duration_minutes=0.001,  # Very short timeout
+            auto_merge=False
+        )
+        
+        assert result['ready'] is False
+        assert result['timeout'] is True
+
+
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
