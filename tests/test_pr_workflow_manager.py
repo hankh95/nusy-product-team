@@ -1,14 +1,15 @@
 """
-Tests for PR Workflow Manager (F-030 Phase 1)
+Tests for PR Workflow Manager (F-030 Phases 1-4)
 """
 
 import pytest
+import json
 from pathlib import Path
 from src.nusy_pm_core.adapters.pr_workflow_manager import PRWorkflowManager
 
 
 class TestPRWorkflowManager:
-    """Test PR creation and issue linking functionality."""
+    """Test PR creation and issue linking functionality (Phase 1)."""
     
     @pytest.fixture
     def manager(self, tmp_path):
@@ -17,7 +18,6 @@ class TestPRWorkflowManager:
     
     def test_get_current_branch(self, manager, monkeypatch):
         """Test getting current git branch."""
-        # Mock subprocess to return test branch
         import subprocess
         
         def mock_run(*args, **kwargs):
@@ -68,7 +68,7 @@ class TestPRWorkflowManager:
 
 
 class TestPRBodyFormat:
-    """Test PR body formatting adheres to standards."""
+    """Test PR body formatting adheres to standards (Phase 1)."""
     
     def test_pr_body_has_required_sections(self):
         """Verify PR body has all required sections."""
@@ -110,6 +110,198 @@ class TestPRBodyFormat:
         
         # GitHub recognizes "Closes #N" syntax
         assert body.startswith("Closes #42\n") or body.startswith("Closes #42 ")
+
+
+class TestReviewWorkflow:
+    """Test review workflow automation (Phase 2)."""
+    
+    @pytest.fixture
+    def manager(self, tmp_path):
+        return PRWorkflowManager(tmp_path)
+    
+    def test_check_pr_status_parsing(self, manager, monkeypatch):
+        """Test PR status check parses GitHub response correctly."""
+        import subprocess
+        
+        mock_response = {
+            'state': 'OPEN',
+            'reviewDecision': 'APPROVED',
+            'mergeable': 'MERGEABLE',
+            'statusCheckRollup': [
+                {'conclusion': 'SUCCESS'}
+            ]
+        }
+        
+        def mock_run(*args, **kwargs):
+            class Result:
+                stdout = json.dumps(mock_response)
+                returncode = 0
+            return Result()
+        
+        monkeypatch.setattr(subprocess, 'run', mock_run)
+        
+        status = manager.check_pr_status(123)
+        assert status['approved'] is True
+        assert status['mergeable'] is True
+        assert status['checks_passing'] is True
+    
+    def test_merge_pr_requires_approval(self, manager, monkeypatch):
+        """Test merge fails if PR not approved."""
+        import subprocess
+        
+        def mock_run(*args, **kwargs):
+            class Result:
+                stdout = json.dumps({
+                    'reviewDecision': 'REVIEW_REQUIRED',
+                    'mergeable': 'MERGEABLE',
+                    'statusCheckRollup': []
+                })
+                returncode = 0
+            return Result()
+        
+        monkeypatch.setattr(subprocess, 'run', mock_run)
+        
+        with pytest.raises(RuntimeError, match="not approved"):
+            manager.merge_pr(123)
+
+
+class TestChangesRequestedWorkflow:
+    """Test changes requested workflow (Phase 3)."""
+    
+    @pytest.fixture
+    def manager(self, tmp_path):
+        return PRWorkflowManager(tmp_path)
+    
+    def test_handle_changes_requested_groups_by_severity(self, manager, monkeypatch):
+        """Test changes requested groups comments by severity."""
+        import subprocess
+        
+        # Mock _get_pr_details
+        def mock_get_pr_details(pr_num):
+            return {'linked_issue': 42, 'title': 'Test', 'body': ''}
+        
+        monkeypatch.setattr(manager, '_get_pr_details', mock_get_pr_details)
+        
+        # Mock subprocess (for gh issue comment)
+        call_count = [0]
+        captured_comment = ['']
+        
+        def mock_run(*args, **kwargs):
+            call_count[0] += 1
+            if 'comment' in args[0]:
+                # Capture comment body
+                body_idx = args[0].index('--body') + 1
+                captured_comment[0] = args[0][body_idx]
+            
+            class Result:
+                stdout = ""
+                returncode = 0
+            return Result()
+        
+        monkeypatch.setattr(subprocess, 'run', mock_run)
+        
+        comments = [
+            {'comment': 'Fix bug', 'severity': 'blocker'},
+            {'comment': 'Add docs', 'severity': 'minor'},
+            {'comment': 'Improve logic', 'severity': 'important'}
+        ]
+        
+        result = manager.handle_changes_requested(123, 'reviewer', comments)
+        
+        assert result['pr_number'] == 123
+        assert result['issue_number'] == 42
+        assert result['blocker_count'] == 1
+        
+        # Check comment has severity grouping
+        comment = captured_comment[0]
+        assert '🔴' in comment  # blocker
+        assert '🟡' in comment  # important
+        assert '🟢' in comment  # minor
+
+
+class TestMetricsAndReporting:
+    """Test metrics and reporting (Phase 4)."""
+    
+    @pytest.fixture
+    def manager(self, tmp_path):
+        # Create workflow logs directory
+        log_dir = tmp_path / 'santiago-pm' / 'workflow-logs'
+        log_dir.mkdir(parents=True)
+        return PRWorkflowManager(tmp_path)
+    
+    def test_track_workflow_state(self, manager):
+        """Test workflow state tracking."""
+        manager.track_workflow_state(42, 'created', {'user': 'test'})
+        manager.track_workflow_state(42, 'in_progress')
+        
+        log_file = manager.repo_path / 'santiago-pm' / 'workflow-logs' / 'issue-42.log'
+        assert log_file.exists()
+        
+        with open(log_file) as f:
+            lines = f.readlines()
+            assert len(lines) == 2
+            
+            entry1 = json.loads(lines[0])
+            assert entry1['state'] == 'created'
+            assert entry1['metadata']['user'] == 'test'
+    
+    def test_calculate_cycle_time(self, manager):
+        """Test cycle time calculation."""
+        from datetime import datetime, timedelta, timezone
+        
+        # Create mock log with timestamps
+        log_file = manager.repo_path / 'santiago-pm' / 'workflow-logs' / 'issue-42.log'
+        
+        now = datetime.now(timezone.utc)
+        states = [
+            {'timestamp': now.isoformat(), 'state': 'created', 'issue_number': 42, 'metadata': {}},
+            {'timestamp': (now + timedelta(hours=2)).isoformat(), 'state': 'pr_created', 'issue_number': 42, 'metadata': {}},
+            {'timestamp': (now + timedelta(hours=3)).isoformat(), 'state': 'in_review', 'issue_number': 42, 'metadata': {}},
+            {'timestamp': (now + timedelta(hours=4)).isoformat(), 'state': 'approved', 'issue_number': 42, 'metadata': {}},
+            {'timestamp': (now + timedelta(hours=4, minutes=5)).isoformat(), 'state': 'merged', 'issue_number': 42, 'metadata': {}},
+            {'timestamp': (now + timedelta(hours=4, minutes=5)).isoformat(), 'state': 'closed', 'issue_number': 42, 'metadata': {}}
+        ]
+        
+        with open(log_file, 'w') as f:
+            for state in states:
+                f.write(json.dumps(state) + '\n')
+        
+        metrics = manager.calculate_cycle_time(42)
+        
+        assert 'issue_to_pr_hours' in metrics
+        assert abs(metrics['issue_to_pr_hours'] - 2.0) < 0.1
+        
+        assert 'pr_to_review_hours' in metrics
+        assert abs(metrics['pr_to_review_hours'] - 1.0) < 0.1
+        
+        assert 'total_cycle_time_hours' in metrics
+        assert abs(metrics['total_cycle_time_hours'] - 4.083) < 0.1
+    
+    def test_generate_workflow_report(self, manager):
+        """Test workflow report generation."""
+        from datetime import datetime, timedelta, timezone
+        
+        # Create logs for multiple issues
+        now = datetime.now(timezone.utc)
+        
+        for issue_num in [1, 2]:
+            log_file = manager.repo_path / 'santiago-pm' / 'workflow-logs' / f'issue-{issue_num}.log'
+            states = [
+                {'timestamp': now.isoformat(), 'state': 'created', 'issue_number': issue_num, 'metadata': {}},
+                {'timestamp': (now + timedelta(hours=3)).isoformat(), 'state': 'pr_created', 'issue_number': issue_num, 'metadata': {}},
+                {'timestamp': (now + timedelta(hours=5)).isoformat(), 'state': 'closed', 'issue_number': issue_num, 'metadata': {}}
+            ]
+            
+            with open(log_file, 'w') as f:
+                for state in states:
+                    f.write(json.dumps(state) + '\n')
+        
+        report = manager.generate_workflow_report()
+        
+        assert report['total_issues'] == 2
+        assert 'avg_cycle_time_hours' in report
+        assert 'avg_issue_to_pr_hours' in report
+        assert 'bottlenecks' in report
 
 
 if __name__ == '__main__':

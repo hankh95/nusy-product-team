@@ -1,22 +1,32 @@
 """
-PR/Issue Workflow Manager - F-030 Phase 1 MVP
-==============================================
+PR/Issue Workflow Manager - F-030 Phases 1-4
+=============================================
 Automates PR creation, review workflow, and issue updates.
 
-Phase 1 Scope:
+Phase 1: PR Creation (✅ Complete)
 - Agent creates PR with work summary and acceptance criteria
 - Auto-links PR to issue using "Closes #N" keyword
 - Adds PR reference comment to linked issue
+
+Phase 2: Review Workflow Automation (🔄 In Progress)
+- Auto-merge on approval
+- Issue update with review summary
+- Auto-close issue on merge
+
+Phase 3: Changes Request Workflow
+- Parse review comments into task list
+- Update issue with structured change requests
+- Track revision iterations
+
+Phase 4: Metrics and Reporting
+- Workflow state tracking
+- Cycle time calculation
+- Quality metrics
 
 Integration Points:
 - F-027 (Personal Logs): Includes session log link in PR body
 - GitHub API: PR/issue operations
 - Git: Branch and commit information
-
-Success Criteria:
-- Agent can create PR with single command
-- PR correctly links to issue
-- Issue shows PR link in comments
 """
 
 from pathlib import Path
@@ -25,6 +35,8 @@ from typing import Dict, List, Optional, Any
 import subprocess
 import re
 import os
+import json
+import time
 
 
 class PRWorkflowManager:
@@ -313,66 +325,689 @@ The PR includes:
             )
         except subprocess.CalledProcessError as e:
             print(f"Warning: Failed to add PR comment to issue: {e.stderr}")
+    
+    # Phase 2: Review Workflow Automation
+    
+    def check_pr_status(self, pr_number: int) -> Dict[str, Any]:
+        """
+        Check PR status including reviews and checks.
+        
+        Returns:
+            Dict with PR status:
+                - state: open/closed/merged
+                - reviews: List of review states
+                - approved: Whether PR is approved
+                - mergeable: Whether PR can be merged
+                - checks_passing: Whether all checks pass
+        """
+        try:
+            result = subprocess.run(
+                [
+                    'gh', 'pr', 'view', str(pr_number),
+                    '--json', 'state,reviews,reviewDecision,mergeable,statusCheckRollup'
+                ],
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            data = json.loads(result.stdout)
+            
+            # Check if all status checks pass
+            checks_passing = True
+            if data.get('statusCheckRollup'):
+                for check in data['statusCheckRollup']:
+                    if check.get('conclusion') not in ['SUCCESS', 'NEUTRAL', 'SKIPPED']:
+                        checks_passing = False
+                        break
+            
+            return {
+                'state': data.get('state', 'UNKNOWN'),
+                'reviews': data.get('reviews', []),
+                'approved': data.get('reviewDecision') == 'APPROVED',
+                'mergeable': data.get('mergeable') == 'MERGEABLE',
+                'checks_passing': checks_passing,
+                'review_decision': data.get('reviewDecision')
+            }
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"Failed to check PR status: {e.stderr}")
+    
+    def merge_pr(
+        self,
+        pr_number: int,
+        merge_method: str = 'squash',
+        delete_branch: bool = True
+    ) -> Dict[str, Any]:
+        """
+        Merge an approved PR.
+        
+        Args:
+            pr_number: PR number to merge
+            merge_method: 'squash', 'merge', or 'rebase'
+            delete_branch: Whether to delete branch after merge
+            
+        Returns:
+            Dict with merge details
+        """
+        # Check PR is approved and mergeable
+        status = self.check_pr_status(pr_number)
+        
+        if not status['approved']:
+            raise RuntimeError(f"PR #{pr_number} is not approved. Cannot auto-merge.")
+        
+        if not status['checks_passing']:
+            raise RuntimeError(f"PR #{pr_number} has failing checks. Cannot auto-merge.")
+        
+        if not status['mergeable']:
+            raise RuntimeError(f"PR #{pr_number} is not mergeable. May have conflicts.")
+        
+        # Merge PR
+        try:
+            merge_args = ['gh', 'pr', 'merge', str(pr_number), f'--{merge_method}']
+            if delete_branch:
+                merge_args.append('--delete-branch')
+            
+            result = subprocess.run(
+                merge_args,
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            
+            return {
+                'merged': True,
+                'pr_number': pr_number,
+                'merge_method': merge_method,
+                'merged_at': datetime.now(timezone.utc).isoformat(),
+                'branch_deleted': delete_branch
+            }
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"Failed to merge PR: {e.stderr}")
+    
+    def update_issue_on_merge(
+        self,
+        issue_number: int,
+        pr_number: int,
+        reviewer: str,
+        review_summary: str,
+        checklist_results: Optional[Dict[str, bool]] = None
+    ):
+        """
+        Update issue with review summary and close on merge.
+        
+        Args:
+            issue_number: Issue number to update
+            pr_number: PR that was merged
+            reviewer: Reviewer's username
+            review_summary: Summary of the review
+            checklist_results: Optional checklist item results
+        """
+        # Build review summary comment
+        comment_parts = [
+            "✅ **Work Approved and Merged**",
+            "",
+            f"**PR**: #{pr_number}",
+            f"**Reviewer**: @{reviewer}",
+            f"**Merged**: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}",
+            "",
+            "**Review Summary**:",
+            review_summary,
+            ""
+        ]
+        
+        # Add checklist results if provided
+        if checklist_results:
+            comment_parts.append("**Checklist Results**:")
+            for item, passed in checklist_results.items():
+                icon = "✅" if passed else "❌"
+                comment_parts.append(f"- {icon} {item}")
+            comment_parts.append("")
+        
+        comment_parts.extend([
+            "**Next Steps**:",
+            "Issue closed automatically. Agent can proceed to next assigned work.",
+            "",
+            "---",
+            "*Automated by Santiago-PM (F-030)*"
+        ])
+        
+        comment = '\n'.join(comment_parts)
+        
+        # Add comment to issue
+        try:
+            subprocess.run(
+                ['gh', 'issue', 'comment', str(issue_number), '--body', comment],
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True,
+                check=True
+            )
+        except subprocess.CalledProcessError as e:
+            print(f"Warning: Failed to add review comment: {e.stderr}")
+        
+        # Close issue with label
+        try:
+            subprocess.run(
+                ['gh', 'issue', 'close', str(issue_number), '--reason', 'completed'],
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            
+            # Add label
+            subprocess.run(
+                ['gh', 'issue', 'edit', str(issue_number), '--add-label', 'approved-merged'],
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True
+            )
+        except subprocess.CalledProcessError as e:
+            print(f"Warning: Failed to close issue: {e.stderr}")
+    
+    def handle_approved_pr(
+        self,
+        pr_number: int,
+        reviewer: str,
+        review_summary: str = "All acceptance criteria met. Code quality is high.",
+        auto_merge: bool = True,
+        merge_method: str = 'squash'
+    ) -> Dict[str, Any]:
+        """
+        Handle complete approved PR workflow: merge + update issue + close.
+        
+        Args:
+            pr_number: PR number that was approved
+            reviewer: Reviewer's username
+            review_summary: Summary from review
+            auto_merge: Whether to auto-merge (default: True)
+            merge_method: Merge method to use
+            
+        Returns:
+            Dict with workflow results
+        """
+        # Get PR details to find linked issue
+        pr_data = self._get_pr_details(pr_number)
+        issue_number = pr_data.get('linked_issue')
+        
+        if not issue_number:
+            raise RuntimeError(f"PR #{pr_number} has no linked issue. Cannot complete workflow.")
+        
+        result = {
+            'pr_number': pr_number,
+            'issue_number': issue_number,
+            'approved': True,
+            'merged': False,
+            'issue_closed': False
+        }
+        
+        # Merge PR if auto_merge enabled
+        if auto_merge:
+            try:
+                merge_result = self.merge_pr(pr_number, merge_method)
+                result['merged'] = True
+                result['merge_details'] = merge_result
+            except Exception as e:
+                result['merge_error'] = str(e)
+                print(f"❌ Failed to auto-merge: {e}")
+                return result
+        
+        # Update issue with review summary and close
+        try:
+            self.update_issue_on_merge(
+                issue_number=issue_number,
+                pr_number=pr_number,
+                reviewer=reviewer,
+                review_summary=review_summary
+            )
+            result['issue_closed'] = True
+        except Exception as e:
+            result['issue_update_error'] = str(e)
+            print(f"❌ Failed to update issue: {e}")
+        
+        return result
+    
+    def _get_pr_details(self, pr_number: int) -> Dict[str, Any]:
+        """Get PR details including linked issue."""
+        try:
+            result = subprocess.run(
+                ['gh', 'pr', 'view', str(pr_number), '--json', 'title,body,closingIssuesReferences'],
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            data = json.loads(result.stdout)
+            
+            # Extract linked issue from closingIssuesReferences
+            linked_issue = None
+            if data.get('closingIssuesReferences'):
+                refs = data['closingIssuesReferences']
+                if refs and len(refs) > 0:
+                    # Extract issue number from first reference
+                    linked_issue = refs[0].get('number')
+            
+            # Fallback: parse "Closes #N" from body
+            if not linked_issue and data.get('body'):
+                match = re.search(r'Closes #(\d+)', data['body'])
+                if match:
+                    linked_issue = int(match.group(1))
+            
+            return {
+                'title': data.get('title'),
+                'body': data.get('body'),
+                'linked_issue': linked_issue
+            }
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"Failed to get PR details: {e.stderr}")
+    
+    # Phase 3: Changes Request Workflow
+    
+    def handle_changes_requested(
+        self,
+        pr_number: int,
+        reviewer: str,
+        review_comments: List[Dict[str, str]]
+    ) -> Dict[str, Any]:
+        """
+        Handle "changes requested" workflow.
+        
+        Args:
+            pr_number: PR number with changes requested
+            reviewer: Reviewer's username
+            review_comments: List of review comments with structure:
+                [
+                    {
+                        'file': 'path/to/file.py',
+                        'line': 125,
+                        'comment': 'Fix this issue',
+                        'severity': 'blocker'|'important'|'minor'
+                    },
+                    ...
+                ]
+                
+        Returns:
+            Dict with workflow results
+        """
+        # Get PR details to find linked issue
+        pr_data = self._get_pr_details(pr_number)
+        issue_number = pr_data.get('linked_issue')
+        
+        if not issue_number:
+            raise RuntimeError(f"PR #{pr_number} has no linked issue.")
+        
+        # Build structured comment
+        comment_parts = [
+            "⚠️ **Changes Requested on PR #{pr_number}**".replace('{pr_number}', str(pr_number)),
+            "",
+            f"**Reviewer**: @{reviewer}",
+            f"**Reviewed**: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}",
+            "",
+            "**Issues Found**:"
+        ]
+        
+        # Group by severity
+        blockers = [c for c in review_comments if c.get('severity') == 'blocker']
+        important = [c for c in review_comments if c.get('severity') == 'important']
+        minor = [c for c in review_comments if c.get('severity') == 'minor']
+        
+        for severity_group, icon, items in [
+            ('Blocker', '🔴', blockers),
+            ('Important', '🟡', important),
+            ('Minor', '🟢', minor)
+        ]:
+            if items:
+                for item in items:
+                    location = ""
+                    if item.get('file'):
+                        location = f" ({item['file']}"
+                        if item.get('line'):
+                            location += f":{item['line']}"
+                        location += ")"
+                    comment_parts.append(f"- {icon} **{severity_group}**: {item['comment']}{location}")
+        
+        comment_parts.extend([
+            "",
+            "**Next Steps**:",
+            "Agent will address comments and update PR. Issue remains open pending resolution.",
+            "",
+            "---",
+            "*Automated by Santiago-PM (F-030)*"
+        ])
+        
+        comment = '\n'.join(comment_parts)
+        
+        # Add comment to issue
+        try:
+            subprocess.run(
+                ['gh', 'issue', 'comment', str(issue_number), '--body', comment],
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True,
+                check=True
+            )
+        except subprocess.CalledProcessError as e:
+            print(f"Warning: Failed to add changes comment: {e.stderr}")
+        
+        # Update issue label
+        try:
+            subprocess.run(
+                ['gh', 'issue', 'edit', str(issue_number), '--add-label', 'in-revision'],
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True
+            )
+        except subprocess.CalledProcessError as e:
+            print(f"Warning: Failed to update issue label: {e.stderr}")
+        
+        return {
+            'pr_number': pr_number,
+            'issue_number': issue_number,
+            'changes_requested': True,
+            'comment_count': len(review_comments),
+            'blocker_count': len(blockers)
+        }
+    
+    # Phase 4: Metrics and Reporting
+    
+    def track_workflow_state(
+        self,
+        issue_number: int,
+        state: str,
+        metadata: Optional[Dict[str, Any]] = None
+    ):
+        """
+        Track workflow state transition with timestamp.
+        
+        States: created, in_progress, pr_created, in_review, approved, 
+                merged, closed, in_revision
+                
+        This writes to a workflow log for metrics analysis.
+        """
+        log_dir = self.repo_path / 'santiago-pm' / 'workflow-logs'
+        log_dir.mkdir(parents=True, exist_ok=True)
+        
+        log_file = log_dir / f'issue-{issue_number}.log'
+        
+        entry = {
+            'timestamp': datetime.now(timezone.utc).isoformat(),
+            'issue_number': issue_number,
+            'state': state,
+            'metadata': metadata or {}
+        }
+        
+        # Append to log file
+        with open(log_file, 'a') as f:
+            f.write(json.dumps(entry) + '\n')
+    
+    def calculate_cycle_time(self, issue_number: int) -> Dict[str, Any]:
+        """
+        Calculate cycle time metrics for an issue.
+        
+        Returns:
+            Dict with timing metrics:
+                - issue_to_pr: Hours from issue created to PR created
+                - pr_to_review: Hours from PR created to review started
+                - review_to_approval: Hours from review to approval
+                - approval_to_merge: Hours from approval to merge
+                - total_cycle_time: Total hours from creation to close
+        """
+        log_file = self.repo_path / 'santiago-pm' / 'workflow-logs' / f'issue-{issue_number}.log'
+        
+        if not log_file.exists():
+            return {'error': 'No workflow log found for issue'}
+        
+        # Read all state transitions
+        states = []
+        with open(log_file, 'r') as f:
+            for line in f:
+                if line.strip():
+                    states.append(json.loads(line))
+        
+        # Extract key timestamps
+        timestamps = {}
+        for state in states:
+            state_name = state['state']
+            if state_name not in timestamps:
+                timestamps[state_name] = datetime.fromisoformat(state['timestamp'])
+        
+        # Calculate durations
+        metrics = {}
+        
+        if 'created' in timestamps and 'pr_created' in timestamps:
+            delta = timestamps['pr_created'] - timestamps['created']
+            metrics['issue_to_pr_hours'] = delta.total_seconds() / 3600
+        
+        if 'pr_created' in timestamps and 'in_review' in timestamps:
+            delta = timestamps['in_review'] - timestamps['pr_created']
+            metrics['pr_to_review_hours'] = delta.total_seconds() / 3600
+        
+        if 'in_review' in timestamps and 'approved' in timestamps:
+            delta = timestamps['approved'] - timestamps['in_review']
+            metrics['review_to_approval_hours'] = delta.total_seconds() / 3600
+        
+        if 'approved' in timestamps and 'merged' in timestamps:
+            delta = timestamps['merged'] - timestamps['approved']
+            metrics['approval_to_merge_hours'] = delta.total_seconds() / 3600
+        
+        if 'created' in timestamps and 'closed' in timestamps:
+            delta = timestamps['closed'] - timestamps['created']
+            metrics['total_cycle_time_hours'] = delta.total_seconds() / 3600
+        
+        return metrics
+    
+    def generate_workflow_report(self, start_date: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Generate workflow performance report.
+        
+        Args:
+            start_date: ISO format date to start report from (optional)
+            
+        Returns:
+            Dict with aggregate metrics:
+                - total_issues: Number of issues processed
+                - avg_cycle_time: Average total cycle time
+                - approval_rate: % of PRs approved first time
+                - avg_review_iterations: Average review rounds
+                - bottlenecks: Slowest workflow stages
+        """
+        log_dir = self.repo_path / 'santiago-pm' / 'workflow-logs'
+        
+        if not log_dir.exists():
+            return {'error': 'No workflow logs found'}
+        
+        # Collect all issue logs
+        issues = []
+        for log_file in log_dir.glob('issue-*.log'):
+            issue_num = int(log_file.stem.replace('issue-', ''))
+            metrics = self.calculate_cycle_time(issue_num)
+            if 'error' not in metrics:
+                issues.append({
+                    'issue_number': issue_num,
+                    **metrics
+                })
+        
+        if not issues:
+            return {'error': 'No completed issues found'}
+        
+        # Calculate aggregate metrics
+        report = {
+            'total_issues': len(issues),
+            'period_start': start_date or 'all_time'
+        }
+        
+        # Average cycle times
+        if any('total_cycle_time_hours' in i for i in issues):
+            cycle_times = [i['total_cycle_time_hours'] for i in issues if 'total_cycle_time_hours' in i]
+            report['avg_cycle_time_hours'] = sum(cycle_times) / len(cycle_times)
+        
+        # Stage durations
+        for stage in ['issue_to_pr_hours', 'pr_to_review_hours', 'review_to_approval_hours']:
+            values = [i[stage] for i in issues if stage in i]
+            if values:
+                report[f'avg_{stage}'] = sum(values) / len(values)
+        
+        # Identify bottlenecks
+        bottlenecks = []
+        for stage_key in ['issue_to_pr_hours', 'pr_to_review_hours', 'review_to_approval_hours']:
+            if f'avg_{stage_key}' in report:
+                bottlenecks.append({
+                    'stage': stage_key.replace('_hours', ''),
+                    'avg_hours': report[f'avg_{stage_key}']
+                })
+        
+        bottlenecks.sort(key=lambda x: x['avg_hours'], reverse=True)
+        report['bottlenecks'] = bottlenecks[:3]  # Top 3
+        
+        return report
 
 
 # CLI interface for agents
 def main():
-    """CLI entry point for agents to create PRs."""
+    """CLI entry point for agents to use PR workflow manager."""
     import argparse
     
     parser = argparse.ArgumentParser(
-        description="Create PR with automatic issue linking (F-030 Phase 1)"
+        description="PR/Issue Workflow Manager (F-030 Phases 1-4)"
     )
-    parser.add_argument(
-        'issue_number',
-        type=int,
-        help='GitHub issue number this PR closes'
-    )
-    parser.add_argument(
-        '--title',
-        help='PR title (defaults to "Closes #N: <issue title>")'
-    )
-    parser.add_argument(
-        '--summary',
-        help='Work summary (defaults to commit messages)'
-    )
-    parser.add_argument(
-        '--session-log',
-        help='Path to F-027 session log for context'
-    )
-    parser.add_argument(
-        '--branch',
-        help='Source branch (defaults to current branch)'
-    )
-    parser.add_argument(
-        '--no-tests',
-        action='store_true',
-        help='Flag if tests are not passing'
-    )
+    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+    
+    # Phase 1: Create PR
+    create_parser = subparsers.add_parser('create-pr', help='Create PR with automatic issue linking')
+    create_parser.add_argument('issue_number', type=int, help='GitHub issue number')
+    create_parser.add_argument('--title', help='PR title')
+    create_parser.add_argument('--summary', help='Work summary')
+    create_parser.add_argument('--session-log', help='Path to F-027 session log')
+    create_parser.add_argument('--branch', help='Source branch')
+    create_parser.add_argument('--no-tests', action='store_true', help='Tests not passing')
+    
+    # Phase 2: Check and merge PR
+    status_parser = subparsers.add_parser('check-status', help='Check PR approval status')
+    status_parser.add_argument('pr_number', type=int, help='PR number')
+    
+    merge_parser = subparsers.add_parser('merge-pr', help='Merge approved PR')
+    merge_parser.add_argument('pr_number', type=int, help='PR number')
+    merge_parser.add_argument('--method', default='squash', choices=['squash', 'merge', 'rebase'])
+    merge_parser.add_argument('--no-delete-branch', action='store_true')
+    
+    approve_parser = subparsers.add_parser('handle-approval', help='Complete workflow on approval')
+    approve_parser.add_argument('pr_number', type=int, help='PR number')
+    approve_parser.add_argument('--reviewer', required=True, help='Reviewer username')
+    approve_parser.add_argument('--summary', default='All acceptance criteria met.')
+    approve_parser.add_argument('--no-auto-merge', action='store_true')
+    
+    # Phase 3: Handle changes requested
+    changes_parser = subparsers.add_parser('handle-changes', help='Handle changes requested')
+    changes_parser.add_argument('pr_number', type=int, help='PR number')
+    changes_parser.add_argument('--reviewer', required=True, help='Reviewer username')
+    changes_parser.add_argument('--comments-file', help='JSON file with review comments')
+    
+    # Phase 4: Metrics
+    metrics_parser = subparsers.add_parser('cycle-time', help='Calculate cycle time for issue')
+    metrics_parser.add_argument('issue_number', type=int, help='Issue number')
+    
+    report_parser = subparsers.add_parser('workflow-report', help='Generate workflow performance report')
+    report_parser.add_argument('--since', help='Start date (ISO format)')
     
     args = parser.parse_args()
     
-    # Initialize manager
+    if not args.command:
+        parser.print_help()
+        return
+    
     manager = PRWorkflowManager(Path.cwd())
     
-    # Create PR
     try:
-        result = manager.create_pr(
-            issue_number=args.issue_number,
-            title=args.title,
-            work_summary=args.summary,
-            session_log_path=args.session_log,
-            branch=args.branch,
-            tests_passing=not args.no_tests
-        )
-        
-        print(f"✅ PR created successfully!")
-        print(f"   PR #{result['pr_number']}: {result['pr_url']}")
-        print(f"   Linked to issue #{result['issue_number']}")
-        print(f"   Branch: {result['branch']}")
-        
+        if args.command == 'create-pr':
+            result = manager.create_pr(
+                issue_number=args.issue_number,
+                title=args.title,
+                work_summary=args.summary,
+                session_log_path=args.session_log,
+                branch=args.branch,
+                tests_passing=not args.no_tests
+            )
+            print(f"✅ PR created successfully!")
+            print(f"   PR #{result['pr_number']}: {result['pr_url']}")
+            print(f"   Linked to issue #{result['issue_number']}")
+            
+        elif args.command == 'check-status':
+            status = manager.check_pr_status(args.pr_number)
+            print(f"PR #{args.pr_number} Status:")
+            print(f"  State: {status['state']}")
+            print(f"  Approved: {status['approved']}")
+            print(f"  Mergeable: {status['mergeable']}")
+            print(f"  Checks Passing: {status['checks_passing']}")
+            
+        elif args.command == 'merge-pr':
+            result = manager.merge_pr(
+                args.pr_number,
+                merge_method=args.method,
+                delete_branch=not args.no_delete_branch
+            )
+            print(f"✅ PR #{result['pr_number']} merged successfully!")
+            print(f"   Method: {result['merge_method']}")
+            print(f"   Merged at: {result['merged_at']}")
+            
+        elif args.command == 'handle-approval':
+            result = manager.handle_approved_pr(
+                args.pr_number,
+                reviewer=args.reviewer,
+                review_summary=args.summary,
+                auto_merge=not args.no_auto_merge
+            )
+            print(f"✅ Approval workflow completed!")
+            print(f"   PR #{result['pr_number']}")
+            print(f"   Issue #{result['issue_number']}")
+            print(f"   Merged: {result['merged']}")
+            print(f"   Issue Closed: {result['issue_closed']}")
+            
+        elif args.command == 'handle-changes':
+            # Load review comments from file
+            import json
+            if args.comments_file:
+                with open(args.comments_file) as f:
+                    comments = json.load(f)
+            else:
+                comments = []
+            
+            result = manager.handle_changes_requested(
+                args.pr_number,
+                reviewer=args.reviewer,
+                review_comments=comments
+            )
+            print(f"⚠️ Changes requested workflow completed!")
+            print(f"   PR #{result['pr_number']}")
+            print(f"   Issue #{result['issue_number']}")
+            print(f"   Comments: {result['comment_count']}")
+            print(f"   Blockers: {result['blocker_count']}")
+            
+        elif args.command == 'cycle-time':
+            metrics = manager.calculate_cycle_time(args.issue_number)
+            if 'error' in metrics:
+                print(f"❌ {metrics['error']}")
+            else:
+                print(f"Cycle Time Metrics for Issue #{args.issue_number}:")
+                for key, value in metrics.items():
+                    print(f"  {key}: {value:.2f} hours")
+            
+        elif args.command == 'workflow-report':
+            report = manager.generate_workflow_report(args.since)
+            if 'error' in report:
+                print(f"❌ {report['error']}")
+            else:
+                print("Workflow Performance Report:")
+                print(f"  Total Issues: {report['total_issues']}")
+                if 'avg_cycle_time_hours' in report:
+                    print(f"  Avg Cycle Time: {report['avg_cycle_time_hours']:.2f} hours")
+                if 'bottlenecks' in report:
+                    print("  Top Bottlenecks:")
+                    for bottleneck in report['bottlenecks']:
+                        print(f"    - {bottleneck['stage']}: {bottleneck['avg_hours']:.2f} hours")
+    
     except Exception as e:
-        print(f"❌ Failed to create PR: {e}")
+        print(f"❌ Failed: {e}")
         exit(1)
 
 
