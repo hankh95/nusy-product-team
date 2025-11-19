@@ -6,7 +6,7 @@ Santiago provides a REST API for external integration, allowing external systems
 
 ## Base URL
 
-```
+```text
 http://localhost:8000
 ```
 
@@ -19,6 +19,7 @@ Currently, the API does not require authentication. Authentication will be added
 All responses are in JSON format. Successful responses include a `result` field, while errors include an `error` field.
 
 ### Success Response
+
 ```json
 {
   "result": {
@@ -28,6 +29,7 @@ All responses are in JSON format. Successful responses include a `result` field,
 ```
 
 ### Error Response
+
 ```json
 {
   "error": "Error message",
@@ -44,6 +46,7 @@ Get the health status of the Santiago service.
 **Endpoint:** `GET /health`
 
 **Response:**
+
 ```json
 {
   "status": "healthy",
@@ -59,6 +62,7 @@ Get the health status of the Santiago service.
 ```
 
 **Status Codes:**
+
 - `200` - Service is healthy
 - `503` - Service is unhealthy
 
@@ -71,6 +75,7 @@ Create a new development task for Santiago agents to work on.
 **Endpoint:** `POST /tasks`
 
 **Request Body:**
+
 ```json
 {
   "task_description": "Implement user authentication system",
@@ -80,11 +85,13 @@ Create a new development task for Santiago agents to work on.
 ```
 
 **Parameters:**
+
 - `task_description` (string, required): Description of the task
 - `priority` (string, optional): Priority level ("low", "medium", "high")
 - `assignee` (string, optional): Agent to assign the task to
 
 **Response:**
+
 ```json
 {
   "task_id": "task_123456789",
@@ -97,6 +104,7 @@ Create a new development task for Santiago agents to work on.
 ```
 
 **Status Codes:**
+
 - `200` - Task created successfully
 - `500` - Internal server error
 
@@ -107,6 +115,7 @@ Get a list of active tasks.
 **Endpoint:** `GET /tasks`
 
 **Response:**
+
 ```json
 {
   "tasks": [],
@@ -126,6 +135,7 @@ Get a list of available Santiago agents.
 **Endpoint:** `GET /agents`
 
 **Response:**
+
 ```json
 {
   "agents": [
@@ -153,9 +163,11 @@ Execute a task with a specific agent.
 **Endpoint:** `POST /agents/{agent_name}/execute`
 
 **Path Parameters:**
+
 - `agent_name` (string): Name of the agent to execute the task
 
 **Request Body:**
+
 ```json
 {
   "task_description": "Refactor authentication module",
@@ -165,6 +177,7 @@ Execute a task with a specific agent.
 ```
 
 **Response:**
+
 ```json
 {
   "execution_id": "exec_123456789",
@@ -176,6 +189,7 @@ Execute a task with a specific agent.
 ```
 
 **Status Codes:**
+
 - `200` - Task execution started
 - `404` - Agent not found
 - `500` - Execution failed
@@ -189,6 +203,7 @@ The API uses standard HTTP status codes and provides detailed error messages:
 - `500` - Internal Server Error (server-side issues)
 
 Error responses include:
+
 ```json
 {
   "error": "Brief error description",
@@ -278,6 +293,7 @@ curl -X POST http://localhost:8000/agents/santiago-developer/execute \
 ## WebSocket Support (Future)
 
 Real-time communication via WebSockets will be added for:
+
 - Task progress updates
 - Agent status changes
 - Live logging
@@ -286,7 +302,8 @@ Real-time communication via WebSockets will be added for:
 ## API Versioning
 
 The API uses URL versioning. Current version is v1:
-```
+
+```text
 /api/v1/health
 /api/v1/tasks
 /api/v1/agents
@@ -295,6 +312,7 @@ The API uses URL versioning. Current version is v1:
 ## Monitoring
 
 API usage can be monitored through:
+
 - Application logs
 - Health endpoint metrics
 - Future: Prometheus metrics and Grafana dashboards
@@ -310,6 +328,7 @@ API usage can be monitored through:
 ## Changelog
 
 ### v1.0.0 (Current)
+
 - Initial API release
 - Health check endpoint
 - Task creation and agent listing

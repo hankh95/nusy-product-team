@@ -10,10 +10,10 @@
 
 ### Work Columns
 
-| **AI Team Work** *1 cards* | **Platform Team Work** *2 cards* | **Product Team Work** *0 cards* | **Research** *0 cards* |
-|:---:|:---:|:---:|:---:|
-| **🔄 Mistral LLM Integration & Role-Based AI Access** *feature* 👤 santiago-developer | **🔄 DGX Provisioning Automation** *feature* 👤 santiago-architect |  |  |
-|  | **🔄 DGX Readiness Preparation** *expedition* 👤 santiago-architect |  |  |
+| AI Team Work | Platform Team Work | Product Team Work | Research |
+|--------------|-------------------|------------------|----------|
+| 🔄 Mistral LLM Integration & Role-Based AI Access 👤 santiago-developer | 🔄 DGX Provisioning Automation 👤 santiago-architect |  |  |
+|  | 🔄 DGX Readiness Preparation 👤 santiago-architect |  |  |
 
 ### 🎯 Ready for DGX Deployment (High Priority)
 
@@ -32,20 +32,20 @@
 
 ## 👥 Human Task Board
 
-*Tasks available for human contributors and collaborators*
+### Tasks available for human contributors and collaborators
 
 **Board ID:** `human-tasks` | **Type:** human-work
 
 ### Board Columns
 
-| **Available Tasks** *6 cards* | **In Progress** *0 cards* | **Review** *0 cards* | **Completed** *0 cards* |
-|:---:|:---:|:---:|:---:|
-| **📝 Documentation Review** *Review and improve project docs* |   |   |   |
-| **🧪 Manual Testing** *Test new features manually* |   |   |   |
-| **🎨 UI/UX Design** *Design user interfaces* |   |   |   |
-| **📊 Data Analysis** *Analyze system performance data* |   |   |   |
-| **🤝 Stakeholder Communication** *Coordinate with external parties* |   |   |   |
-| **🔧 DevOps Support** *Infrastructure and deployment help* |   |   |   |
+| Available Tasks | In Progress | Review | Completed |
+|----------------|-------------|--------|-----------|
+| 📝 Documentation Review |   |   |   |
+| 🧪 Manual Testing |   |   |   |
+| 🎨 UI/UX Design |   |   |   |
+| 📊 Data Analysis |   |   |   |
+| 🤝 Stakeholder Communication |   |   |   |
+| 🔧 DevOps Support |   |   |   |
 
 ### 💡 How to Pick Up Tasks
 
@@ -66,16 +66,19 @@
 This file shows the complete project status across all boards.
 
 ### 🤖 For Santiago Agents (Autonomous Work)
+
 - **Master Board**: Overall project priorities and planning
 - **Active Development**: Current autonomous work in progress
 - **Kanban Rules**: Move cards through Ready → In Progress → Review → Done
 
 ### 👥 For Human Contributors
+
 - **Human Task Board**: Tasks suitable for human involvement
 - **Claim tasks** by adding comments and moving to "In Progress"
 - **Collaborate** with autonomous agents on complex tasks
 
 ### 📊 Board Management
+
 ```bash
 # View all boards
 cd santiago-pm && python -m tackle.kanban.kanban_cli list-boards

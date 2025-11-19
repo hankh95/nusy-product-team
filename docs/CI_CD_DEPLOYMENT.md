@@ -81,6 +81,7 @@ make ci
 **Purpose**: Local development and testing
 **Deployment**: Direct Python execution or Docker
 **Features**:
+
 - Hot reload enabled
 - Debug logging
 - Local database/storage
@@ -98,6 +99,7 @@ make docker-run
 **Purpose**: Integration testing and validation
 **Deployment**: Docker Compose with full service stack
 **Features**:
+
 - Production-like configuration
 - Full service dependencies (Redis, monitoring)
 - Automated deployment from CI/CD
@@ -112,6 +114,7 @@ make deploy-staging
 **Purpose**: Live Santiago operation
 **Deployment**: Container orchestration (Docker/Kubernetes)
 **Features**:
+
 - High availability
 - Monitoring and alerting
 - Security hardening
@@ -163,31 +166,39 @@ The `docker-compose.yml` defines the complete service stack with:
 Santiago provides a REST API for external integration:
 
 ### Health Check
+
 ```http
 GET /health
 ```
+
 Returns service health status and version information.
 
 ### Task Management
+
 ```http
 POST /tasks
 ```
+
 Create new development tasks for Santiago agents.
 
 ```http
 GET /tasks
 ```
+
 List active tasks and their status.
 
 ### Agent Operations
+
 ```http
 GET /agents
 ```
+
 List available Santiago agents.
 
 ```http
 POST /agents/{agent_name}/execute
 ```
+
 Execute tasks with specific agents.
 
 ### Example Usage

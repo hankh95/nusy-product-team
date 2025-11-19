@@ -1,6 +1,6 @@
 # Santiago Factory
 
-**A self-bootstrapping AI agent factory that builds domain-specific contractors**
+## A self-bootstrapping AI agent factory that builds domain-specific contractors
 
 Santiago is NOT a team. It IS a factory that builds specialized AI agents (Santiagos) for specific domains. Each Santiago is a contractor—you hire them, they do the work, they leave. The factory learns from each build and improves itself.
 
@@ -132,6 +132,7 @@ Santiago implements the **"Old Man and the Sea"** pattern:
 3. **Fishnet** — Test + manifest generation (BDD + MCP contract)
 
 Each Santiago built by the factory:
+
 - Has **domain knowledge** stored in `knowledge/catches/<santiago>/`
 - Has **BDD tests** validating that knowledge
 - Has **MCP manifest** defining its service contract
@@ -145,7 +146,7 @@ The factory **self-improves**: as it builds more Santiagos, it learns patterns a
 
 Before real Santiagos exist, we use **proxy agents**—thin wrappers around external APIs:
 
-```
+```text
 Phase 0: Proxy agents (external APIs) ← WE ARE HERE
 Phase 1: First real Santiago built (factory can self-improve)
 Phase 2+: Real Santiagos replace proxies one by one
@@ -158,7 +159,8 @@ See `santiago_core/agents/_proxy/` and `docs/vision/fake_team_pack/`.
 ## Architecture Highlights
 
 ### Knowledge Storage
-```
+
+```text
 knowledge/
 ├── catches/
 │   ├── index.yaml              # Trust registry
@@ -172,11 +174,13 @@ knowledge/
 ```
 
 ### Capability Levels
+
 - **Apprentice** — Pond scope, basic tasks, proxy level
 - **Journeyman** — Lake scope, production-ready, A/B ≥90%
 - **Master** — Sea/Ocean scope, self-improving, teaches others
 
 ### Governance
+
 - **Queue-first** KG writes (idempotency, validation, provenance)
 - **A/B parity** ≥90% before promotion
 - **Rehearsal pass rate** ≥95% BDD tests
@@ -187,7 +191,7 @@ knowledge/
 
 ## Project Structure
 
-```
+```text
 /santiago-factory/
 ├── ARCHITECTURE.md              # Full architecture (canonical)
 ├── MIGRATION_ROADMAP.md         # M0-M4 implementation plan
@@ -271,6 +275,7 @@ From Hemingway's *The Old Man and the Sea*:
 > Santiago fishes for 84 days without a catch, then lands a giant marlin through skill, patience, and learning from each failure.
 
 The factory embodies this:
+
 - **Persistent iteration** (keeps trying, learns from failures)
 - **Deep expertise** (domain knowledge extraction)
 - **Self-improvement** (meta-learning from each build)
@@ -306,6 +311,7 @@ See `docs/vision/building-on-DGX/`.
 ## Archive
 
 Historical artifacts preserved in `_archive/`:
+
 - Research explorations (`_archive/research/`)
 - Old architecture plans (`_archive/plans/`)
 - Legacy code (`_archive/legacy/`)

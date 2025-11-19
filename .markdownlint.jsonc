@@ -14,5 +14,7 @@
   // Require trailing pipes in tables for consistency
   "MD055": true,
   // Proper spacing around code fences inside lists
-  "MD058": true
+  "MD058": true,
+  // Allow flexible table column styles
+  "MD060": false
 }
