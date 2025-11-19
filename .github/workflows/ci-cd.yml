@@ -50,8 +50,35 @@ jobs:
 
       - name: Run linting
         run: |
-          # Markdown linting
-          npx --yes markdownlint-cli2 "**/*.md" "#node_modules" "#.git"
+          # Markdown linting - only changed files
+          if [ "${{ github.event_name }}" = "push" ]; then
+            # For pushes, compare with the previous commit
+            PREV_SHA=$(git rev-parse HEAD~1 2>/dev/null || echo "")
+            if [[ -n "$PREV_SHA" ]]; then
+              mapfile -t MD_FILES < <(git diff --name-only "$PREV_SHA" HEAD -- '**/*.md')
+              if (( ${#MD_FILES[@]} > 0 )); then
+                echo "Linting changed Markdown files: ${MD_FILES[*]}"
+                npx --yes markdownlint-cli2 "${MD_FILES[@]}"
+              else
+                echo "No Markdown files changed, skipping markdown linting"
+              fi
+            else
+              echo "First commit, skipping markdown linting"
+            fi
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
+            # For PRs, compare with base branch
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            mapfile -t MD_FILES < <(git diff --name-only "$BASE_SHA" HEAD -- '**/*.md')
+            if (( ${#MD_FILES[@]} > 0 )); then
+              echo "Linting changed Markdown files: ${MD_FILES[*]}"
+              npx --yes markdownlint-cli2 "${MD_FILES[@]}"
+            else
+              echo "No Markdown files changed, skipping markdown linting"
+            fi
+          else
+            echo "Skipping markdown linting for workflow_dispatch"
+          fi
+          
           # Turtle/TTL linting
           python tools/lint_ttl.py
 
