@@ -27,9 +27,8 @@ dependencies = [
     "aiohttp",
 ]
 
-[tool.setuptools.packages.find]
-include = ["santiago_core*"]
-exclude = ["core", "agents", "services"]
+[tool.setuptools]
+packages = ["santiago_core"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
