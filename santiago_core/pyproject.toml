@@ -28,7 +28,7 @@ dependencies = [
 ]
 
 [tool.setuptools.packages.find]
-where = "."
+where = ["."]
 include = ["*"]
 
 [tool.pytest.ini_options]
