@@ -29,7 +29,7 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["*"]
+include = ["santiago_core*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
