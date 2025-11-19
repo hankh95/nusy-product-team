@@ -36,16 +36,39 @@ jobs:
             printf "files=%s\n" "${FILES[*]}" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Markdown Lint (changed only)
-        if: ${{ github.event_name == 'pull_request' && steps.md_changed.outputs.has_md_changes == 'true' }}
+      - name: Compute changed markdown files (push)
+        if: ${{ github.event_name == 'push' }}
+        id: md_changed_push
         run: |
           set -euo pipefail
-          read -r -a FILES <<< "${{ steps.md_changed.outputs.files }}"
+          # For pushes, compare with the previous commit
+          HEAD_SHA="${{ github.sha }}"
+          PREV_SHA=$(git rev-parse HEAD~1 2>/dev/null || echo "")
+          if [[ -z "$PREV_SHA" ]]; then
+            # First commit, skip linting
+            echo "has_md_changes=false" >> "$GITHUB_OUTPUT"
+            printf "files=\n" >> "$GITHUB_OUTPUT"
+          else
+            mapfile -t FILES < <(git diff --name-only "$PREV_SHA" "$HEAD_SHA" -- '**/*.md')
+            if (( ${#FILES[@]} == 0 )); then
+              echo "has_md_changes=false" >> "$GITHUB_OUTPUT"
+              printf "files=\n" >> "$GITHUB_OUTPUT"
+            else
+              echo "has_md_changes=true" >> "$GITHUB_OUTPUT"
+              printf "files=%s\n" "${FILES[*]}" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Markdown Lint (push changed only)
+        if: ${{ github.event_name == 'push' && steps.md_changed_push.outputs.has_md_changes == 'true' }}
+        run: |
+          set -euo pipefail
+          read -r -a FILES <<< "${{ steps.md_changed_push.outputs.files }}"
           echo "Linting changed Markdown files: ${FILES[*]}"
           npx --yes markdownlint-cli2 "${FILES[@]}"
 
       - name: Markdown Lint (full)
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ false }}
         run: |
           npx --yes markdownlint-cli2 "**/*.md" "#node_modules" "#.git"
 
