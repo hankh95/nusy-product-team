@@ -167,6 +167,8 @@ class TestBaseProxyAgent:
     @pytest.mark.asyncio
     async def test_budget_exceeded(self, mock_proxy):
         """Should raise error when budget exceeded"""
+        # Enable budget tracking for this test
+        mock_proxy.config.budget_tracking = True
         mock_proxy.budget_spent = 30.0  # Exceed daily budget
 
         with pytest.raises(ProxyBudgetExceeded):

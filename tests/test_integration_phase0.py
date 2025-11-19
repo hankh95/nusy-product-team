@@ -18,33 +18,45 @@ class TestLLMRouting:
     
     def test_architect_routes_to_xai(self):
         """Architect role should route to xAI (Grok)"""
+        # Disable API key requirement for testing
+        import os
+        os.environ["REQUIRE_API_KEYS"] = "false"
         router = LLMRouter()
         
         config = router.get_config("architect_proxy", TaskComplexity.COMPLEX)
         
         assert config.provider.value == LLMProvider.XAI.value
-        assert config.model == "grok-beta"
+        assert config.model == "grok-4-fast"
     
     def test_developer_routes_to_openai(self):
         """Developer role should route to OpenAI"""
+        # Disable API key requirement for testing
+        import os
+        os.environ["REQUIRE_API_KEYS"] = "false"
         router = LLMRouter()
         
         config = router.get_config("developer_proxy", TaskComplexity.SIMPLE)
         
         assert config.provider.value == LLMProvider.OPENAI.value
-        assert config.model == "gpt-4o-mini"
+        assert config.model == "gpt-5-nano"
     
     def test_ethicist_routes_to_xai(self):
         """Ethicist role should route to xAI (Grok)"""
+        # Disable API key requirement for testing
+        import os
+        os.environ["REQUIRE_API_KEYS"] = "false"
         router = LLMRouter()
         
         config = router.get_config("ethicist_proxy", TaskComplexity.COMPLEX)
         
         assert config.provider.value == LLMProvider.XAI.value
-        assert config.model == "grok-beta"
+        assert config.model == "grok-4-fast"
     
     def test_complexity_affects_model_selection_openai(self):
         """OpenAI model selection should vary by complexity"""
+        # Disable API key requirement for testing
+        import os
+        os.environ["REQUIRE_API_KEYS"] = "false"
         router = LLMRouter()
         
         simple = router.get_config("developer_proxy", TaskComplexity.SIMPLE)
@@ -52,10 +64,10 @@ class TestLLMRouting:
         complex_task = router.get_config("developer_proxy", TaskComplexity.COMPLEX)
         critical = router.get_config("developer_proxy", TaskComplexity.CRITICAL)
         
-        assert simple.model == "gpt-4o-mini"
-        assert moderate.model == "gpt-4o"
-        assert complex_task.model == "gpt-4o"
-        assert critical.model == "o1-preview"
+        assert simple.model == "gpt-5-nano"
+        assert moderate.model == "gpt-5.1"
+        assert complex_task.model == "gpt-5.1"
+        assert critical.model == "o3"
     
     def test_task_complexity_detection(self):
         """Test automatic complexity detection from tool names"""
@@ -259,7 +271,7 @@ class TestProxyIntegration:
         
         # PM should route to OpenAI for dev tasks
         config = pm.llm_router.get_config("pm_proxy", TaskComplexity.MODERATE)
-        assert config.provider == LLMProvider.OPENAI.value
+        assert config.provider == LLMProvider.OPENAI
     
     async def test_ethicist_async_mode(self):
         """Test ethicist operates in async mode"""
@@ -278,4 +290,4 @@ class TestProxyIntegration:
         assert ethicist.ethical_mode == "async"
         
         # Verify core principles configured
-        assert "Service to Humanity" in str(ethicist.bahai_principles)
+        assert "Unity of Humanity" in str(ethicist.bahai_principles)

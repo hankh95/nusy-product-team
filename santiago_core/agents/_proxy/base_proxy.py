@@ -45,6 +45,7 @@ class ProxyConfig(BaseModel):
     log_dir: str = "ships-logs/proxy/"
     cost_per_call: float = 0.02  # Default cost estimate
     budget_tracking: bool = False  # Disabled by default per user decision
+    budget_per_day: float = Field(default=25.0, gt=0)  # Daily budget limit when tracking enabled
 
 
 class ProxyBudgetExceeded(Exception):
