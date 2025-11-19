@@ -45,6 +45,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -e .
+          pip install -e ./santiago_core
           # Install test dependencies
           pip install pytest pytest-cov pytest-bdd pytest-asyncio coverage[toml]
 
