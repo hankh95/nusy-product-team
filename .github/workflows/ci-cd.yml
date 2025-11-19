@@ -1,0 +1,269 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      deploy_to_production:
+        description: 'Deploy to production after tests pass'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+          # Install test dependencies
+          pip install pytest pytest-cov pytest-bdd pytest-asyncio coverage[toml]
+
+      - name: Run linting
+        run: |
+          # Markdown linting
+          npx --yes markdownlint-cli2 "**/*.md" "#node_modules" "#.git"
+          # Turtle/TTL linting
+          python tools/lint_ttl.py
+
+      - name: Run tests with coverage
+        run: |
+          pytest --cov=santiago_core --cov=nusy_pm_core --cov=nusy_orchestrator \
+                 --cov-report=xml --cov-report=term-missing --cov-fail-under=80 \
+                 -v tests/
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+      - name: Run smoke tests
+        run: |
+          python smoke_test.py
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+
+  quality-gate:
+    needs: test
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Run quality checks
+        run: |
+          # Check for security vulnerabilities
+          pip install safety
+          safety check
+
+          # Check code complexity
+          pip install radon
+          radon cc --min C --max C --show-complexity --total-average santiago_core/ || true
+
+          # Check for code smells
+          pip install flake8
+          flake8 santiago_core/ --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 santiago_core/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Generate test report
+        run: |
+          pip install pytest-html
+          pytest --html=test-report.html --self-contained-html tests/ || true
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            test-report.html
+            coverage.xml
+          retention-days: 30
+
+  deploy-staging:
+    needs: [test, quality-gate]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event.inputs.deploy_to_production == 'true')
+    environment: staging
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy to staging
+        run: |
+          # Create deployment package
+          zip -r santiago-deployment.zip . \
+            -x "*.git*" "*.github*" "*__pycache__*" "*.pytest_cache*" "*tests*" "*docs*" "*.env*"
+
+          # Upload to S3 for deployment
+          aws s3 cp santiago-deployment.zip s3://santiago-deployments/staging/${{ github.sha }}/santiago-deployment.zip
+
+          # Trigger deployment via Lambda or ECS
+          aws lambda invoke --function-name santiago-deploy-staging \
+            --payload "{\"version\": \"${{ github.sha }}\", \"environment\": \"staging\"}" \
+            response.json
+
+      - name: Run staging smoke tests
+        run: |
+          # Wait for deployment to complete
+          sleep 60
+
+          # Run smoke tests against staging
+          python -c "
+          import requests
+          import time
+
+          # Test staging endpoint
+          staging_url = 'https://staging.santiago.nusy.ai/health'
+          for i in range(10):
+              try:
+                  response = requests.get(staging_url, timeout=10)
+                  if response.status_code == 200:
+                      print('✅ Staging deployment successful')
+                      exit(0)
+              except:
+                  pass
+              time.sleep(5)
+
+          print('❌ Staging deployment failed')
+          exit(1)
+          "
+
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    if: github.event.inputs.deploy_to_production == true
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy to production
+        run: |
+          # Promote staging deployment to production
+          aws lambda invoke --function-name santiago-promote-to-production \
+            --payload "{\"version\": \"${{ github.sha }}\", \"source\": \"staging\"}" \
+            response.json
+
+      - name: Run production smoke tests
+        run: |
+          # Wait for deployment to complete
+          sleep 120
+
+          # Run smoke tests against production
+          python -c "
+          import requests
+          import time
+
+          # Test production endpoint
+          prod_url = 'https://santiago.nusy.ai/health'
+          for i in range(15):
+              try:
+                  response = requests.get(prod_url, timeout=10)
+                  if response.status_code == 200:
+                      print('✅ Production deployment successful')
+                      exit(0)
+              except:
+                  pass
+              time.sleep(10)
+
+          print('❌ Production deployment failed')
+          exit(1)
+          "
+
+      - name: Create GitHub release
+        if: success()
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release v${{ github.run_number }}
+          body: |
+            ## Changes
+            Automated deployment of Santiago v${{ github.run_number }}
+
+            ### Test Results
+            - ✅ All tests passed
+            - ✅ Code coverage > 80%
+            - ✅ Quality gates passed
+            - ✅ Staging deployment successful
+            - ✅ Production deployment successful
+
+            ### Deployment Details
+            - SHA: ${{ github.sha }}
+            - Branch: ${{ github.ref }}
+            - Environment: Production
+          draft: false
+          prerelease: false

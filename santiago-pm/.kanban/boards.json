@@ -35,56 +35,6 @@
             "completed_at": null
           },
           {
-            "card_id": "card_EXP-DGX_20251118_164711",
-            "item_reference": {
-              "item_id": "EXP-DGX",
-              "item_type": "expedition",
-              "repository_path": "EXPEDITION-dgx-readiness-preparation.md",
-              "title": "DGX Readiness Preparation",
-              "description": "Prepare infrastructure and team for DGX deployment arriving tomorrow",
-              "priority": "high",
-              "assignee": "platform-team",
-              "labels": [],
-              "created_at": "2025-11-18T16:47:11.091174",
-              "updated_at": "2025-11-18T16:47:11.091175"
-            },
-            "column": "backlog",
-            "position": 1,
-            "swimlane_id": null,
-            "comments": [],
-            "tags": [],
-            "blocked_reason": null,
-            "created_at": "2025-11-18T16:47:11.091190",
-            "moved_at": "2025-11-18T16:47:11.091190",
-            "started_at": null,
-            "completed_at": null
-          },
-          {
-            "card_id": "card_FEAT-DGX-PROV_20251118_164711",
-            "item_reference": {
-              "item_id": "FEAT-DGX-PROV",
-              "item_type": "feature",
-              "repository_path": "features/dgx-provisioning-automation.feature",
-              "title": "DGX Provisioning Automation",
-              "description": "Automate DGX provisioning and configuration",
-              "priority": "high",
-              "assignee": "platform-team",
-              "labels": [],
-              "created_at": "2025-11-18T16:47:11.091787",
-              "updated_at": "2025-11-18T16:47:11.091788"
-            },
-            "column": "backlog",
-            "position": 2,
-            "swimlane_id": null,
-            "comments": [],
-            "tags": [],
-            "blocked_reason": null,
-            "created_at": "2025-11-18T16:47:11.091799",
-            "moved_at": "2025-11-18T16:47:11.091799",
-            "started_at": null,
-            "completed_at": null
-          },
-          {
             "card_id": "card_FEAT-AUTO-EXEC_20251118_164711",
             "item_reference": {
               "item_id": "FEAT-AUTO-EXEC",
@@ -156,31 +106,6 @@
             "blocked_reason": null,
             "created_at": "2025-11-18T16:49:02.717779",
             "moved_at": "2025-11-18T16:49:02.717779",
-            "started_at": null,
-            "completed_at": null
-          },
-          {
-            "card_id": "card_FEAT-MISTRAL-INT_20251118_164902",
-            "item_reference": {
-              "item_id": "FEAT-MISTRAL-INT",
-              "item_type": "feature",
-              "repository_path": "features/mistral-llm-integration.feature",
-              "title": "Mistral LLM Integration & Role-Based AI Access",
-              "description": "Load Mistral LLM and enable role-based AI access with external fallback capability",
-              "priority": "high",
-              "assignee": "ai-team",
-              "labels": [],
-              "created_at": "2025-11-18T16:49:02.719108",
-              "updated_at": "2025-11-18T16:49:02.719111"
-            },
-            "column": "backlog",
-            "position": 6,
-            "swimlane_id": null,
-            "comments": [],
-            "tags": [],
-            "blocked_reason": null,
-            "created_at": "2025-11-18T16:49:02.719128",
-            "moved_at": "2025-11-18T16:49:02.719129",
             "started_at": null,
             "completed_at": null
           },
@@ -642,7 +567,104 @@
       "ready": {
         "column_type": "ready",
         "title": "Ready",
-        "cards": [],
+        "cards": [
+          {
+            "card_id": "card_FEAT-MISTRAL-INT_20251118_164902",
+            "item_reference": {
+              "item_id": "FEAT-MISTRAL-INT",
+              "item_type": "feature",
+              "repository_path": "features/mistral-llm-integration.feature",
+              "title": "Mistral LLM Integration & Role-Based AI Access",
+              "description": "Load Mistral LLM and enable role-based AI access with external fallback capability",
+              "priority": "high",
+              "assignee": "ai-team",
+              "labels": [],
+              "created_at": "2025-11-18T16:49:02.719108",
+              "updated_at": "2025-11-18T16:49:02.719111"
+            },
+            "column": "ready",
+            "position": 0,
+            "swimlane_id": null,
+            "comments": [
+              {
+                "content": "Moved to ready by noesis: Prioritizing for DGX arrival tomorrow",
+                "author": "noesis",
+                "created_at": "2025-11-18T20:14:14.036852",
+                "tags": []
+              }
+            ],
+            "tags": [],
+            "blocked_reason": null,
+            "created_at": "2025-11-18T16:49:02.719128",
+            "moved_at": "2025-11-18T20:14:14.036846",
+            "started_at": null,
+            "completed_at": null
+          },
+          {
+            "card_id": "card_FEAT-DGX-PROV_20251118_164711",
+            "item_reference": {
+              "item_id": "FEAT-DGX-PROV",
+              "item_type": "feature",
+              "repository_path": "features/dgx-provisioning-automation.feature",
+              "title": "DGX Provisioning Automation",
+              "description": "Automate DGX provisioning and configuration",
+              "priority": "high",
+              "assignee": "platform-team",
+              "labels": [],
+              "created_at": "2025-11-18T16:47:11.091787",
+              "updated_at": "2025-11-18T16:47:11.091788"
+            },
+            "column": "ready",
+            "position": 1,
+            "swimlane_id": null,
+            "comments": [
+              {
+                "content": "Moved to ready by noesis: Prioritizing for DGX arrival tomorrow",
+                "author": "noesis",
+                "created_at": "2025-11-18T20:14:14.035639",
+                "tags": []
+              }
+            ],
+            "tags": [],
+            "blocked_reason": null,
+            "created_at": "2025-11-18T16:47:11.091799",
+            "moved_at": "2025-11-18T20:14:14.035632",
+            "started_at": null,
+            "completed_at": null
+          },
+          {
+            "card_id": "card_EXP-DGX_20251118_164711",
+            "item_reference": {
+              "item_id": "EXP-DGX",
+              "item_type": "expedition",
+              "repository_path": "EXPEDITION-dgx-readiness-preparation.md",
+              "title": "DGX Readiness Preparation",
+              "description": "Prepare infrastructure and team for DGX deployment arriving tomorrow",
+              "priority": "high",
+              "assignee": "platform-team",
+              "labels": [],
+              "created_at": "2025-11-18T16:47:11.091174",
+              "updated_at": "2025-11-18T16:47:11.091175"
+            },
+            "column": "ready",
+            "position": 2,
+            "swimlane_id": null,
+            "comments": [
+              {
+                "content": "Moved to ready by noesis: Prioritizing for DGX arrival tomorrow",
+                "author": "noesis",
+                "created_at": "2025-11-18T20:14:14.034320",
+                "tags": []
+              }
+            ],
+            "tags": [],
+            "blocked_reason": null,
+            "created_at": "2025-11-18T16:47:11.091190",
+            "moved_at": "2025-11-18T20:14:14.034248",
+            "started_at": null,
+            "completed_at": null
+          }
+        ],
         "wip_limit": null,
         "is_closed": false,
         "is_archived": false
@@ -675,7 +697,7 @@
     "swimlanes": {},
     "parent_board_id": null,
     "created_at": "2025-11-18T16:37:31.270797",
-    "updated_at": "2025-11-18T16:51:26.243153"
+    "updated_at": "2025-11-18T20:14:14.036854"
   },
   "integration-demo": {
     "board_id": "integration-demo",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-11-18 16:51:31.946740",
+  "generated_at": "2025-11-18 20:13:42.837330",
   "total_items": 25,
   "dgx_readiness_plan": [
     {
@@ -130,8 +130,8 @@
       "assignee": "ai-team",
       "estimated_effort": 8,
       "required_skills": [
-        "ml",
         "deep-learning",
+        "ml",
         "ai"
       ],
       "rationale": "MEDIUM priority (0.45) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (0.90)\n  \u2022 High learning value - reduces uncertainty (0.65)",
@@ -151,8 +151,8 @@
       "assignee": "ai-team",
       "estimated_effort": 16,
       "required_skills": [
-        "ml",
         "deep-learning",
+        "ml",
         "ai"
       ],
       "rationale": "MEDIUM priority (0.45) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (0.90)\n  \u2022 High learning value - reduces uncertainty (0.65)",
@@ -372,8 +372,8 @@
       "assignee": "ai-team",
       "estimated_effort": 13,
       "required_skills": [
-        "ml",
         "deep-learning",
+        "ml",
         "ai"
       ],
       "rationale": "MEDIUM priority (0.41) because:\n  \u2022 Does not unblock other work\n  \u2022 Workers available with right skills (0.90)",
@@ -453,10 +453,10 @@
       "assignee": "ai-team",
       "estimated_effort": 13,
       "required_skills": [
-        "qa",
         "ml",
-        "testing",
-        "ai"
+        "ai",
+        "qa",
+        "testing"
       ],
       "rationale": "LOW priority (0.34) because:\n  \u2022 Strong customer value (0.70)\n  \u2022 Does not unblock other work\n  \u2022 Limited worker availability (0.00)\n  \u2022 High learning value - reduces uncertainty (0.65)",
       "factors": {
@@ -497,10 +497,10 @@
       "assignee": "ai-team",
       "estimated_effort": 8,
       "required_skills": [
-        "qa",
         "ml",
-        "testing",
-        "ai"
+        "ai",
+        "qa",
+        "testing"
       ],
       "rationale": "LOW priority (0.23) because:\n  \u2022 Does not unblock other work\n  \u2022 Limited worker availability (0.00)",
       "factors": {

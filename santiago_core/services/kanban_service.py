@@ -13,8 +13,10 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime
 
 from santiago_core.core.mcp_service import MCPServer, MCPTool, MCPToolResult
-from santiago_pm.tackle.kanban.kanban_service import KanbanService
-from santiago_pm.tackle.kanban.kanban_model import ColumnType, ItemType, BoardType
+import sys
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "santiago-pm"))
+from tackle.kanban.kanban_service import KanbanService
+from tackle.kanban.kanban_model import ColumnType, ItemType, BoardType
 
 # Import the neurosymbolic prioritizer
 import sys
@@ -175,10 +177,13 @@ class SantiagoKanbanService(MCPServer):
         ))
 
         self.register_tool(MCPTool(
-            name="kanban_get_dgx_readiness_priorities",
-            description="Prioritize work items for DGX readiness (arrives tomorrow)",
+            name="kanban_close_issue",
+            description="Close an issue when work is completed (moves card to done and marks issue closed)",
             parameters={
-                "board_id": {"type": "string", "description": "Board to analyze"}
+                "board_id": {"type": "string", "description": "Board containing the card"},
+                "card_id": {"type": "string", "description": "Card/issue to close"},
+                "closed_by": {"type": "string", "description": "Person/agent closing the issue", "required": False},
+                "close_reason": {"type": "string", "description": "Reason for closing", "required": False}
             }
         ))
 
@@ -216,6 +221,8 @@ class SantiagoKanbanService(MCPServer):
                 return await self._handle_prioritize_item(parameters)
             elif tool_name == "kanban_get_dgx_readiness_priorities":
                 return await self._handle_dgx_readiness_priorities(parameters)
+            elif tool_name == "kanban_close_issue":
+                return await self._handle_close_issue(parameters)
             else:
                 return MCPToolResult(error=f"Unknown tool: {tool_name}")
 
@@ -596,6 +603,36 @@ class SantiagoKanbanService(MCPServer):
 
         # Nice to have
         return {"readiness_level": "nice_to_have", "blocks_dgx": False, "timeline": "post_dgx"}
+
+    async def _handle_close_issue(self, params: Dict[str, Any]) -> MCPToolResult:
+        """Handle issue closing by moving card to done column"""
+        try:
+            # Move card to done column
+            result = self.kanban_service.move_card_with_validation(
+                board_id=params["board_id"],
+                card_id=params["card_id"],
+                new_column=ColumnType.DONE,
+                moved_by=params.get("closed_by", "santiago-developer"),
+                reason=params.get("close_reason", "Work completed following full development workflow")
+            )
+
+            # Add a completion comment
+            self.kanban_service.add_comment_to_card(
+                board_id=params["board_id"],
+                card_id=params["card_id"],
+                comment_text=f"✅ Issue closed by {params.get('closed_by', 'santiago-developer')}. {params.get('close_reason', 'Work completed successfully.')}",
+                author=params.get("closed_by", "santiago-developer")
+            )
+
+            return MCPToolResult(result={
+                "success": True,
+                "card_id": params["card_id"],
+                "moved_to": "done",
+                "closed_by": params.get("closed_by", "santiago-developer")
+            })
+
+        except Exception as e:
+            return MCPToolResult(error=f"Failed to close issue {params['card_id']}: {str(e)}")
 
 
 # Service entry point

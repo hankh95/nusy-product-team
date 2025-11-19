@@ -296,7 +296,7 @@ $(ls -la "$MODEL_DIR")
 Next Steps:
 1. Configure vLLM service: ./configure_vllm.sh
 2. Test inference service: ./test_inference.sh
-3. Setup multi-agent runtime: ./setup_multi_agent.sh
+3. Review complete setup guide: docs/vision/building-on-DGX/mistral_setup_guide.md
 
 Log file: $LOG_FILE
 Registry: $MODEL_DIR/model_registry.json

@@ -910,8 +910,8 @@ class UnifiedKanbanSystem:
 
                 for board_data in data.values():
                     # Convert timestamps
-                    board_data['created_at'] = datetime.fromisoformat(board_data['created_at'])
-                    board_data['updated_at'] = datetime.fromisoformat(board_data['updated_at'])
+                    board_data['created_at'] = self._parse_timestamp(board_data['created_at'])
+                    board_data['updated_at'] = self._parse_timestamp(board_data['updated_at'])
 
                     # Convert board type
                     if isinstance(board_data['board_type'], str):
@@ -928,8 +928,8 @@ class UnifiedKanbanSystem:
                         for card_data in col_data.get('cards', []):
                             # Convert item reference
                             item_ref_data = card_data['item_reference']
-                            item_ref_data['created_at'] = datetime.fromisoformat(item_ref_data['created_at'])
-                            item_ref_data['updated_at'] = datetime.fromisoformat(item_ref_data['updated_at'])
+                            item_ref_data['created_at'] = self._parse_timestamp(item_ref_data['created_at'])
+                            item_ref_data['updated_at'] = self._parse_timestamp(item_ref_data['updated_at'])
                             if isinstance(item_ref_data['item_type'], str):
                                 item_ref_data['item_type'] = ItemType(item_ref_data['item_type'])
                             elif hasattr(item_ref_data['item_type'], 'value'):
@@ -941,8 +941,8 @@ class UnifiedKanbanSystem:
                             card_data['item_reference'] = ItemReference(**item_ref_data)
 
                             # Convert card timestamps
-                            card_data['created_at'] = datetime.fromisoformat(card_data['created_at'])
-                            card_data['moved_at'] = datetime.fromisoformat(card_data['moved_at'])
+                            card_data['created_at'] = self._parse_timestamp(card_data['created_at'])
+                            card_data['moved_at'] = self._parse_timestamp(card_data['moved_at'])
                             if isinstance(card_data['column'], str):
                                 card_data['column'] = ColumnType(card_data['column'])
                             elif hasattr(card_data['column'], 'value'):
@@ -955,7 +955,7 @@ class UnifiedKanbanSystem:
                             if 'comments' in card_data:
                                 converted_comments = []
                                 for comment_data in card_data['comments']:
-                                    comment_data['created_at'] = datetime.fromisoformat(comment_data['created_at'])
+                                    comment_data['created_at'] = self._parse_timestamp(comment_data['created_at'])
                                     converted_comments.append(Comment(**comment_data))
                                 card_data['comments'] = converted_comments
                             else:
@@ -988,7 +988,7 @@ class UnifiedKanbanSystem:
 
                     # Convert swimlanes
                     for sl_key, sl_data in board_data.get('swimlanes', {}).items():
-                        sl_data['created_at'] = datetime.fromisoformat(sl_data['created_at'])
+                        sl_data['created_at'] = self._parse_timestamp(sl_data['created_at'])
                         board_data['swimlanes'][sl_key] = Swimlane(**sl_data)
 
                     board = KanbanBoard(**board_data)
@@ -997,9 +997,29 @@ class UnifiedKanbanSystem:
             except Exception as e:
                 print(f"Warning: Could not load boards: {e}")
 
+    def _parse_timestamp(self, timestamp_str):
+        """Parse timestamp that could be ISO format or Unix timestamp"""
+        if isinstance(timestamp_str, str):
+            try:
+                # Try ISO format first
+                return datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
+            except ValueError:
+                try:
+                    # Try Unix timestamp (float)
+                    return datetime.fromtimestamp(float(timestamp_str), tz=timezone.utc)
+                except (ValueError, TypeError):
+                    # Fallback to current time
+                    return datetime.now(timezone.utc)
+        elif isinstance(timestamp_str, (int, float)):
+            # Unix timestamp as number
+            return datetime.fromtimestamp(timestamp_str, tz=timezone.utc)
+        elif isinstance(timestamp_str, datetime):
+            return timestamp_str
+        else:
+            # Fallback
+            return datetime.now(timezone.utc)
+
     def _save_boards(self):
-        """Save boards to storage"""
-        boards_file = self.storage_path / "boards.json"
         try:
             data = {}
             for board_id, board in self.boards.items():

@@ -27,6 +27,102 @@ cat _archive/docs/DEVELOPMENT_PLAN.md
 
 ---
 
+## Development & Deployment
+
+### Local Development
+
+```bash
+# Run full CI pipeline locally
+make ci
+
+# Run tests with coverage
+make test-cov
+
+# Start development server
+make serve-reload
+
+# Deploy to local development
+make deploy-dev
+```
+
+### Testing
+
+```bash
+# Run all tests
+make test
+
+# Run smoke tests (API connectivity)
+make test-smoke
+
+# Run tests with coverage report
+make test-cov
+```
+
+### Docker Deployment
+
+```bash
+# Build Docker image
+make docker-build
+
+# Run with Docker Compose
+make docker-run
+
+# View logs
+make docker-logs
+
+# Stop containers
+make docker-stop
+```
+
+### CI/CD Pipeline
+
+The project uses GitHub Actions for automated testing and deployment:
+
+- **Linting**: Markdown and code quality checks
+- **Testing**: Unit tests with 80% coverage requirement
+- **Quality Gates**: Security scanning and complexity analysis
+- **Multi-stage Deployment**: Development → Staging → Production
+
+#### Deployment Environments
+
+- **Development**: Local deployment with hot reload
+- **Staging**: Docker-based deployment for integration testing
+- **Production**: Full production deployment with monitoring
+
+#### Manual Deployment
+
+```bash
+# Deploy to staging
+make deploy-staging
+
+# Deploy to production
+make deploy-prod
+
+# Or use the deployment script directly
+./scripts/deploy.sh production
+```
+
+### API Endpoints
+
+Once deployed, Santiago provides REST API endpoints:
+
+- `GET /health` - Health check
+- `POST /tasks` - Create development tasks
+- `GET /tasks` - List active tasks
+- `GET /agents` - List available agents
+- `POST /agents/{name}/execute` - Execute tasks with specific agents
+
+---
+
+## Documentation
+
+- **[CI/CD & Deployment Guide](docs/CI_CD_DEPLOYMENT.md)**: Complete CI/CD and deployment documentation
+- **[API Reference](docs/API_REFERENCE.md)**: REST API documentation and examples
+- **[Development Practices](DEVELOPMENT_PRACTICES.md)**: TDD/BDD and development standards
+- **[Architecture](ARCHITECTURE.md)**: System architecture and design decisions
+
+---
+
 ## What is Santiago?
 
 Santiago implements the **"Old Man and the Sea"** pattern:
