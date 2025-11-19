@@ -3,7 +3,7 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "santiago-core"
+name = "santiago_core"
 version = "0.1.0"
 description = "Santiago Autonomous AI Development Framework"
 authors = [
