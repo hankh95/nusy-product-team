@@ -37,18 +37,26 @@ Then create a **new unified architecture file**:
 
 ## Discovery Phase (Before Synthesis)
 
+**Important Context**: The code in this repository is **production-ready, live-running code that passes CI/CD**. This is not experimental or prototype code. The system has:
+- Active GitHub Actions CI/CD pipeline (`.github/workflows/ci-cd.yml`)
+- 80%+ test coverage requirements enforced
+- Quality gates (linting, security scanning, complexity checks)
+- Automated testing on every push/PR
+- Working deployments to staging/production
+
 Before writing the merged plan, you MUST:
 
-1. **Examine actual working code implementations**, not just documentation:
+1. **Examine actual working code implementations** (production code, not prototypes):
    - `santiago_core/` - Contains the best/most complete agent and service implementations
      - `santiago_core/services/knowledge_graph.py` - Working KG service
      - `santiago_core/services/kanban_service.py` - Kanban MCP service
      - `santiago_core/agents/` - Agent implementations
      - `santiago_core/run_team.py` - Agent orchestration
-   - `expeditions/exp_036/` and `expeditions/exp_040/` - In-memory Git implementations
+   - `expeditions/exp_036/` and `expeditions/exp_040/` - In-memory Git implementations (experimental/proof-of-concept)
      - `expeditions/exp_040/dulwich_git_service.py` - Dulwich-based in-memory Git
      - `expeditions/exp_036/enhanced_shared_memory_git_service.py` - Enhanced shared memory Git
      - `expeditions/exp_036/in_memory_llm_service.py` - In-memory LLM service
+     - **Note**: Expeditions are experimental; distinguish these from production code in `santiago_core/` and `santiago-pm/tackle/`
    - `src/nusy_pm_core/adapters/kg_store.py` - KG store adapter
    - `santiago-pm/tackle/` - Working Kanban and PM tool implementations
      - `santiago-pm/tackle/kanban/` - Kanban system (model, service, CLI, KG integration)
@@ -67,9 +75,16 @@ Before writing the merged plan, you MUST:
 
 3. **Map existing implementations to the architecture**:
    - Document which code paths already implement in-memory Git, KG, Kanban, and agent orchestration
+   - **Distinguish production code** (in `santiago_core/`, `santiago-pm/tackle/`, `src/nusy_pm_core/`) **from experimental code** (in `expeditions/`)
    - Note gaps between vision and current implementation
    - Reference specific files, classes, and functions in your merged plan
-   - Identify what should be preserved, what should be migrated, and what needs to be built
+   - Identify what should be preserved (production code), what should be migrated (experimental → production), and what needs to be built
+   - **Understand what each system produces**:
+     - Kanban system: Examine `kanban-boards.md` to see actual board structure and outputs
+     - Autonomous system: Review `santiago_core/run_team.py` to understand agent coordination patterns
+     - Look at example outputs, logs, or generated artifacts to understand runtime behavior
+     - Check CI/CD status (`.github/workflows/ci-cd.yml`, `docs/CI_CD_DEPLOYMENT.md`) to understand what's tested and deployed
+     - If code/docs are unclear, briefly running tools (e.g., `python -m tackle.kanban.kanban_cli show-board`) can help, but code examination is primary
 
 ## Requirements
 1. Use the GPT‑5.1 plan (`docs-arch-redux-3/GPT51/arch-vision-gpt51-answer.md`) as the structural and narrative base.
