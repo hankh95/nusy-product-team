@@ -36,6 +36,10 @@ Recommendations: [Future improvements]
   - Principles: Non-aggression, service orientation
   - Impact: Positive team ethical foundation
   - Learning: Framework provides good decision guidance
+- **2025-11-20**: Architecture Redux 3 & KnowledgeOps framing - APPROVED (WITH GUARDRAILS)
+  - Principles: Service to team and users, transparency, preservation of knowledge/provenance
+  - Impact: Clearer target architecture and migration plan, with explicit gates for high-risk changes
+  - Learning: Treating knowledge as code in Git while using the KG as a runtime projection supports safety and reversibility when combined with CI/CD and ethical review
 
 ## Cargo Manifest Status
 - **Ethical Principles**: Loaded and operational
