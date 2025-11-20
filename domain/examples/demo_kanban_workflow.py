@@ -15,10 +15,10 @@ from pathlib import Path
 from datetime import datetime
 
 # Add the santiago-pm path to sys.path so we can import
-sys.path.insert(0, str(Path(__file__).parent / "santiago-pm"))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "self_improvement" / "santiago_pm"))
 
-from tackle.kanban.kanban_service import KanbanService
-from tackle.kanban.kanban_model import ColumnType, ItemType, BoardType
+from self_improvement.santiago_pm.tackle.kanban.kanban_service import KanbanService
+from self_improvement.santiago_pm.tackle.kanban.kanban_model import ColumnType, ItemType, BoardType
 
 
 class SantiagoKanbanWorkflowDemo:

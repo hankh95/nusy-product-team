@@ -28,7 +28,7 @@ import json
 from rdflib import Graph, Namespace, URIRef, Literal
 from rdflib.namespace import RDF, RDFS
 
-from nusy_pm_core.adapters.kg_store import KGStore
+from domain.src.nusy_pm_core.adapters.kg_store import KGStore
 
 
 def search_documents(keywords: List[str], workspace_path: Path) -> tuple[int, List[str]]:

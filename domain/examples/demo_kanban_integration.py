@@ -11,8 +11,8 @@ from pathlib import Path
 # Add santiago-pm to path
 sys.path.insert(0, str(Path(__file__).parent / "santiago-pm"))
 
-from tackle.kanban.kanban_service import KanbanService
-from tackle.kanban.kanban_model import ColumnType, ItemType, BoardType
+from self_improvement.santiago_pm.tackle.kanban.kanban_service import KanbanService
+from self_improvement.santiago_pm.tackle.kanban.kanban_model import ColumnType, ItemType, BoardType
 
 
 def main():

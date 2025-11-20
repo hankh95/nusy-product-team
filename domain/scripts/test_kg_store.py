@@ -18,7 +18,7 @@ from pathlib import Path
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from nusy_pm_core.adapters.kg_store import KGStore, KGTriple
+from domain.src.nusy_pm_core.adapters.kg_store import KGStore, KGTriple
 
 
 def test_kg_store():
