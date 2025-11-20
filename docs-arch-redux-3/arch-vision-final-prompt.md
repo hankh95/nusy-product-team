@@ -35,13 +35,52 @@ Then create a **new unified architecture file**:
 
 - Your job is to **clarify and document** these choices and integrate them consistently across the architecture; do not re-open them as design options.
 
+## Discovery Phase (Before Synthesis)
+
+Before writing the merged plan, you MUST:
+
+1. **Examine actual working code implementations**, not just documentation:
+   - `santiago_core/` - Contains the best/most complete agent and service implementations
+     - `santiago_core/services/knowledge_graph.py` - Working KG service
+     - `santiago_core/services/kanban_service.py` - Kanban MCP service
+     - `santiago_core/agents/` - Agent implementations
+     - `santiago_core/run_team.py` - Agent orchestration
+   - `expeditions/exp_036/` and `expeditions/exp_040/` - In-memory Git implementations
+     - `expeditions/exp_040/dulwich_git_service.py` - Dulwich-based in-memory Git
+     - `expeditions/exp_036/enhanced_shared_memory_git_service.py` - Enhanced shared memory Git
+     - `expeditions/exp_036/in_memory_llm_service.py` - In-memory LLM service
+   - `src/nusy_pm_core/adapters/kg_store.py` - KG store adapter
+   - `santiago-pm/tackle/` - Working Kanban and PM tool implementations
+     - `santiago-pm/tackle/kanban/` - Kanban system (model, service, CLI, KG integration)
+
+2. **Identify best-practice folder structures**:
+   - `santiago-pm/` - Has the **best sub-folder structure** for self-improvement artifacts:
+     - `cargo-manifests/` - Feature specifications
+     - `ships-logs/` - Issue tracking
+     - `voyage-trials/` - Experiments
+     - `navigation-charts/` - Development plans
+     - `captains-journals/` - Knowledge capture
+     - `crew-manifests/` - Agent roles
+     - `strategic-charts/` - Vision and strategy
+     - `tackle/` - Implementation modules
+   - Use `santiago-pm/tackle/folder-structure.md` and `santiago-pm/README.md` as references for the canonical folder organization
+
+3. **Map existing implementations to the architecture**:
+   - Document which code paths already implement in-memory Git, KG, Kanban, and agent orchestration
+   - Note gaps between vision and current implementation
+   - Reference specific files, classes, and functions in your merged plan
+   - Identify what should be preserved, what should be migrated, and what needs to be built
+
 ## Requirements
 1. Use the GPT‑5.1 plan (`docs-arch-redux-3/GPT51/arch-vision-gpt51-answer.md`) as the structural and narrative base.
 2. Pull improvements from:
    - the Grok 4.1 plan (`docs-arch-redux-3/GROK41/arch-vision-grok41-answer-fabulous.md`)
    - the combined plan (`docs-arch-redux-3/arch-vision-combined-answer.md`)
    - any additional architecture-relevant files discovered via repo search
-3. Integrate repo patterns, folder structures, agent roles, and KGs as defined in code/docs (especially `docs/FOLDER_LAYOUT.md`, `docs/RELEVANCE_MAP.md`, and `santiago-pm/tackle/folder-structure.md` if present).
+3. Integrate repo patterns, folder structures, agent roles, and KGs as defined in code/docs:
+   - **Folder structure**: Use `santiago-pm/` as the canonical reference for self-improvement artifact organization (see `santiago-pm/tackle/folder-structure.md` and `santiago-pm/README.md`)
+   - **Code implementations**: Reference `santiago_core/` for working agent and service implementations
+   - **Supporting docs**: Also consult `docs/FOLDER_LAYOUT.md`, `docs/RELEVANCE_MAP.md`, and other architecture docs
 4. Resolve unclear roles and relationships using information found across the repo.
 5. Clarify and make explicit:
    - KG multiplicity (shared vs per-agent, and how domain vs self-improvement namespaces are modeled).
@@ -55,6 +94,13 @@ Then create a **new unified architecture file**:
    3. Knowledge Graph & Memory Model
    4. Agents & Roles
    5. Reference Implementation Architecture (folders, services, flows)
+      - **MUST reference actual code paths and folder structures found in the repo**
+      - Document:
+        - Which folder structure to use (`santiago-pm/` as the canonical example for self-improvement artifacts)
+        - Which code implementations exist (`santiago_core/services/`, `expeditions/exp_036/`, `expeditions/exp_040/`, etc.)
+        - How existing in-memory Git and KG services should be integrated
+        - Migration path from current structure to target architecture
+        - What code should be preserved, what should be refactored, and what needs to be built
    6. Operational Architecture (CI/CD, eval, rollback, ethics)
    7. Change Log (Sources of Ideas)
 7. Include at least one Mermaid diagram for:
