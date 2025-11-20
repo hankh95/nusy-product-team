@@ -417,6 +417,8 @@ Domain knowledge follows a CI/CD-like pipeline, parallel to code but with **Git 
      - Staging vs production knowledge environments.
      - Automated promotion of knowledge versions.
 
+Knowledge work items (e.g. ingestion, curation, schema changes, KnowledgeOps tooling) are tracked as **Kanban cards** just like code work; their movement through the Kanban states (Backlog → Ready → In Progress → Review → Done) is what drives this pipeline in practice.
+
 ### 6.3 Evaluation & Experiment Harness
 
 - `santiago-pm/voyage-trials/` and `research-logs/`:
