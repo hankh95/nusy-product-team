@@ -84,6 +84,51 @@ Central data store for entities, relationships, and state. Stores passage defini
 
 The vision of a self-managing, self-improving AI system that can plan, execute, and optimize its own development processes without human intervention.
 
+### Two-Namespace Model
+
+Repository organization separating production domain code (`domain/`) from self-improvement system code (`self-improvement/`). Ensures clear boundaries between business logic and autonomous improvement capabilities.
+
+### Domain Namespace
+
+The `domain/` directory containing production code that implements core business functionality. Subject to high stability requirements and full testing coverage.
+
+### Self-Improvement Namespace
+
+The `self-improvement/` directory containing code that implements autonomous improvement capabilities. Includes experimental features, development tools, and agent implementations with lower stability requirements.
+
+### Canonical Scaffold
+
+The `santiago-pm/` folder serving as the authoritative template for self-improvement artifacts and processes. Provides nautical-themed organization for autonomous agents and human developers.
+
+### Santiago-PM Scaffold
+
+The canonical self-improvement scaffold implementing nautical theming for product management artifacts. Includes cargo manifests, ship's logs, voyage trials, and navigation charts for structured autonomous operation.
+
+### Runtime Architecture
+
+The operational structure of the Santiago system during execution. Defines how agents, knowledge graphs, and external services interact to achieve autonomous software development.
+
+### Self-Improving Multi-Agent System
+
+An AI system that can autonomously modify its own code, processes, and capabilities. Santiago implements this through the self-improvement namespace and canonical scaffold patterns.
+
+### Expedition Pattern
+
+Development methodology using isolated branches and numbered experiment directories for autonomous work. Enables safe, reviewable changes with clear success criteria and rollback capabilities.
+
+### Triage Report
+
+Analysis document proposing target homes for repository artifacts during migration. Categorizes files for retention, movement, or archival based on the target architecture.
+
+### Migration Principles
+
+Guidelines for restructuring the repository to align with target architecture:
+
+- Preserve history (archive, don't delete)
+- Small, reviewed changes
+- Non-destructive operations first
+- Focus on documentation and planning before structural changes
+
 ## Naming Convention
 
 - **Individual AI Agents**: Named after characters from "The Old Man and the Sea" (Santiago, Manolin)

@@ -1,12 +1,55 @@
-# Santiago PM Domain Folder Structure
+# Santiago Repository Folder Structure
 
 ## Overview
 
-The `santiago-pm/` folder serves as the centralized domain for Product Management artifacts in the Santiago system. It follows nautical theming inspired by the Santiago ship metaphor, providing intuitive organization for autonomous agents and human developers.
+The repository implements a **two-namespace model** separating production domain code from self-improvement system code:
 
-## Folder Hierarchy
+- **`domain/`**: Production code implementing the core business domain
+- **`self-improvement/`**: Code implementing the autonomous self-improvement capabilities
 
+The `santiago-pm/` folder serves as the canonical scaffold for self-improvement artifacts, following nautical theming inspired by the Santiago ship metaphor.
+
+## Repository Structure
+
+```text
+repository/
+├── domain/                      # Production domain code
+│   ├── features/               # Feature implementations
+│   ├── models/                 # Domain models
+│   ├── services/               # Business services
+│   └── tests/                  # Domain tests
+├── self-improvement/           # Self-improvement system
+│   ├── santiago-pm/           # Canonical PM scaffold
+│   ├── santiago-dev/          # Development tools
+│   └── agents/                # Agent implementations
+├── docs/                       # Documentation
+├── _archive/                   # Historical artifacts
+└── [infrastructure files]      # Root-level config files
 ```
+
+## Two-Namespace Model
+
+### domain/ (Production Domain)
+
+Contains all code that implements the core business functionality:
+
+- **Purpose**: Deliver business value and domain capabilities
+- **Contents**: Production-ready features, models, services
+- **Testing**: Full test coverage, CI/CD integration
+- **Stability**: High stability requirements
+
+### self-improvement/ (Self-Improvement System)
+
+Contains code that implements autonomous improvement capabilities:
+
+- **Purpose**: Enable the system to improve itself autonomously
+- **Contents**: PM scaffold, development agents, experimentation tools
+- **Testing**: Experimental validation, rapid iteration
+- **Stability**: Lower stability requirements, experimental features
+
+## Santiago-PM Scaffold Structure
+
+```text
 santiago-pm/
 ├── folder-structure.md          # This document (moved to tackle/)
 ├── notes-domain-model.md        # Notes domain specification
@@ -92,13 +135,26 @@ Each subfolder contains:
 - Templates with KG relation definitions
 - Automatic relation establishment on artifact creation
 
-## Migration Guidelines
+## Migration Status
 
-1. Move existing features/ to cargo-manifests/
-2. Move existing issues/ to ships-logs/
-3. Move existing experiments/ to voyage-trials/
-4. Update all references and KG relations
-5. Maintain backward compatibility links
+**Current State**: Repository transitioning to two-namespace model
+
+**Completed**:
+
+- Architecture vision and migration plan documented
+- Root artifact triage report generated
+- Expedition infrastructure established
+
+**In Progress**:
+
+- Folder structure documentation updates
+- Namespace separation planning
+
+**Pending**:
+
+- Physical directory restructuring
+- Import/reference updates
+- Test reorganization
 
 ## Agent Discovery
 
@@ -108,3 +164,4 @@ Santiago agents can:
 - Navigate subfolders autonomously
 - Create artifacts using templates
 - Update KG relations automatically
+- Distinguish between domain/ and self-improvement/ contexts
