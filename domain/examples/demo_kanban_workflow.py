@@ -14,8 +14,10 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
-# Add the santiago-pm path to sys.path so we can import
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "self_improvement" / "santiago_pm"))
+# Set PYTHONPATH for imports
+import os
+repo_root = Path(__file__).parent.parent.parent
+os.environ['PYTHONPATH'] = str(repo_root / "domain" / "src")
 
 from self_improvement.santiago_pm.tackle.kanban.kanban_service import KanbanService
 from self_improvement.santiago_pm.tackle.kanban.kanban_model import ColumnType, ItemType, BoardType
