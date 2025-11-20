@@ -27,8 +27,8 @@ import argparse
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
-from nusy_pm_core.adapters.kg_store import KGStore
-from nusy_pm_core.santiago_core_bdd_executor import SantiagoCoreNeurosymbolicReasoner
+from domain.src.nusy_pm_core.adapters.kg_store import KGStore
+from domain.src.nusy_pm_core.santiago_core_bdd_executor import SantiagoCoreNeurosymbolicReasoner
 
 
 class SantiagoExpert:

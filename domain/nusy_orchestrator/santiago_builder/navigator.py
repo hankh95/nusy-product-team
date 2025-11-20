@@ -33,13 +33,13 @@ from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
 # Import Santiago Builder components
-from nusy_orchestrator.santiago_builder.catchfish import Catchfish, ExtractionLayer
-from nusy_orchestrator.santiago_builder.fishnet import Fishnet
+from domain.nusy_orchestrator.santiago_builder.catchfish import Catchfish, ExtractionLayer
+from domain.nusy_orchestrator.santiago_builder.fishnet import Fishnet
 
 # Import KG Store
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
-from nusy_pm_core.adapters.kg_store import KGStore, KGTriple
+from domain.src.nusy_pm_core.adapters.kg_store import KGStore, KGTriple
 
 
 class NavigationStep(Enum):

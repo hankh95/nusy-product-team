@@ -56,7 +56,7 @@
 - **Option B**: Keep all tests in root `tests/` but reorganize subdirectories by domain
 - **Option C**: Co-locate tests with source code (e.g., `santiago_core/tests/`, `domain/*/tests/`)
 
-**Captain Response:** [Your answer here]
+**Captain Response:** [Option A becuase I like the idea of keeping a domains experts tests close to their definitio. the self improvement tests should be close to the self improvement code and the santiago core tests should be close to the santiago core code.]]
 
 ### 2. Import Path Updates Strategy
 
@@ -74,7 +74,7 @@
 - **Option B**: Add symbolic links or PYTHONPATH adjustments to maintain compatibility
 - **Option C**: Update imports systematically with find/replace operations
 
-**Captain Response:** [Your answer here]
+**Captain Response:** [Option A - with an easily accessible guide for developers on how to structure imports in the new architecture. This ensures clarity and consistency across the codebase. AND a record of all the changes made for future reference.]]
 
 ### 3. Santiago-dev Directory Handling
 
@@ -94,7 +94,7 @@
 - **Option B**: Move to `domain/` as testing/development environment
 - **Option C**: Keep at root as development tooling (like `tools/`)
 
-**Captain Response:** [Your answer here]
+**Captain Response:** [Try to run the code to see what it does and then decide. My hunch is that it should go to self improvement but I want to be sure.]]
 
 ### 4. Remaining Root Artifacts
 
@@ -115,7 +115,7 @@
 - **Option B**: Keep most at root as repository-level artifacts
 - **Option C**: Move all to appropriate domain/self-improvement locations
 
-**Captain Response:** [Your answer here]
+**Captain Response:** [Try to uderstand the purpose of each file and move accordingly. My initial thought is that docs should go to docs, examples to domain/examples, and anything temporary or migration-related to _archive/. but this has to be tempered with what it's role is in the new architecture. Contributing.md should probably stay at root as it's a repository-level artifact, but really needs to be cleaned up OR write a link in it to where the master of "how to work on this team" lives - I think this is actually the kanban workflows etc. But we may want a human readable version with the link to the real thing (eg the kanban or other methods we develop for the process of getting work done.]
 
 ### 5. Phase 2 Completion Criteria
 
@@ -134,7 +134,7 @@
 - **Option B**: Full validation (run tests, check CI/CD, verify agent navigation)
 - **Option C**: Minimal validation (just directory structure)
 
-**Captain Response:** [Your answer here]
+**Captain Response:** [Option B - but to do this right, we have to understand if the code we are tring to run is actually aligned with the new architecture. So we may have to do some code updates as part of this validation. But I want to be sure that the core capabilities (autonomous agents, knowledge ingestion, reasoning, kanban and other PM services) is working as expected before we move on to phase 3. Create check points if it is taking too long to do all at once.] 
 
 ## Risk Assessment
 
@@ -144,6 +144,8 @@
 2. **Test Distribution Errors:** Incorrect test placement could hide issues
 3. **Agent Navigation:** Autonomous agents may not find moved artifacts
 4. **CI/CD Pipeline:** Build/test scripts may reference old paths
+
+**Captain Response:** [What are good software practices here? One idea would be to move the files AND keep them in the old location as symlinks for a period of time while we validate everything is working. This would reduce risk of breaking things while we do the transition. We could also have a mapping document that shows old paths to new paths for reference during this period that we tie to each running module or test. Third idea is to keep a working version of the old structure in a branch while we validate the new one and then switch over when we are sure everything is working.]
 
 ### Success Criteria
 

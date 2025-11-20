@@ -17,8 +17,8 @@ from typing import Dict, List, Optional, Any, Tuple
 # Add project paths
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tackle.qa_integration.qa_integration_service import QAIntegrationService
-from tackle.personal_logging.personal_logger import AutomatedPersonalLogger
+from self_improvement.santiago_dev.tackle.qa_integration.qa_integration_service import QAIntegrationService
+from self_improvement.santiago_dev.tackle.personal_logging.personal_logger import AutomatedPersonalLogger
 
 
 class SimplifiedAutonomousExecutor:

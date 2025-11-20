@@ -4,21 +4,21 @@
 
 This document outlines the contribution process and provides detailed examples for the Clinical Intelligence Starter project.
 
-**For comprehensive development practices, see [DEVELOPMENT_PRACTICES.md](DEVELOPMENT_PRACTICES.md) - the single source of truth for all development standards.**
+**For comprehensive development practices, see [docs/architecture/arch-vision-merged-plan.md](docs/architecture/arch-vision-merged-plan.md) - the single source of truth for all development standards.**
 
 ## Quick Links
 
-- **[DEVELOPMENT_PRACTICES.md](DEVELOPMENT_PRACTICES.md)**: Universal development practices (TDD/BDD, code quality, testing)
+- **[docs/architecture/arch-vision-merged-plan.md](docs/architecture/arch-vision-merged-plan.md)**: Universal development practices (TDD/BDD, code quality, testing)
 - **[.cursorrules](.cursorrules)**: AI agent work practices
 - **[README.md](README.md)**: Project overview and quick start
-- **[DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md)**: Project roadmap
+- **[docs/architecture/arch-migration-plan.md](docs/architecture/arch-migration-plan.md)**: Project roadmap
 
 ## Documentation Canonicalization
 
 To prevent duplicate drift and speed up reviews:
 
 - Superseded docs: Keep only the latest version under the canonical filename. Use a "Version History" section inside the doc to summarize prior changes. Rely on Git history for previous versions rather than keeping `-v1`, `-v2` file copies.
-- Canonical strategic doc (Santiago-PM): `santiago-pm/strategic-charts/Santiago-Trains-Manolin.md` (see index in `santiago-pm/strategic-charts/README.md`).
+- Canonical strategic doc (Santiago-PM): `self-improvement/santiago-pm/strategic-charts/Santiago-Trains-Manolin.md` (see index in `self-improvement/santiago-pm/strategic-charts/README.md`).
 - When replacing a document: remove the old file, promote the new content to the canonical name, and add a brief note to the top indicating the effective version/date if helpful.
 
 ---
@@ -581,7 +581,7 @@ Before closing an issue, ensure:
 
 ## Architecture Guidelines
 
-See [`docs/architecture_spec.md`](docs/architecture_spec.md) for detailed architecture documentation.
+See [`docs/architecture/arch-vision-merged-plan.md`](docs/architecture/arch-vision-merged-plan.md) for detailed architecture documentation.
 
 ### Sub-project Boundaries
 
@@ -633,7 +633,7 @@ All module development plans follow this standard structure:
 
 ### Master Development Plan
 
-The master plan at [`DEVELOPMENT_PLAN.md`](DEVELOPMENT_PLAN.md) coordinates across all modules:
+The master plan at [`docs/architecture/arch-migration-plan.md`](docs/architecture/arch-migration-plan.md) coordinates across all modules:
 - Provides unified view of all module phases
 - Documents cross-module dependencies
 - Tracks system-level priorities and milestones
