@@ -59,6 +59,16 @@ Follow the Red-Green-Refactor cycle for all development:
 - **BDD Scenarios**: Validate business logic and user workflows
 - **Test Quality**: Tests should be readable, maintainable, and provide clear failure messages
 
+#### 3a. Kanban & Work Ownership
+
+- **Claim work via Kanban**: Before starting, claim a card from the relevant board (e.g. `exp-057-migration`) using the Kanban tools, so only one agent/human owns it at a time.
+- **Stay within your card**: Treat the card’s linked artifact (cargo manifest, domain feature, expedition doc) as your source spec; avoid scope‑creeping into unrelated work.
+- **Definition of Done (per card)**:
+  - Tests/linters run and passing for the areas you touched.
+  - Changes committed (and pushed when appropriate) with a message referencing the card/manifest.
+  - Any relevant personal/ships logs updated.
+  - Kanban card moved to `review`/`done` with a short summary comment.
+
 ### Practical TDD/BDD Workflow Examples
 
 #### Example 1: Adding a New Source Format Processor (CatchFish)

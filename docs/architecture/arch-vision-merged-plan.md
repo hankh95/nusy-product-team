@@ -491,6 +491,11 @@ This section summarizes where each major idea in this merged plan came from.
   - `ci_cd_test.py`.
   - `README.md` + `Makefile` + `scripts/deploy.sh`.
 
+- **DGX Operations & BMJ Voyage**:
+  - `docs-arch-redux-3/noesis_clipper_go_package/docs/ARCHITECTURE/DGX_Operations_Guide.md`.
+  - `docs-arch-redux-3/noesis_clipper_go_package/plans/VOY-001-BMJ-Maiden-Plan.md`.
+  - `docs/architecture/DGX_READINESS_CHECKLIST.md` (this repo) – concrete DGX readiness checklist and work breakdown.
+
 - **Ethics and Role Architecture**:
   - `GLOSSARY.md` and role docs under `roles/` and `santiago_core/crew-manifests/`.
   - `santiago-pm/crew-manifests/` and `santiago-pm/strategic-charts/`.
