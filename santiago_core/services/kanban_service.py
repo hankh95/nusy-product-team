@@ -14,14 +14,10 @@ from datetime import datetime
 
 from santiago_core.core.mcp_service import MCPServer, MCPTool, MCPToolResult
 import sys
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "santiago-pm"))
-from tackle.kanban.kanban_service import KanbanService
-from tackle.kanban.kanban_model import ColumnType, ItemType, BoardType
-
-# Import the neurosymbolic prioritizer
-import sys
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
-from nusy_pm_core.adapters.neurosymbolic_prioritizer import NeurosymbolicPrioritizer
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+from domain.src.nusy_pm_core.adapters.neurosymbolic_prioritizer import NeurosymbolicPrioritizer
+from self_improvement.santiago_pm.tackle.kanban.kanban_service import KanbanService
+from self_improvement.santiago_pm.tackle.kanban.kanban_model import ColumnType, ItemType, BoardType
 
 
 class SantiagoKanbanService(MCPServer):

@@ -5,26 +5,51 @@
     {
       "name": "bootstrapping",
       "duration_days": 3,
-      "behaviors": ["agent_initialization", "communication_setup"],
-      "success_metrics": ["agent_startup_time", "communication_latency"]
+      "behaviors": [
+        "agent_initialization",
+        "communication_setup"
+      ],
+      "success_metrics": [
+        "agent_startup_time",
+        "communication_latency"
+      ]
     },
     {
       "name": "knowledge_loading",
       "duration_days": 4,
-      "behaviors": ["source_ingestion", "knowledge_validation"],
-      "success_metrics": ["ingestion_success_rate", "knowledge_integrity"]
+      "behaviors": [
+        "source_ingestion",
+        "knowledge_validation"
+      ],
+      "success_metrics": [
+        "ingestion_success_rate",
+        "knowledge_integrity"
+      ]
     },
     {
       "name": "autonomous_development",
       "duration_days": 7,
-      "behaviors": ["feature_proposal", "implementation", "testing"],
-      "success_metrics": ["feature_velocity", "test_pass_rate"]
+      "behaviors": [
+        "feature_proposal",
+        "implementation",
+        "testing"
+      ],
+      "success_metrics": [
+        "feature_velocity",
+        "test_pass_rate"
+      ]
     },
     {
       "name": "self_evaluation",
       "duration_days": 7,
-      "behaviors": ["performance_analysis", "improvement_proposal"],
-      "success_metrics": ["analysis_completeness", "learning_rate"]
+      "behaviors": [
+        "performance_analysis",
+        "improvement_proposal"
+      ],
+      "success_metrics": [
+        "analysis_completeness",
+        "learning_rate"
+      ]
     }
   ],
   "decision_triggers": [
@@ -37,13 +62,6 @@
   "success_criteria": {
     "autonomy_level": 0.8,
     "feature_velocity": 0.5,
-    "quality_maintenance": 0.9,
-    "learning_rate": 0.1
-  },
-  "api_keys": {},
-  "resource_limits": {
-    "max_api_calls_per_hour": 1000,
-    "max_cost_per_day": 10.0,
-    "max_execution_time_per_task": 300
+    "quality_maintenance": 0.9
   }
 }

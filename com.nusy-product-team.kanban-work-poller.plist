@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.nusy-product-team.kanban-work-poller</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/hankhead/Projects/Personal/nusy-product-team/venv/bin/python</string>
+        <string>/Users/hankhead/Projects/Personal/nusy-product-team/santiago_core/services/kanban_work_poller.py</string>
+        <string>--poll-interval</string>
+        <string>60</string>
+        <string>--max-concurrent</string>
+        <string>2</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/hankhead/Projects/Personal/nusy-product-team</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PYTHONPATH</key>
+        <string>/Users/hankhead/Projects/Personal/nusy-product-team</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/Users/hankhead/Projects/Personal/nusy-product-team/logs/kanban-work-poller.out</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/hankhead/Projects/Personal/nusy-product-team/logs/kanban-work-poller.err</string>
+
+    <key>StartInterval</key>
+    <integer>60</integer>
+</dict>
+</plist>

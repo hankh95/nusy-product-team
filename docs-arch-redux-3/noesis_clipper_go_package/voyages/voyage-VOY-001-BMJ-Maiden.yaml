@@ -1,0 +1,58 @@
+voyage:
+  id: "VOY-001-BMJ-Maiden"
+  name: "BMJ → Machine-Executable Knowledge Maiden Voyage"
+  domain: "BMJ Best Practice"
+  customer: "BMJ Clinical Knowledge Team"
+  main_objective: "Convert BMJ knowledge for selected topics into a high-fidelity, logic-complete, FHIR-capable semantic graph running entirely on the DGX."
+  motivation_statement: "Be of maximum service to BMJ by delivering a faster, more complete, and more clinically useful graph of their guideline content."
+  constraints:
+    max_duration_days: 30
+    budget_usd: 0
+    compute_limit: "DGX-only"
+    quality_gates:
+      bdd_pass: ">=98%"
+      provenance: ">=100%"
+  goals:
+    - description: "Deliver full framed files to spec for at least one topic in 4 weeks"
+      measure: "topics_complete"
+      target: 1
+    - description: "Achieve ≥98% BDD pass rate on core scenarios for the pilot topic"
+      measure: "bdd_pass_percent"
+      target: 98
+    - description: "Reduce topic cycle time to ≤18 minutes per topic"
+      measure: "minutes_per_topic"
+      target: 18
+  team:
+    roles:
+      - PM
+      - Architect
+      - Researcher
+      - Extractor
+      - Developer
+      - QA
+      - Ethicist
+    motivation_vector:
+      service_to_customer: 0.95
+      craft: 0.97
+      curiosity: 0.90
+      urgency: 0.80
+      ethics: 1.00
+  cycles:
+    design: "Baseline + Hybrid Two-Stream Design (Option 1 & 2) + weekly checkpoints"
+  outputs:
+    - semantic_graph
+    - executable_modules
+    - tackle
+    - retrospective
+    - improvement_proposals
+  evaluation:
+    retrospective_required: true
+    metrics_to_capture:
+      - bdd_pass_percent
+      - extraction_completeness
+      - cycle_time
+      - hallucination_rate
+      - customer_satisfaction
+  connections:
+    expeditions: "daily micro-iterations and weekly voyages"
+    update_global_kg: true
