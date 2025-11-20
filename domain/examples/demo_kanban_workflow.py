@@ -15,9 +15,8 @@ from pathlib import Path
 from datetime import datetime
 
 # Set PYTHONPATH for imports
-import os
 repo_root = Path(__file__).parent.parent.parent
-os.environ['PYTHONPATH'] = str(repo_root / "domain" / "src")
+sys.path.insert(0, str(repo_root))
 
 from self_improvement.santiago_pm.tackle.kanban.kanban_service import KanbanService
 from self_improvement.santiago_pm.tackle.kanban.kanban_model import ColumnType, ItemType, BoardType
@@ -257,7 +256,7 @@ class SantiagoKanbanWorkflowDemo:
         import subprocess
         import os
 
-        os.chdir(Path(__file__).parent.parent / "santiago-pm")
+        os.chdir(Path(__file__).parent.parent.parent / "self_improvement" / "santiago_pm")
         result = subprocess.run([
             "python", "-m", "tackle.kanban.kanban_cli",
             "generate-markdown",

@@ -136,7 +136,55 @@ Use this as a set of heuristics, not hard rules – and update it as we learn.
 
 ---
 
-## 7. How to Use This Playbook as a Team
+## 7. Ask-AI Wind (Leverage External Knowledge to Unstick Flow)
+
+**When to use:**  
+- The team is short on ideas for how to unblock work or improve flow, and you want to tap into broader experience (SAFe, Lean, flow experts, etc.).
+
+**Actions:**
+
+1. Formulate **good questions for AI** (or literature search), e.g.:
+   - “What are the top 10 ways SAFe PO/PM recommends to unblock a project and create flow?”
+   - “What are the top methods software teams use to achieve Lean flow and reduce WIP?”
+   - “How does Joshua Kerievsky recommend handling blocked work to improve flow?”
+2. Treat each question as a **mini-research card**:
+   - Create a card like “Ask AI: SAFe PO/PM unblocking patterns” linking to a short research log.
+   - Capture answers in a markdown note with citations or at least source hints.
+3. From the answers, derive:
+   - 1–3 **candidate wind patterns** you can pilot.
+   - Follow-up questions (e.g., “What is the stop card and why does it increase flow?”).
+4. If a pattern looks promising, add a **small experiment card** to try it on your board.
+
+**Goal:** Use AI/literature to expand the team’s unblocking toolkit, then test patterns in small, low-risk experiments.
+
+---
+
+## 8. 5 Whys & Stop-Card Wind (Root Causes and Team Pause)
+
+**When to use:**  
+- A recurring blockage keeps reappearing in the same place (same column, same kind of work), or a “stop card” / team pause is being considered.
+
+**Actions:**
+
+1. Run **5 Whys** on a specific stuck card or pattern:
+   - “Why is this card still in Review after 2 weeks?”
+   - For each answer, ask “Why?” again up to ~5 times, until you reach a structural cause (e.g., unclear acceptance criteria, missing test harness, overloaded reviewers).
+2. Consider a **stop-card style intervention** (inspired by flow experts like Joshua Kerievsky):
+   - Create a card that explicitly pauses new work:
+     - “STOP: whole team focuses on unblocking X until resolved.”
+   - Clearly document:
+     - why the stop is being called,
+     - what must be true before the stop card can move to Done,
+     - how this is expected to **increase** future flow (e.g., by removing a systemic bottleneck).
+3. After the stop:
+   - Capture what changed and whether flow actually improved.
+   - Convert learnings into new wind patterns or checklist items.
+
+**Goal:** Get past surface symptoms to underlying causes, and use deliberate, time-boxed “stops” to address them when that will increase long-term flow.
+
+---
+
+## 9. How to Use This Playbook as a Team
 
 - When the board feels stuck or “windless”:
   - Ask: **Which pattern fits this situation best?**

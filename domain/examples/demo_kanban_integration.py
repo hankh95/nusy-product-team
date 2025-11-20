@@ -8,8 +8,8 @@ Simple demonstration of how the Kanban system integrates with the autonomous pla
 import sys
 from pathlib import Path
 
-# Add santiago-pm to path
-sys.path.insert(0, str(Path(__file__).parent / "santiago-pm"))
+# Add repo root to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from self_improvement.santiago_pm.tackle.kanban.kanban_service import KanbanService
 from self_improvement.santiago_pm.tackle.kanban.kanban_model import ColumnType, ItemType, BoardType
