@@ -67,6 +67,27 @@ Planned actions (to be implemented via Kanban tasks, not done automatically):
    - Update references where necessary.
    - Preserve history and provenance (no destructive deletes without explicit approval).
 
+### 1.4 PM Feature vs BDD File Cleanup (Planned)
+
+There is currently a mix of **feature specifications** and **BDD `.feature` files** under `santiago-pm/cargo-manifests/`:
+
+- Example **feature spec (doc)**: `santiago-pm/cargo-manifests/continuous-backlog-discovery.md`.
+- Example **expedition spec (doc)**: `santiago-pm/expeditions/autonomous-multi-agent-swarm/autonomous-multi-agent-swarm.md`.
+- Example **BDD test files**: various `*.feature` files living in `santiago-pm/cargo-manifests/`.
+
+Planned actions:
+
+1. Define a clear separation between:
+   - **Feature/expedition specs** (markdown) that describe desired behavior.
+   - **BDD test assets** (`*.feature`) that live alongside tests or in a dedicated test folder.
+2. Inventory all `*.feature` files in `santiago-pm/cargo-manifests/` and propose target homes:
+   - E.g. move under a `tests/` or `bdd-tests/` subtree referenced from the specs.
+3. Update `santiago-pm/tackle/folder-structure.md` and relevant docs to:
+   - Document where feature specs live vs where BDD tests live.
+4. Apply moves via small PRs, ensuring:
+   - CI still finds and runs the BDD tests.
+   - Links from specs to tests remain valid.
+
 ---
 
 ## 2. Code Migration & Refactor Plan

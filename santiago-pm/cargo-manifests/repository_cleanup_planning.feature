@@ -108,3 +108,5 @@ Feature: Repository cleanup planning led by Santiago-PM
     And Santiago-PM MUST record Hank’s approval status in the ships-log
     And no destructive actions MAY be taken unless Hank has explicitly approved
       the corresponding milestone or step
+    And the cleanup work MUST respect the current global prioritization weights
+      and constraints set by Hank for domain vs self-improvement work
