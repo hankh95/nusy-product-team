@@ -4,13 +4,13 @@
 
 Santiago is a **self-improving, neurosymbolic multi-agent system** that behaves like a seasoned software crew sailing an ocean of knowledge.
 
-- **Ocean**: External knowledge and customer domains (guidelines, PDFs, repos, APIs, data).
-- **Ship (Runtime)**: Santiago-core + agents, running continuously on DGX, backed by:
+**Ocean**: External knowledge and customer domains (guidelines, PDFs, repos, APIs, data).
+**Ship (Noesis Runtime)**: The Noesis platform/ship running Santiago-core + agents continuously on DGX, backed by:
   - In-memory Git workspace(s).
   - Knowledge graphs.
   - Kanban and CI/CD.
-- **Crew (Agents)**: Architect, PM, Developers, QA, DevOps, Ethicist, Domain Experts.
-- **Shipyard (Self-improvement)**: Same DGX runtime, but the crew focuses on:
+- **Crew (Santiago Agents)**: Architect, PM, Developers, QA, DevOps, Ethicist, Domain Experts.
+- **Shipyard (Self-improvement Mode on DGX)**: Same Noesis runtime, but the crew focuses on:
   - Improving Santiago-core (brain, memory, orchestration).
   - Improving tooling, observability, and safety.
   - Refining workflows and experiments.
@@ -23,7 +23,7 @@ Santiago is a **self-improving, neurosymbolic multi-agent system** that behaves 
 - **Two work types, one system**:
   - **Domain work** (“at sea”): building and operating domain experts.
   - **Self-improvement work** (“in the shipyard”): upgrading core, tools, memory, and agents.
-  - These are modeled as **distinct Kanban work types/lanes**, not separate runtimes.
+  - These are modeled as **distinct Kanban work types/lanes and two primary folder namespaces within a single Santiago-domain Git repo** (e.g. domain/* vs self-improvement/*), **not as separate runtime modes**.
 - **In-memory Git + file-system-as-truth**:
   - Active artifacts live in **in-memory Git** (e.g. `memory://santiago-workspace`).
   - Kanban is a **projection** over these files (e.g. `kanban-boards.md`), not a separate DB.
@@ -65,7 +65,7 @@ Conceptually:
     - Domain knowledge and artifacts.
     - Self-improvement knowledge and artifacts.
 
-Work continuously flows through a combined Kanban, with PM + Ethicist resolving priorities based on:
+Work continuously flows through a combined Kanban, with PM + Ethicist resolving priorities **within global weights and constraints set by the human Captain (Hank)**, based on:
 
 - Customer/domain value.
 - Unblock impact.
@@ -183,14 +183,10 @@ Each Santiago instance uses:
   - Nodes/edges tagged with:
     - `scope=domain` – operational domain knowledge.
     - `scope=self-improvement` – knowledge about experiments, refactors, tools.
-  - Directory structure in Git mirrors this:
-    - `domain-knowledge/`, `domain-features/`, `domain-expeditions/`
-    - `self-improvement/`, `runtime-tools/`, `ethics/`
-
-This reconciles:
-
-- Grok-41 “fabulous” preference for **one unified hull** per Santiago.
-+- GPT-5.1/Grok-41 initial suggestion of dual KGs.
+  - Directory structure in Git mirrors this with **two primary namespaces in each Santiago-domain repo**:
+    - `domain/*` – domain knowledge and artifacts (e.g. `domain-knowledge/`, `domain-features/`, `domain-expeditions/`).
+    - `self-improvement/*` – self-improvement knowledge and artifacts (e.g. `runtime-tools/`, `ethics/`, and a scaffold mirroring the `santiago-pm/` structure for cargo-manifests, ships-logs, voyage-trials, navigation-charts, captains-journals, etc.).
+  - For the self-improvement scaffold, **`santiago-pm/` is the canonical pattern**; see `santiago-pm/tackle/folder-structure.md` for the full layout to be nested under `self-improvement/` in each Santiago-domain repo.
 
 ### 3.2 KG Responsibilities
 
@@ -198,8 +194,9 @@ This reconciles:
   - Agent registration, capabilities, tasks, relationships.
   - Persistent storage and reload.
 - **KGStore**:
-  - Triple storage and retrieval.
-  - SPARQL-like querying.
+  - Triple storage and retrieval (RDFLib-backed).
+  - Exposes an RDFLib `Graph` as the primary interface for the neurosymbolic reasoner (`SantiagoCoreNeurosymbolicReasoner`, adapted from the NuSy clinical prototype).
+  - Optional SPARQL/query helpers for tooling, debugging, and ad‑hoc analysis.
   - Provenance and stats (`kg_stats.json`, `provenance.json`).
 
 These underpin:
@@ -334,13 +331,25 @@ At the factory level:
 
 #### 5.3.1 Kanban Flow
 
-1. Features and expeditions are defined in:
-   - `features/*.feature`.
-   - `expeditions/exp_0xx/README.md`.
-   - `santiago-pm/cargo-manifests/`, `santiago-pm/voyage-trials/`.
+1. Work items (features, expeditions, issues, tasks, chores, passages) are defined in:
+   - **Features & expeditions**:
+     - `features/*.feature`.
+     - `expeditions/exp_0xx/README.md`.
+     - `santiago-pm/cargo-manifests/`, `santiago-pm/voyage-trials/`.
+   - **Issues**:
+     - `santiago-pm/ships-logs/` and supporting templates in `santiago-pm/issues/`.
+   - **Tasks**:
+     - `santiago-pm/tasks/` (task definitions and workflows).
+   - **Chores**:
+     - `santiago-pm/chores/` (small maintenance activities).
+   - **Passages**:
+     - `santiago-pm/passages/` (YAML passage definitions and docs).
 2. These are indexed by the Kanban system (CLI + services).
 3. `kanban-boards.md` and `santiago-pm/kanban-boards.md` are **generated** from this content (e.g. via `kanban_regenerator.py` or `run_team.py`).
 4. Agents and humans use the Kanban CLI and MCP service to move work.
+5. Cards move through the **standard Kanban workflow states**:
+   - Backlog → Ready → In Progress → Review → Done  
+   as defined by `ColumnType` in `santiago-pm/tackle/kanban/kanban_model.py` and documented in `santiago-pm/tackle/kanban/README.md`, with `KanbanService` enforcing valid transitions and updating item state.
 
 #### 5.3.2 Autonomous Team Flow
 
@@ -357,9 +366,9 @@ At the factory level:
 
 ---
 
-## 6. Operational Architecture (CI/CD, Eval, Rollback, Ethics)
+## 6. Operational Architecture (CI/CD, KnowledgeOps, Eval, Rollback, Ethics)
 
-### 6.1 CI/CD Pipeline
+### 6.1 CI/CD Pipeline (Code & Services)
 
 From `.github/workflows/ci-cd.yml` and `docs/CI_CD_DEPLOYMENT.md`:
 
@@ -383,7 +392,32 @@ Locally:
 
 - `make ci`, `make test-cov`, `make deploy-dev`, `scripts/deploy.sh`.
 
-### 6.2 Evaluation & Experiment Harness
+### 6.2 KnowledgeOps Pipeline (Knowledge as Code)
+
+Domain knowledge follows a CI/CD-like pipeline, parallel to code but with **Git as the primary source of truth** and the knowledge graph as the runtime projection:
+
+1. **Ingest** (CatchFish / knowledge loaders)
+   - Raw sources (guidelines, docs, repos, research) are ingested and transformed into structured knowledge artifacts:
+     - Markdown, YAML, JSON-LD, TTL files under `knowledge/` and domain-specific folders (e.g. `santiago-pm/cargo-manifests/`, `santiago-pm/research-logs/`).
+2. **Validate** (FishNet / BDD)
+   - BDD-style tests and validation passes (FishNet, quality-assessments, voyage-trials) check:
+     - Consistency of knowledge.
+     - Alignment with hypotheses and domain rules.
+     - Coverage of required behaviors.
+3. **Version & Review** (Knowledge-as-Code in Git)
+   - Knowledge artifacts are versioned in Git alongside code:
+     - Changes go through the same PR, review, and CI gates as code.
+     - Knowledge changes can be rolled back via Git history.
+   - This preserves all the benefits of “infrastructure as code” for domain knowledge (diffs, review, branching, auditing).
+4. **Deploy to KG** (Runtime Projection)
+   - Once validated, knowledge artifacts are **applied to the knowledge graph**:
+     - `SantiagoKnowledgeGraph` / `KGStore` load from the versioned files and persist TTL + provenance.
+     - The KG is treated as the **runtime view** of knowledge, not the authoritative version-control system.
+   - Future work (see KnowledgeOps expedition) will refine:
+     - Staging vs production knowledge environments.
+     - Automated promotion of knowledge versions.
+
+### 6.3 Evaluation & Experiment Harness
 
 - `santiago-pm/voyage-trials/` and `research-logs/`:
   - Define experiments and research streams.
@@ -392,7 +426,7 @@ Locally:
 - `ci_cd_test.py`:
   - Exercises CI/CD stack components (Docker, Makefile, GitHub Actions, deploy scripts, docs).
 
-### 6.3 Rollback & Snapshots
+### 6.4 Rollback & Snapshots
 
 - **Git-based rollback**:
   - Traditional Git snapshots for persistent state.
@@ -401,7 +435,7 @@ Locally:
   - KG services serialize to TTL and JSON metadata.
   - Can be rolled back by restoring KG files and relevant Git commits.
 
-### 6.4 Ethics & Safety Gates
+### 6.5 Ethics & Safety Gates
 
 - **Ethicist agent**:
   - Reasoning encoded in roles and future tackle modules.
