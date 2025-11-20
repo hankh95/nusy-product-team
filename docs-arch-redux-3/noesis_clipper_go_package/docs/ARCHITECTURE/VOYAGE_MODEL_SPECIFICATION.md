@@ -1,10 +1,12 @@
 # Noesis Clipper Voyage / Journey Model Specification
 
-This document defines the canonical model for a Voyage (Journey) in the Noesis Clipper / Santiago architecture.
+A **Voyage** is a structured journey where Santiago and its crew work on a specific domain with a clear customer, objective, and set of constraints. Each voyage is designed to both serve the customer and improve Santiago-core itself.
 
 ## 1. Concept
 
-A **Voyage** is a structured journey where Santiago and its crew work on a specific domain with a clear customer, objective, and set of constraints. Each voyage is designed to both serve the customer and improve Santiago-core itself.
+- Every voyage has a **domain**, **customer**, **main objective**, **constraints**, **goals**, **team**, **cycles**, **outputs**, and **evaluation**.
+- Voyages are the primary unit of value delivery and learning in the Noesis Clipper architecture.
+- Expeditions (micro-iterations) sit inside voyages; voyages roll up to a long-term program.
 
 ## 2. YAML Specification
 
@@ -65,6 +67,6 @@ voyage:
 
 ## 3. Usage
 
-- Each new clinical or product domain expedition creates a Voyage YAML.
+- Each new clinical or product domain expedition defines a voyage YAML using this schema.
 - The voyage definition feeds Santiago-core’s orchestration layer, motivation engine, and evaluation harness.
 - Retrospectives and metrics update the global backlog and influence future voyages.

@@ -24,8 +24,8 @@ from typing import Dict, Any, Optional
 import argparse
 
 # Add src to path for imports
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root / "src"))
+project_root = Path(__file__).parent.parent.parent.parent
+sys.path.insert(0, str(project_root))
 
 from domain.src.nusy_pm_core.adapters.kg_store import KGStore
 from domain.src.nusy_pm_core.santiago_core_bdd_executor import SantiagoCoreNeurosymbolicReasoner
