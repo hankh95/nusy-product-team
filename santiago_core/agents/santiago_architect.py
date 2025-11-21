@@ -12,12 +12,13 @@ from typing import Dict, List, Optional
 
 from santiago_core.core.agent_framework import SantiagoAgent, Task, Message, EthicalOversight
 from santiago_core.services.knowledge_graph import SantiagoKnowledgeGraph
+from santiago_core.services.memory_coordinator import SantiagoMemoryCoordinator
 
 
 class SantiagoArchitect(SantiagoAgent):
     """Architect agent for defining system architecture and technical approaches"""
 
-    def __init__(self, workspace_path: Path, knowledge_graph: SantiagoKnowledgeGraph):
+    def __init__(self, workspace_path: Path, knowledge_graph: SantiagoKnowledgeGraph, memory_coordinator: SantiagoMemoryCoordinator):
         super().__init__("santiago-architect", workspace_path)
         self.architecture_patterns: Dict[str, Dict] = {}
         self.current_architecture: Dict = {}
@@ -28,6 +29,7 @@ class SantiagoArchitect(SantiagoAgent):
             "storage": ["rdf", "postgresql", "redis"]
         }
         self.knowledge_graph = knowledge_graph
+        self.memory_coordinator = memory_coordinator
 
     async def handle_custom_message(self, message: Message) -> None:
         """Handle architect-specific messages"""
@@ -243,3 +245,12 @@ graph TD
         await self.update_task_status(task.id, "completed")
         self.knowledge_graph.update_task_status(task.id, "completed", "santiago-architect")
         self.knowledge_graph.record_learning("santiago-architect", "task_completion", f"Successfully completed architecture task '{task.title}'", "success")
+
+        # Record in memory system
+        self.memory_coordinator.record_personal_learning(
+            "santiago-architect",
+            "architecture_design",
+            f"Designed architecture for: {task.title} - {task.description}",
+            confidence=0.8,
+            source="experience"
+        )

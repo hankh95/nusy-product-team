@@ -15,17 +15,19 @@ import shutil
 
 from santiago_core.core.agent_framework import SantiagoAgent, Task, Message, EthicalOversight
 from santiago_core.services.knowledge_graph import SantiagoKnowledgeGraph
+from santiago_core.services.memory_coordinator import SantiagoMemoryCoordinator
 
 
 class SantiagoDeveloper(SantiagoAgent):
     """Developer agent for implementing features and writing code"""
 
-    def __init__(self, workspace_path: Path, knowledge_graph: SantiagoKnowledgeGraph):
+    def __init__(self, workspace_path: Path, knowledge_graph: SantiagoKnowledgeGraph, memory_coordinator: SantiagoMemoryCoordinator):
         super().__init__("santiago-developer", workspace_path)
         self.implemented_features: List[Dict] = []
         self.test_results: Dict[str, Dict] = {}
         self.code_quality_metrics: Dict[str, float] = {}
         self.knowledge_graph = knowledge_graph
+        self.memory_coordinator = memory_coordinator
 
     async def handle_custom_message(self, message: Message) -> None:
         """Handle developer-specific messages"""
@@ -875,6 +877,15 @@ Closes #{task.id}
                 "success"
             )
 
+            # Record in memory system
+            self.memory_coordinator.record_personal_learning(
+                "santiago-developer",
+                "feature_implementation",
+                f"Implemented feature: {task.title} - {task.description} (TDD workflow completed)",
+                confidence=0.9,
+                source="experience"
+            )
+
         except Exception as e:
             self.logger.error(f"Error in development workflow for task {task.id}: {e}")
             await self.update_task_status(task.id, "failed", error=str(e))
@@ -883,5 +894,14 @@ Closes #{task.id}
                 "workflow_failure",
                 f"Failed to complete '{task.title}': {str(e)}",
                 "failure"
+            )
+
+            # Record failure in memory system
+            self.memory_coordinator.record_personal_experience(
+                "santiago-developer",
+                "development_failure",
+                f"Failed to implement: {task.title}",
+                "failure",
+                [f"Error: {str(e)}"]
             )
             raise

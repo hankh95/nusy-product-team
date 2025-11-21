@@ -12,17 +12,19 @@ from typing import Dict, List, Optional
 
 from santiago_core.core.agent_framework import SantiagoAgent, Task, Message, EthicalOversight
 from santiago_core.services.knowledge_graph import SantiagoKnowledgeGraph
+from santiago_core.services.memory_coordinator import SantiagoMemoryCoordinator
 
 
 class SantiagoProductManager(SantiagoAgent):
     """Product Manager agent for the Santiago autonomous development team"""
 
-    def __init__(self, workspace_path: Path, knowledge_graph: SantiagoKnowledgeGraph):
+    def __init__(self, workspace_path: Path, knowledge_graph: SantiagoKnowledgeGraph, memory_coordinator: SantiagoMemoryCoordinator):
         super().__init__("santiago-pm", workspace_path)
         self.vision_holder_intent = ""
         self.current_hypotheses: List[Dict] = []
         self.feature_backlog: List[Dict] = []
         self.knowledge_graph = knowledge_graph
+        self.memory_coordinator = memory_coordinator
 
     async def handle_custom_message(self, message: Message) -> None:
         """Handle PM-specific messages"""
@@ -190,3 +192,12 @@ class SantiagoProductManager(SantiagoAgent):
         await self.update_task_status(task.id, "completed")
         self.knowledge_graph.update_task_status(task.id, "completed", "santiago-pm")
         self.knowledge_graph.record_learning("santiago-pm", "task_completion", f"Successfully completed task '{task.title}'", "success")
+
+        # Record in memory system
+        self.memory_coordinator.record_personal_learning(
+            "santiago-pm",
+            "task_completion",
+            f"Completed task: {task.title} - {task.description}",
+            confidence=0.9,
+            source="experience"
+        )

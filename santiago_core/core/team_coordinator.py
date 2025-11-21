@@ -14,6 +14,7 @@ from santiago_core.agents.santiago_pm import SantiagoProductManager
 from santiago_core.agents.santiago_architect import SantiagoArchitect
 from santiago_core.agents.santiago_developer import SantiagoDeveloper
 from santiago_core.services.knowledge_graph import SantiagoKnowledgeGraph
+from santiago_core.services.memory_coordinator import SantiagoMemoryCoordinator
 from santiago_core.core.agent_framework import Message, SantiagoAgent, Task
 
 
@@ -24,13 +25,16 @@ class SantiagoTeamCoordinator:
         self.workspace_path = workspace_path
         self.logger = logging.getLogger("santiago-coordinator")
 
-        # Initialize knowledge graph
-        self.knowledge_graph = SantiagoKnowledgeGraph(workspace_path)
+        # Initialize memory coordinator (the brain of Santiago)
+        self.memory_coordinator = SantiagoMemoryCoordinator(workspace_path)
 
-        # Initialize agents
-        self.product_manager = SantiagoProductManager(workspace_path, self.knowledge_graph)
-        self.architect = SantiagoArchitect(workspace_path, self.knowledge_graph)
-        self.developer = SantiagoDeveloper(workspace_path, self.knowledge_graph)
+        # Initialize knowledge graph
+        self.knowledge_graph = SantiagoKnowledgeGraph("default_voyage", workspace_path)
+
+        # Initialize agents with memory access
+        self.product_manager = SantiagoProductManager(workspace_path, self.knowledge_graph, self.memory_coordinator)
+        self.architect = SantiagoArchitect(workspace_path, self.knowledge_graph, self.memory_coordinator)
+        self.developer = SantiagoDeveloper(workspace_path, self.knowledge_graph, self.memory_coordinator)
 
         # Register peers for communication
         self._register_agent_peers()

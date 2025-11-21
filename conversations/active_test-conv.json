@@ -1,0 +1,28 @@
+{
+  "conversation_id": "test-conv",
+  "messages": [
+    {
+      "message_id": "system_test-conv_1763735307.575509",
+      "sender": "system",
+      "content": "Conversation started. Topic: test topic",
+      "timestamp": "2025-11-21T14:28:27.575512",
+      "message_type": "system",
+      "metadata": {
+        "participants": [
+          "agent1",
+          "agent2"
+        ],
+        "topic": "test topic"
+      }
+    },
+    {
+      "message_id": "agent1_test-conv_1763735307.57558",
+      "sender": "agent1",
+      "content": "Hello world",
+      "timestamp": "2025-11-21T14:28:27.575581",
+      "message_type": "text",
+      "metadata": {}
+    }
+  ],
+  "last_updated": "2025-11-21T14:28:27.575584"
+}
