@@ -1,0 +1,24 @@
+{
+  "description": "vLLM configuration for Mistral-7B inference on DGX (BMJ/Santiago multi-agent)",
+  "service": {
+    "type": "openai-compatible",
+    "base_url": "http://localhost:8000/v1",
+    "timeout_seconds": 60
+  },
+  "model": {
+    "name": "mistral-7b-instruct",
+    "max_tokens": 4096,
+    "temperature": 0.7
+  },
+  "concurrency": {
+    "max_batch_size": 8,
+    "max_concurrent_requests": 32
+  },
+  "notes": [
+    "Run vLLM on DGX with an OpenAI-compatible server, e.g.:",
+    "  python -m vllm.entrypoints.openai.api_server --model mistralai/Mistral-7B-Instruct-v0.2 --port 8000",
+    "Agents and services should read base_url and model.name from this config or environment variables."
+  ]
+}
+
+
