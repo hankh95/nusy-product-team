@@ -2,7 +2,7 @@
 # DGX Mistral-7B Deployment Script
 # Run this script on your DGX Spark system
 
-set -e
+# set -e
 
 echo "🚀 Starting DGX Mistral-7B Deployment"
 echo "===================================="
@@ -332,10 +332,11 @@ main() {
     echo "1. Start the service: $WORKSPACE_DIR/scripts/start.sh"
     echo "2. Check status: $WORKSPACE_DIR/scripts/status.sh"
     echo "3. View logs: $WORKSPACE_DIR/scripts/logs.sh"
-    echo "4. Test API: curl -X POST http://localhost:8001/v1/chat/completions \\"
-    echo "     -H 'Content-Type: application/json' \\"
-    echo "     -H 'Authorization: Bearer nusy-dgx-2025' \\"
-    echo "     -d '{\"model\": \"mistralai/Mistral-7B-Instruct-v0.1\", \"messages\": [{\"role\": \"user\", \"content\": \"Hello!\"}]}'"
+    echo "4. Test API: curl command here"
+    # echo "4. Test API: curl -X POST http://localhost:8001/v1/chat/completions \\"
+    # echo "     -H 'Content-Type: application/json' \\"
+    # echo "     -H 'Authorization: Bearer nusy-dgx-2025' \\"
+    # echo "     -d '{\"model\": \"mistralai/Mistral-7B-Instruct-v0.1\", \"messages\": [{\"role\": \"user\", \"content\": \"Hello!\"}]}'"
     echo ""
     echo "🔧 Configuration files:"
     echo "   - vLLM config: $WORKSPACE_DIR/config/vllm_config.yaml"
@@ -349,5 +350,4 @@ main() {
 }
 
 # Run main function
-main "$@"</content>
-<parameter name="filePath">/Users/hankhead/Projects/Personal/nusy-product-team/expeditions/dgx-deployment-scripts/deploy_mistral_dgx.sh
+main "$@"
