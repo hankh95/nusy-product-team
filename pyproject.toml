@@ -24,8 +24,11 @@ dependencies = [
 [project.scripts]
 # Archived prototype entry point removed (nusy_pm_core.cli). Runtime scripts will be reintroduced post-migration.
 
+[tool.setuptools.packages.find]
+include = ["santiago_core", "domain", "self_improvement"]
+
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["santiago_core/tests", "domain/tests", "self_improvement/santiago_pm/tests"]
 python_files = "test_*.py"
 python_classes = "Test*"
 python_functions = "test_*"

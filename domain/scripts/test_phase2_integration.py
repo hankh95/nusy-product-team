@@ -14,9 +14,9 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from nusy_orchestrator.santiago_builder.navigator import Navigator
-from nusy_orchestrator.santiago_builder.catchfish import Catchfish
-from nusy_orchestrator.santiago_builder.fishnet import Fishnet
+from domain.nusy_orchestrator.santiago_builder.navigator import Navigator
+from domain.nusy_orchestrator.santiago_builder.catchfish import Catchfish
+from domain.nusy_orchestrator.santiago_builder.fishnet import Fishnet
 
 
 async def test_catchfish_basic():

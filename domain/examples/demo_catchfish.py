@@ -18,7 +18,7 @@ Shows:
 import asyncio
 from pathlib import Path
 
-from nusy_orchestrator.santiago_builder.catchfish import (
+from domain.nusy_orchestrator.santiago_builder.catchfish import (
     Catchfish,
     ExtractionLayer,
     ExtractionMethod,

@@ -595,7 +595,7 @@ try:
         EnhancedSharedMemoryGitService,
         get_enhanced_shared_memory_git_service
     )
-    from src.nusy_pm_core.tools.self_questioning_tool import SelfQuestioningTool
+    from domain.src.nusy_pm_core.tools.self_questioning_tool import SelfQuestioningTool
     EXP_036_AVAILABLE = True
 except ImportError:
     EXP_036_AVAILABLE = False

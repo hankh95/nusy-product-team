@@ -34,12 +34,12 @@ lint-changed: ## Lint only changed markdown files
 	fi
 
 test: ## Run all tests
-	pytest tests/ -v
+	pytest santiago_core/tests/ domain/tests/ self_improvement/santiago_pm/tests/ -v
 
 test-cov: ## Run tests with coverage
-	pytest --cov=santiago_core --cov=nusy_pm_core --cov=nusy_orchestrator \
+	pytest --cov=santiago_core --cov=domain.src.nusy_pm_core --cov=domain.nusy_orchestrator \
 		   --cov-report=term-missing --cov-report=html --cov-fail-under=80 \
-		   -v tests/
+		   -v santiago_core/tests/ domain/tests/ self_improvement/santiago_pm/tests/
 
 test-smoke: ## Run smoke tests
 	python smoke_test.py

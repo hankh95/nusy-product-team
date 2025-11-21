@@ -31,7 +31,7 @@ from expeditions.exp_036.enhanced_shared_memory_git_service import (
     EnhancedSharedMemoryGitService,
     get_enhanced_shared_memory_git_service
 )
-from src.nusy_pm_core.tools.self_questioning_tool import SelfQuestioningTool
+from domain.src.nusy_pm_core.tools.self_questioning_tool import SelfQuestioningTool
 
 
 class TestIntegrationValidation(unittest.TestCase):

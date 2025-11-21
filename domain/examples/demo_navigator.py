@@ -15,7 +15,7 @@ This shows:
 import asyncio
 from pathlib import Path
 
-from nusy_orchestrator.santiago_builder.navigator import Navigator
+from domain.nusy_orchestrator.santiago_builder.navigator import Navigator
 
 
 async def main():

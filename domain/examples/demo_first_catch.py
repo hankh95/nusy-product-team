@@ -20,12 +20,12 @@ Target: Product Management behaviors
 import asyncio
 from pathlib import Path
 
-from nusy_orchestrator.santiago_builder.navigator import Navigator
-from nusy_orchestrator.santiago_builder.catchfish import (
+from domain.nusy_orchestrator.santiago_builder.navigator import Navigator
+from domain.nusy_orchestrator.santiago_builder.catchfish import (
     Catchfish,
     ExtractionLayer,
 )
-from nusy_orchestrator.santiago_builder.fishnet import (
+from domain.nusy_orchestrator.santiago_builder.fishnet import (
     Fishnet,
     CapabilityLevel,
     KnowledgeScope,
