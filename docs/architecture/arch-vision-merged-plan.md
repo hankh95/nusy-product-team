@@ -480,6 +480,11 @@ This section summarizes where each major idea in this merged plan came from.
   - `santiago_core/services/knowledge_graph.py` – `SantiagoKnowledgeGraph`.
   - `src/nusy_pm_core/adapters/kg_store.py` – `KGStore`.
   - `research-logs/memory-architecture-*` – conceptual memory architecture.
+- **Fleet / Three-Tier Memory Architecture (EXP-042)**:
+  - `_archive/legacy-docs/research-logs/memory-architecture-analysis.md` – three-tier memory vision (EXP-042).
+  - `_archive/legacy-docs/research-logs/memory-architecture-comprehensive-stream.md` – detailed exploration of Santiago memory.
+  - `santiago_core/services/personal_memory.py`, `conversation_memory.py`, `memory_coordinator.py`, `multimodal_ingest.py` – Fleet Memory implementation.
+  - `docs/architecture/expeditions/EXP-042-FLEET-MEMORY-ARCHITECTURE.md` – system-level design & validation plan.
 
 - **In-Memory Git & LLM**:
   - `expeditions/exp_036/` – in-memory LLM & Git services.
